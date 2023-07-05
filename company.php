@@ -1,5 +1,5 @@
-<?php include 'header.php'; ?>
-<?php include 'nav.php'; ?>   
+<?php include 'header.php'; 
+include 'nav.php'; ?>   
     
 <!-- ============================================================== -->
 <!-- Start right Content here -->
