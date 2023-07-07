@@ -47,7 +47,7 @@
                                     <span key="t-forms">Company</span> <div class="arrow-down"></div>
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="topnav-form">
-                                    <a href="company.php" class="dropdown-item" key="t-form-elements">Create Company</a>
+                                    <a href="../../../company.php" class="dropdown-item" key="t-form-elements">Create Company</a>
                                 </div>
                             </div>
                         </div>

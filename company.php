@@ -1,10 +1,10 @@
-<?php include 'header.php'; 
-include 'nav.php'; ?>   
+<?php include './application/views/admin/header.php'; 
+include './application/views/admin/nav.php'; ?>   
     
 <!-- ============================================================== -->
 <!-- Start right Content here -->
 <!-- ============================================================== -->
-<link rel="shortcut icon" href="assets/images/favicon.ico">
+
 <!-- CSS styles -->
 <style>  
     .btn-primary {
@@ -94,7 +94,7 @@ include 'nav.php'; ?>
                                                     include 'conn.php';
 
                                                     // Select query
-                                                    $sql = "SELECT `CompanyID`, `CompanyName`, `Address`, `Phone`, `Email`, `Description`, `Logo` FROM `company` WHERE 1";
+                                                    $sql = "SELECT * FROM company WHERE 1";
                                                     $result = mysqli_query($conn, $sql);
 
                                                     // Check if the query was successful
@@ -310,4 +310,4 @@ $(document).ready(function() {
 
 
 
-<?php include 'footer.php'; ?>
+<?php include './application/views/admin/footer.php'; ?>

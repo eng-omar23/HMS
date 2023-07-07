@@ -15,6 +15,7 @@
         <link href="../../../assets/css/icons.min.css" rel="stylesheet" type="text/css" />
         <!-- App Css-->
         <link href="../../../assets/css/app.min.css" rel="stylesheet" type="text/css" />
+        <link rel="shortcut icon" href="../../../assets/images/favicon.ico">
     </head>
     <body data-topbar="dark" data-layout="horizontal">
         <!-- Begin page -->
