@@ -247,12 +247,13 @@ $(document).ready(function(){
                 alert(resp)
                  var res = jQuery.parseJSON(resp);
                  if (res.status == 200) {
-                   $("#success").css("display", "block");
-                    $("#success").text(res.message);
+                    window.location.href = 'hall.php';
+                //    $("#success").css("display", "block");
+                //     $("#success").text(res.message);
               }     else if (res.status == 404) {
-                  $("#success").css("display", "none");
-                   $("#error").css("display", "block");
-                   $("#error").text(res.message);
+                //   $("#success").css("display", "none");
+                //    $("#error").css("display", "block");
+                //    $("#error").text(res.message);
               }
             
                  }
@@ -306,7 +307,7 @@ function deleteItem(itemId) {
         method: 'POST',
         data: { itemId: itemId },
         success: function(response) {
-         alert("success")
+            window.location.href = 'hall.php';
             console.log(response);
             // Reload the page or update the UI as needed
         },
