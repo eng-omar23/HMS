@@ -121,8 +121,8 @@ include '../../../conn.php';
                             <a href='#' class='text-success p-2 edit-btn' data-bs-toggle='modal' data-bs-target='.hallModal' data-id='$hall_id'><i class='bx bxs-edit-alt'></i></a>
                             </li>
                             <li class='list-inline-item'>
-                                <a href='#' class='text-danger p-2  delete-btn'><i class='bx bxs-trash'></i></a>
-                            </li></td>";
+                            <a href='#' class='text-danger p-2 delete-btn' data-item-id='$hall_id'><i class='bx bxs-trash'></i></a>
+                        </li></td>";
                             echo "</tr>";
                         }
                     } else {
@@ -223,6 +223,11 @@ include '../../../conn.php';
     
     <script>  
 $(document).ready(function(){
+    $('.delete-btn').click(function(e) {
+        e.preventDefault();
+        var itemId = $(this).data('item-id');
+        deleteItem(itemId);
+    });
    
     $("#error").css("display", "none");
     $("#success").css("display", "none");
@@ -293,5 +298,24 @@ $(document).ready(function() {
         });
     });
 });
+
+
+function deleteItem(itemId) {
+    $.ajax({
+        url: '../../../apis/halls.php',
+        method: 'POST',
+        data: { itemId: itemId },
+        success: function(response) {
+         alert("success")
+            console.log(response);
+            // Reload the page or update the UI as needed
+        },
+        error: function(xhr, status, error) {
+            // Handle errors
+            console.error(error);
+        }
+    });
+}
+
 
     </script>
