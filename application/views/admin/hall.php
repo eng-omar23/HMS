@@ -220,7 +220,7 @@ include '../../../conn.php';
         </div><!-- container-fluid -->
     </div>
     <?php include 'footer.php'; ?>
-    
+    <!-- <script src="../../../js/halls.js"></script> -->
     <script>  
 $(document).ready(function(){
     $('.delete-btn').click(function(e) {
