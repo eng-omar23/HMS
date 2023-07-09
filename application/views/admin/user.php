@@ -60,48 +60,57 @@
                                                         <thead>
                                                             <tr>
                                                                 <th scope="col">#</th>
-                                                                <th scope="col">Full Name</th>
-                                                                <th scope="col">Phone Number</th>
+                                                                <th scope="col">User Name</th>
                                                                 <th scope="col">Email</th>
-                                                                <th scope="col">Address</th>
+                                                                <th scope="col">Passowrd</th>
+                                                                <th scope="col">Status</th>
+                                                                <th scope="col">Type</th>
                                                                 <th scope="col">Action</th>
                                                             </tr>
                                                             
                                                         </thead>
                                                         <?php
                 // Select query
-                $sql = "SELECT * FROM customers WHERE 1";
+                $sql = "SELECT * FROM users WHERE 1";
                 $result = mysqli_query($conn, $sql);
+                $n=1;
 
                 // Check if the query was successful
                 if ($result) {
                     // Check if there are any rows returned
                     if (mysqli_num_rows($result) > 0) {
                         while ($row = mysqli_fetch_assoc($result)) {
-                            $cid = $row['custid'];
-                            $address = $row['address'];
-                            $name = $row['firstname'];
+                            $userid = $row['user_id'];
+                            $username = $row['username'];
+                            $pass = $row['password'];
                             $email = $row['email'];
-                            $phone = $row['phone'];
-                         
-                            $date = $row['date'];
+                            $type = $row['type'];
+                            $status = $row['status'];
                       
                             // Display the data
                             echo "<tr>";
-                            echo "<td>$name</td>";                         
+                            echo "<td>$n</td>";                         
+                            echo "<td>$username</td>";                         
                             echo "<td>$email</td>";
+                            echo "<td>$pass</td>";
+                          if($status==1){
+                            echo "<td>Active</td>";
+                          }
+                          else{
+                            echo "<td>InACtive</td>"; 
+                          }
                          
-                            echo "<td>$phone</td>";
-                            echo "<td>$date</td>";
-                            echo "<td>$address</td>";
+                            
+                            echo "<td>$type</td>";
                             echo "<td>
                             <li class='list-inline-item'>
-                            <a href='#' class='text-success p-2 edit-btn' data-bs-toggle='modal' data-bs-target='.orderdetailsModal' data-id='$cid'><i class='bx bxs-edit-alt'></i></a>
+                            <a href='#' class='text-success p-2 edit-btn' data-bs-toggle='modal' data-bs-target='.orderdetailsModal' data-id='$userid'><i class='bx bxs-edit-alt'></i></a>
                             </li>
                             <li class='list-inline-item'>
-                            <a href='#' class='text-danger p-2 delete-btn' data-item-id='$cid'><i class='bx bxs-trash'></i></a>
+                            <a href='#' class='text-danger p-2 delete-btn' data-item-id='$userid'><i class='bx bxs-trash'></i></a>
                         </li></td>";
                             echo "</tr>";
+                 
                         }
                     } else {
                         echo "<tr><td colspan='6'>No Customers found</td></tr>";
@@ -136,45 +145,53 @@
                     <div class="modal-dialog modal-dialog-centered" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="orderdetailsModalLabel">Customer</h5>
+                                <h5 class="modal-title" id="orderdetailsModalLabel">Users</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                            <form id="customers" action="../../../apis/customers.php" method="post">
-                            <input type="hidden" class="form-control" id="cid" name="cid">
+                            <form id="users" action="../../../apis/users.php" method="post">
+                            <input type="hidden" class="form-control" id="userid" name="userid">
                                     <div class="mb-3">
-                                        <label for="formrow-firstname-input" class="form-label">Full Name</label>
-                                        <input type="text" class="form-control" id="cname" name="cname" placeholder="Enter Fullname">
+                                        <label for="formrow-firstname-input" class="form-label">User Name</label>
+                                        <input type="text" class="form-control form-control-sm" id="uname" name="uname" placeholder="Enter Fullname">
                                     </div>
 
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="mb-3">
-                                                <label for="formrow-address-input" class="form-label">Phone Number</label>
-                                                <input type="text" class="form-control" id="number" name="number" placeholder="Enter Phone Number">
+                                                <label for="formrow-address-input" class="form-label">User Password</label>
+                                                <input type="text" class="form-control form-control-sm" id="upass" name="upass" placeholder="Enter Phone Number">
                                             </div>
                                         </div>
                                         <div class="col-md-6">
-                                            <div class="mb-3">
-                                                <label for="formrow-email-input" class="form-label">Address</label>
-                                                <input type="text" class="form-control" id="address" name="address" placeholder="Enter Address">
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="row">
-
-                                         
                                             <div class="mb-3">
                                                 <label for="formrow-email-input" class="form-label">Email</label>
-                                                <input type="email" class="form-control" id="email" name="email" placeholder="Enter Customer Email">
+                                                <input type="text" class="form-control form-control-sm" id="email" name="email" placeholder="Enter Address">
                                             </div>
-                                         
-
-                                        
-                                        
-
+                                        </div>
                                     </div>
+
+
+
+                                    <div class="mb-3">   
+                                         <select class="form-control form-control-sm" name="type" id="type">
+                                            <option value="">Choose User Type</option>
+                                            <option value="admin">Admin</option>
+                                            <option value="customer">Customer</option>
+                                 
+                                        </select>
+                                    </div>
+                             
+                                    
+                                    <div  class="mb-3">   
+                                         <select class="form-control form-control-sm" name="type" id="type">
+                                            <option value="">Choose User Status</option>
+                                            <option value="1">Active</option>
+                                            <option value="0">Inactive</option>
+                                 
+                                        </select>
+                                    </div>
+                                  
                                     <div class="modal-footer">
                                 <button type="submit" class="btn btn-primary"  id="btnCustomer">Save Changes</button>
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btnClose">Close</button>
