@@ -18,6 +18,7 @@
                                     <div>
                                         <a href="Customer.php" class="dropdown-item" key="t-alerts">Customers</a>
                                         <a href="hall.php" class="dropdown-item" key="t-buttons">Halls</a>
+                                        <a href="facility.php" class="dropdown-item" key="t-buttons">Facility</a>
                                     </div>
                                 </div>
                             </div>
