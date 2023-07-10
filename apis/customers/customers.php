@@ -1,7 +1,8 @@
 <?php
 use function PHPSTORM_META\type;
 
-require '../conn.php';
+require '../../conn.php';
+require '../functions.php';
 
 $cname = @$_POST['cname'];
 $cid = @$_POST['cid'];
@@ -60,49 +61,7 @@ if (empty($cid)) {
     
 }
 
-if (isset($_POST['itemId'])) {
-    $itemId = $_POST['itemId'];
-    $success = deleteItemFromDatabase($itemId, $conn);
-    if ($success) {
-        echo "success.";
-        exit(); 
-    } else {
-        echo "Failed to delete the item.";
-    }
-}
-
-// Function to delete the item from the database
-function deleteItemFromDatabase($itemId, $conn) {
-
-    $sql = "delete from customers where custid = '$itemId' ";
-    $query = mysqli_query($conn, $sql);
-    if ($query) {
-        return true;
-    } else {
-        return false;
-    }
-}
 
 
-if (isset($_POST['custid'])) {
-    $id = $_POST['custid'];
-    $id = mysqli_real_escape_string($conn, $id);
-    $sql = "SELECT * FROM customers WHERE custid= '$id'";
-    $result = mysqli_query($conn, $sql);
 
-    if ($result && mysqli_num_rows($result) > 0) {
-        $row = mysqli_fetch_assoc($result);
 
-        $hallData = [
-            'cid' => $row['custid'],
-            'cname' => $row['firstname'],
-            'caddress' => $row['address'],
-            'cphone' => $row['phone'],
-            'cemail' => $row['email'],
-            
-        ];
-        echo json_encode($hallData);
-    } else {
-        echo json_encode(['error' => 'Customer Not found']);
-    }
-}

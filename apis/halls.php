@@ -3,6 +3,7 @@ use function PHPSTORM_META\type;
 
 require '../conn.php';
 
+
 $hall_id = @$_POST['hall_id'];
 $desc = @$_POST['hdesc'];
 $type = @$_POST['htype'];

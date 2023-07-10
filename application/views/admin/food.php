@@ -60,17 +60,17 @@
                                                         <thead>
                                                             <tr>
                                                                 <th scope="col">#</th>
-                                                                <th scope="col">Full Name</th>
-                                                                <th scope="col">Phone Number</th>
-                                                                <th scope="col">Email</th>
-                                                                <th scope="col">Address</th>
+                                                                <th scope="col">Food Type</th>
+                                                                <th scope="col">Food Price</th>
+                                                                <th scope="col">Date</th>
                                                                 <th scope="col">Action</th>
-                                                            </tr>
+                                                           
                                                             
                                                         </thead>
                                                         <?php
                 // Select query
-                $sql = "SELECT * FROM customers WHERE 1";
+                $sql = "SELECT * FROM food WHERE 1";
+                $n=1;
                 $result = mysqli_query($conn, $sql);
 
                 // Check if the query was successful
@@ -78,33 +78,33 @@
                     // Check if there are any rows returned
                     if (mysqli_num_rows($result) > 0) {
                         while ($row = mysqli_fetch_assoc($result)) {
-                            $cid = $row['custid'];
-                            $address = $row['address'];
-                            $name = $row['firstname'];
-                            $email = $row['email'];
-                            $phone = $row['phone'];
-                         
+                            $foodId = $row['foodId'];
+                            $type = $row['foodType'];
+                            $price = $row['foodPrice'];
                             $date = $row['date'];
+                         
                       
                             // Display the data
                             echo "<tr>";
-                            echo "<td>$name</td>";                         
-                            echo "<td>$email</td>";
+                            echo "<td>$n</td>";                         
+                            echo "<td>$type</td>";                         
+                            echo "<td>$price</td>";
                          
-                            echo "<td>$phone</td>";
                             echo "<td>$date</td>";
-                            echo "<td>$address</td>";
+                          
                             echo "<td>
                             <li class='list-inline-item'>
-                            <a href='#' class='text-success p-2 edit-btn' data-bs-toggle='modal' data-bs-target='.orderdetailsModal' data-id='$cid'><i class='bx bxs-edit-alt'></i></a>
+                            <a href='#' class='text-success p-2 edit-btn' data-bs-toggle='modal' data-bs-target='.orderdetailsModal' data-id='$foodId'><i class='bx bxs-edit-alt'></i></a>
                             </li>
                             <li class='list-inline-item'>
-                            <a href='#' class='text-danger p-2 delete-btn' data-item-id='$cid'><i class='bx bxs-trash'></i></a>
+                            <a href='#' class='text-danger p-2 delete-btn' data-item-id='$foodId'><i class='bx bxs-trash'></i></a>
                         </li></td>";
                             echo "</tr>";
+                            $n++;
                         }
+                      
                     } else {
-                        echo "<tr><td colspan='6'>No Customers found</td></tr>";
+                        echo "<tr><td colspan='6'>No Foods found</td></tr>";
                     }
                 } else {
                     echo "Error: " . mysqli_error($conn);
@@ -140,41 +140,24 @@
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                            <form id="customers" action="../../../apis/customers/customers.php" method="post">
-                            <input type="hidden" class="form-control" id="cid" name="cid">
+                            <form id="foods" action="../../../apis/food/foods.php" method="post">
+                            <input type="hidden" class="form-control" id="fid" name="fid">
                                     <div class="mb-3">
-                                        <label for="formrow-firstname-input" class="form-label">Full Name</label>
-                                        <input type="text" class="form-control" id="cname" name="cname" placeholder="Enter Fullname">
+                                        <label for="formrow-firstname-input" class="form-label">Food Type</label>
+                                        <input type="text" class="form-control" id="ftype" name="ftype" placeholder="Enter Food Type">
                                     </div>
 
                                     <div class="row">
-                                        <div class="col-md-6">
+                                      
                                             <div class="mb-3">
-                                                <label for="formrow-address-input" class="form-label">Phone Number</label>
-                                                <input type="text" class="form-control" id="number" name="number" placeholder="Enter Phone Number">
+                                                <label for="formrow-address-input" class="form-label">Food Price</label>
+                                                <input type="text" class="form-control" id="fprice" name="fprice" placeholder="Enter Food Price">
                                             </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="mb-3">
-                                                <label for="formrow-email-input" class="form-label">Address</label>
-                                                <input type="text" class="form-control" id="address" name="address" placeholder="Enter Address">
-                                            </div>
-                                        </div>
+                                    
+                                        
                                     </div>
 
-                                    <div class="row">
-
-                                         
-                                            <div class="mb-3">
-                                                <label for="formrow-email-input" class="form-label">Email</label>
-                                                <input type="email" class="form-control" id="email" name="email" placeholder="Enter Customer Email">
-                                            </div>
-                                         
-
-                                        
-                                        
-
-                                    </div>
+                           
                                     <div class="modal-footer">
                                 <button type="submit" class="btn btn-primary"  id="btnCustomer">Save Changes</button>
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btnClose">Close</button>
@@ -203,10 +186,10 @@
     $("#success").css("display", "none");
    
                 })
-    $("#customers").submit(function(e){   
+    $("#foods").submit(function(e){   
              e.preventDefault();
              $.ajax({
-                url:"../../../apis/customers/customers.php",
+                url:"../../../apis/food/foods.php",
                  data: new FormData($(this)[0]),
                 cache: false,
                 contentType: false,
@@ -217,7 +200,7 @@
                 alert(resp)
                  var res = jQuery.parseJSON(resp);
                  if (res.status == 200) {
-                    window.location.href = 'customer.php';
+                    window.location.href = 'food.php';
                 //    $("#success").css("display", "block");
                 //     $("#success").text(res.message);
               }     else if (res.status == 404) {
@@ -236,21 +219,20 @@
  
 $(document).ready(function() {
     $('.edit-btn').click(function() {
-        var cid = parseInt($(this).data('id'), 10);
+        var foodid = parseInt($(this).data('id'), 10);
         $.ajax({
-            url: "../../../apis/customers/getCustomers.php",
+            url: '../../../apis/food/getFood.php',
             type: 'POST',
-            data: { custid: cid },
+            data: { foodid: foodid },
             success: function(response) {
                 alert(response)
-                var customerData = JSON.parse(response);
+                var foodata = JSON.parse(response);
                 
-                console.log(customerData.cname);
-                $('#cname').val(customerData.cname);
-                $('#cid').val(customerData.cid);
-                $('#address').val(customerData.caddress);
-                $('#number').val(customerData.cphone);
-                $('#email').val(customerData.cemail);
+                console.log(foodata.cname);
+                $('#fid').val(1);
+                $('#fprice').val(foodata.price);
+                $('#ftype').val(foodata.type);
+          
           
           
             }
@@ -261,11 +243,11 @@ $(document).ready(function() {
 
 function deleteItem(itemId) {
     $.ajax({
-        url:"../../../apis/customers/delete.php",
+        url:'../../../apis/food/delete.php',
         method: 'POST',
         data: { itemId: itemId },
         success: function(response) {
-            window.location.href = 'customer.php';
+            window.location.href = 'food.php';
             console.log(response);
             // Reload the page or update the UI as needed
         },

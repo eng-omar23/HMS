@@ -16,7 +16,7 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-            <h4 class="mb-sm-0 font-size-18">Customer</h4>
+            <h4 class="mb-sm-0 font-size-18">Users</h4>
 
             <div class="page-title-right">
                 <ol class="breadcrumb m-0">
@@ -49,7 +49,7 @@
                                                         </div>
                                                         <div class="col-xl col-sm-6 align-self-end">
                                                             <div class="mb-3">
-                                                            <button type="button" class="btn btn-success btn-rounded waves-effect waves-light mb-2 me-2" data-bs-toggle="modal" data-bs-target=".orderdetailsModal"><i class="mdi mdi-plus me-1"></i> Add Customer</button>
+                                                            <button type="button" class="btn btn-success btn-rounded waves-effect waves-light mb-2 me-2" data-bs-toggle="modal" data-bs-target=".orderdetailsModal"><i class="mdi mdi-plus me-1"></i> Add New User</button>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -110,10 +110,11 @@
                             <a href='#' class='text-danger p-2 delete-btn' data-item-id='$userid'><i class='bx bxs-trash'></i></a>
                         </li></td>";
                             echo "</tr>";
+                            $n++;
                  
                         }
                     } else {
-                        echo "<tr><td colspan='6'>No Customers found</td></tr>";
+                        echo "<tr><td colspan='6'>No users found</td></tr>";
                     }
                 } else {
                     echo "Error: " . mysqli_error($conn);
@@ -149,7 +150,7 @@
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                            <form id="users" action="../../../apis/users.php" method="post">
+                            <form id="users" action="../../../apis/users/users.php" method="post">
                             <input type="hidden" class="form-control" id="userid" name="userid">
                                     <div class="mb-3">
                                         <label for="formrow-firstname-input" class="form-label">User Name</label>
@@ -160,13 +161,13 @@
                                         <div class="col-md-6">
                                             <div class="mb-3">
                                                 <label for="formrow-address-input" class="form-label">User Password</label>
-                                                <input type="text" class="form-control form-control-sm" id="upass" name="upass" placeholder="Enter Phone Number">
+                                                <input type="password" class="form-control form-control-sm" id="upass" name="upass" placeholder="Enter User Password">
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="mb-3">
                                                 <label for="formrow-email-input" class="form-label">Email</label>
-                                                <input type="text" class="form-control form-control-sm" id="email" name="email" placeholder="Enter Address">
+                                                <input type="email" class="form-control form-control-sm" id="email" name="email" placeholder="Enter Email">
                                             </div>
                                         </div>
                                     </div>
@@ -184,7 +185,7 @@
                              
                                     
                                     <div  class="mb-3">   
-                                         <select class="form-control form-control-sm" name="type" id="type">
+                                         <select class="form-control form-control-sm" name="status" id="status">
                                             <option value="">Choose User Status</option>
                                             <option value="1">Active</option>
                                             <option value="0">Inactive</option>
@@ -220,10 +221,10 @@
     $("#success").css("display", "none");
    
                 })
-    $("#customers").submit(function(e){   
+    $("#users").submit(function(e){   
              e.preventDefault();
              $.ajax({
-                url:"../../../apis/customers.php",
+                url:'../../../apis/users/users.php',
                  data: new FormData($(this)[0]),
                 cache: false,
                 contentType: false,
@@ -234,7 +235,7 @@
                 alert(resp)
                  var res = jQuery.parseJSON(resp);
                  if (res.status == 200) {
-                    window.location.href = 'customer.php';
+                    window.location.href = 'user.php';
                 //    $("#success").css("display", "block");
                 //     $("#success").text(res.message);
               }     else if (res.status == 404) {
@@ -253,21 +254,22 @@
  
 $(document).ready(function() {
     $('.edit-btn').click(function() {
-        var cid = parseInt($(this).data('id'), 10);
+        var user_id = parseInt($(this).data('id'), 10);
         $.ajax({
-            url: '../../../apis/customers.php',
+            url: "../../../apis/users/getusers.php",
             type: 'POST',
-            data: { custid: cid },
+            data: { user_id: user_id },
             success: function(response) {
                 alert(response)
-                var customerData = JSON.parse(response);
+                var USerData = JSON.parse(response);
                 
-                console.log(customerData.cname);
-                $('#cname').val(customerData.cname);
-                $('#cid').val(customerData.cid);
-                $('#address').val(customerData.caddress);
-                $('#number').val(customerData.cphone);
-                $('#email').val(customerData.cemail);
+                console.log(USerData.cname);
+                $('#uname').val(USerData.name);
+                $('#userid').val(USerData.id);
+                $('#upass').val(USerData.pass);
+                $('#email').val(USerData.email);
+                $('#type').val(USerData.type);
+                $('#status').val(USerData.status);
           
           
             }
@@ -278,11 +280,11 @@ $(document).ready(function() {
 
 function deleteItem(itemId) {
     $.ajax({
-        url:"../../../apis/customers.php",
+        url:"../../../apis/users/delete.php",
         method: 'POST',
         data: { itemId: itemId },
         success: function(response) {
-            window.location.href = 'customer.php';
+            window.location.href = 'user.php';
             console.log(response);
             // Reload the page or update the UI as needed
         },

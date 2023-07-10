@@ -19,8 +19,8 @@
                                         <a href="Customer.php" class="dropdown-item" key="t-alerts">Customers</a>
                                         <a href="hall.php" class="dropdown-item" key="t-buttons">Halls</a>
                                        <a href="user.php" class="dropdown-item" key="t-buttons">users</a>
-                                        <!-- <a href="facility.php" class="dropdown-item" key="t-buttons">Facility</a>
-                                        <a href="food.php" class="dropdown-item" key="t-buttons">Food</a>  -->
+                                        <a href="facility.php" class="dropdown-item" key="t-buttons">Facility</a>
+                                        <a href="food.php" class="dropdown-item" key="t-buttons">Food</a> 
                                     </div>
                                 </div>
                             </div>
