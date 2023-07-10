@@ -1,5 +1,5 @@
 <?php include './application/views/admin/header.php'; 
-include './application/views/admin/nav.php'; ?>   
+include '../application/views/admin/nav.php'; ?>   
     
 <!-- ============================================================== -->
 <!-- Start right Content here -->

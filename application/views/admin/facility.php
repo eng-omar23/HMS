@@ -148,7 +148,7 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-md-13">
+                            <div class="col-md-">
                                 <div class="mb-3">
                                     <label for="formrow-address-input" class="form-label">Price</label>
                                     <input type="text" class="form-control" id="price" name="price"
