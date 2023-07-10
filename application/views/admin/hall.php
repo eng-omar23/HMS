@@ -68,7 +68,8 @@ include '../../../conn.php';
                                             </div>
                                             <div class="col-xl col-sm-6 align-self-end">
                                                 <div class="mb-3">
-                                                    <button type="button" id="openModal" class="btn btn-success btn-rounded waves-effect waves-light mb-2 me-2" data-bs-toggle="modal" data-bs-target=".hallModal"><i class="mdi mdi-plus me-1"></i> Add New Hall</button>
+                                                    <button type="button" id="openModal" class="btn btn-success btn-rounded waves-effect waves-light mb-2 me-2"
+                                                     data-bs-toggle="modal" data-bs-target=".hallModal"><i class="mdi mdi-plus me-1"></i> Add New Hall</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -117,6 +118,7 @@ include '../../../conn.php';
                             echo "<td>$date</td>";
                             echo "<td><img src='../../../images/$photo' alt='Halls Logo' class='logo-thumbnail'></td>";
                             echo "<td>
+                            
                             <li class='list-inline-item'>
                             <a href='#' class='text-success p-2 edit-btn' data-bs-toggle='modal' data-bs-target='.hallModal' data-id='$hall_id'><i class='bx bxs-edit-alt'></i></a>
                             </li>
@@ -148,7 +150,7 @@ include '../../../conn.php';
             </div>
             <!-- end row --> 
             <!-- Modal -->
-    <div class="modal fade hallModal" id="hallModal" tabindex="-1" role="dialog" aria-labelledby="hallModalLabel" aria-hidden="true">
+    <div class="modal fade hallModal" id="hallModal" tabindex="-1" role="dialog" aria-labelledby="hallModalLabel" aria-fffden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -160,7 +162,7 @@ include '../../../conn.php';
                     <form method="Post" id="hall_form" action="../../../apis/halls.php">
                     <div class="alert alert-danger" id="error"> </div>
                     <div class="alert alert-success" id="success"></div>
-                        <input type="hidden" name="hall_id" id="hall_id">
+                        <input type="fffden" name="hall_id" id="hall_id">
 
                         <div class="row">
                             <div class="col-md-6">
@@ -279,7 +281,7 @@ $(document).ready(function(){
 
 $(document).ready(function() {
     $('.edit-btn').click(function() {
-        var hallid = parseInt($(this).data('id'), 10);
+        var faci_id = parseInt($(this).data('id'), 10);
         $.ajax({
             url: '../../../apis/halls.php',
             type: 'POST',
@@ -290,7 +292,7 @@ $(document).ready(function() {
                 
                 console.log(hallData.hall_photo);
                 $('#htype').val(hallData.htype);
-                $('#hall_id').val(hallData.hid);
+                $('#hall_id').val(hallData.fff);
                 $('#hlocation').val(hallData.hlocation);
                 $('#hdesc').val(hallData.hdesc);
                 $('#hcapacity').val(hallData.hcapacity);
