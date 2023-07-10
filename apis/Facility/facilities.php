@@ -11,8 +11,23 @@ $price = @$_POST['price'];
 
 if (empty($Faci_id)) {
     if (empty($Faci_name) && empty($price)) {
-
+        $result = [
+            'message' => 'All the Fields are required',
+            'status' => 400
+        ];
+        echo json_encode($result);
+        return;
     } 
+    $sql="select * from facility where facility_name='$Faci_name'" ;
+    $result=if_record_exists($conn,$sql);
+    if($result){
+        $result = [
+            'message' => 'facility already exist',
+            'status' => 400
+        ];
+        echo json_encode($result);
+        return;
+    }
     else {
 
         $sql = "insert into facility values (null,'$Faci_name','$price')";

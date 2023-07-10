@@ -52,7 +52,7 @@
                                                     <button type="button"
                                                         class="btn btn-success btn-rounded waves-effect waves-light mb-2 me-2"
                                                         data-bs-toggle="modal" data-bs-target=".orderdetailsModal"><i
-                                                            class="mdi mdi-plus me-1"></i> Add Facility</button>
+                                                            class="mdi mdi-plus me-1"></i> Add New Facility</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -74,7 +74,7 @@
                 // Select query
                 $sql = "SELECT * FROM facility WHERE 1";
                 $result = mysqli_query($conn, $sql);
-
+$n=1;
                 // Check if the query was successful
                 if ($result) {
                     // Check if there are any rows returned
@@ -89,6 +89,7 @@
                       
                             // Display the data
                             echo "<tr>";
+                            echo "<td>$n</td>";                         
                             echo "<td>$Faci_name</td>";                         
                             echo "<td>$price</td>";
                          
@@ -100,6 +101,7 @@
                             <a href='#' class='text-danger p-2 delete-btn' data-item-id='$Faci_id'><i class='bx bxs-trash'></i></a>
                         </li></td>";
                             echo "</tr>";
+                            $n++;
                         }
                     } else {
                         echo "<tr><td colspan='6'>No Facility found</td></tr>";
