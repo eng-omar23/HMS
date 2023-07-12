@@ -72,6 +72,7 @@
                 // Select query
                 $sql = "SELECT * FROM customers WHERE 1";
                 $result = mysqli_query($conn, $sql);
+                $n=1;
 
                 // Check if the query was successful
                 if ($result) {
@@ -88,6 +89,7 @@
                       
                             // Display the data
                             echo "<tr>";
+                            echo "<td>$$n</td>";                         
                             echo "<td>$name</td>";                         
                             echo "<td>$email</td>";
                          
@@ -102,6 +104,7 @@
                             <a href='#' class='text-danger p-2 delete-btn' data-item-id='$cid'><i class='bx bxs-trash'></i></a>
                         </li></td>";
                             echo "</tr>";
+                            $n++;
                         }
                     } else {
                         echo "<tr><td colspan='6'>No Customers found</td></tr>";

@@ -18,4 +18,8 @@ function if_record_exists($conn,$sql){
 
     }
 
- 
+ //calculate the debit 
+function calculateDebit($rate,$attendee){
+    $result = $rate * $attendee;
+    return $result;
+}
