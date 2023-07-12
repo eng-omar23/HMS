@@ -74,10 +74,9 @@
                                                                 <th scope="col">Customer</th>
                                                                 <th scope="col">StarDate</th>
                                                                 <th scope="col">EndDate</th>
-                                                                <th scope="col">Bookingstatus</th>
+                                                                <th scope="col">Status</th>
                                                                 <th scope="col">Attendee</th>
                                                                 <th scope="col">Rate</th>
-                                                                
                                                                 <th scope="col">Balance</th>
                                                                 <th scope="col">date</th>
                                                                 <th scope="col">Action</th>
@@ -88,7 +87,7 @@
                 // Select query
                 $sql = "SELECT * FROM bview  WHERE 1";
                 $result = mysqli_query($conn, $sql);
-$n=1;
+                $n=1;
                 // Check if the query was successful
                 if ($result) {
                     //Check if there are any rows returned
