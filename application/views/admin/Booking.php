@@ -59,7 +59,7 @@
                                                         </div>
                                                         <div class="col-xl col-sm-6 align-self-end">
                                                             <div class="mb-3">
-                                                            <button type="button" class="btn btn-success btn-rounded waves-effect waves-light mb-2 me-2" data-bs-toggle="modal" data-bs-target=".orderdetailsModal"><i class="mdi mdi-plus me-1">Add</i></button>
+                                                            <button type="button" class="btn btn-success btn-rounded waves-effect waves-light mb-2 me-2" data-bs-toggle="modal" data-bs-target=".orderdetailsModal"><i class="mdi mdi-plus me-1"></i></button>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -85,7 +85,7 @@
                                                         </thead>
                                                         <?php
                 // Select query
-                $sql = "SELECT * FROM bview  WHERE 1";
+                $sql = "SELECT b.booking_id AS id, b.created_at AS bdate, b.updated_at AS bupdatedate, c.firstname AS cname, b.booking_status AS STATUS, h.hall_type AS htype, b.start_date AS sdate, b.end_date AS edate, b.attendee AS attend, b.Rate AS rate, SUM(tr.debit - tr.credit) AS balance FROM hbs.bookings b LEFT JOIN hbs.transactions tr ON b.booking_id = tr.refID LEFT JOIN hbs.customers c ON c.custid = tr.custid LEFT JOIN hbs.halls h ON h.hall_id = b.hall_id GROUP BY b.booking_id";
                 $result = mysqli_query($conn, $sql);
                 $n=1;
                 // Check if the query was successful
@@ -106,17 +106,19 @@
                             // $date = $row['bdate'];
                             
                             // Display the data
+                        
                             echo "<tr>";
                             echo "<td>$n</td>";   
                             echo "<td>$htype</td>";                      
                             echo "<td>$cname</td>";                         
                             echo "<td>$sdate</td>";                         
-                            echo "<td>$edate</td>";                         
+                            echo "<td>$edate</td>";     
+                                          
                           
-                           if($status=1){
+                           if($status==0){
                             echo "<td style='color: green;font-weight: bold; font-style: normal;'>Pending</td>";
                            }
-                           else if($status=2){
+                           else if($status==1){
                            echo "<td style='color: blue; font-weight: bold; font-style: italic;'>Approved</td>";
                            }
                            else {
@@ -135,7 +137,13 @@
                             </li>
                             <li class='list-inline-item'>
                             <a href='#' class='text-danger p-2 delete-btn' data-item-id='$id '><i class='bx bxs-trash'></i></a>
-                        </li></td>";
+                        </li>
+                    
+                        
+                     
+                    
+                        
+                        </td>";
                             echo "</tr>";
                             $n+=+1;
                         }
@@ -214,8 +222,10 @@
                                         $sql="select * from customers";
                                         $result=mysqli_query($conn,$sql);
                                         if(mysqli_num_rows($result) > 0 ){
+                                            
                                             while($row = mysqli_fetch_array($result)){
                                                 ?>
+                                           
                                                 <option value="<?php echo $row['custid']?>"><?php echo $row['firstname']?></option>
                                                 <?php
                                             }
@@ -280,16 +290,19 @@
                                                 <input type="text" class="form-control" id="rate" name="rate" placeholder="Enter Rate">
                                             </div>
                                             
-                                            <!-- <div class="mb-3">
+                                           <div class="mb-3">
                                             <?php
                                         $sql="select * from facility";
                                         $result=mysqli_query($conn,$sql);
                                         if(mysqli_num_rows($result) > 0 ){
+                                            ?>
+                                            <h6>choose Facility</h1>
+                                            <?php
                                             while($row = mysqli_fetch_array($result)){
                                                 ?>  
-                                              <h6>choose Facility</h1>
+                                         
                                                  <label for="checkbox" class="form-label"class="form-label">  <?php echo $row['facility_name']?></label>        
-                                            <input type="checkbox" id="<?php echo $row['facility_id']?>" name="<?php echo $row['facility_id']?>" value="<?php echo $row['facility_id']?>">
+                                            <input type="checkbox" id="<?php echo $row['facility_id[]']?>" name="facility_id[]" value="<?php echo $row['facility_id']?>">
                                                 <?php
                                             }
 
@@ -302,21 +315,10 @@
                                         ?>
                                            
 
-                                            </div> -->
+                                            </div>
 
                                             <div class="row">
-                                        <!-- <div class="col-md-6">
-                                            <div class="mb-3">
-                                                <label for="formrow-address-input" class="form-label">Start Date</label>
-                                                <input type="date" class="form-control" id="startDate" name="startDate">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="mb-3">
-                                                <label for="formrow-email-input" class="form-label">End Date</label>
-                                                <input type="date" class="form-control" id="endDate" name="endDate" >
-                                            </div>
-                                        </div> -->
+                           
                                     </div>
                                    
                                     </div>

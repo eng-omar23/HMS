@@ -12,13 +12,54 @@ $attendee = $_POST['attend'];
 $rate = $_POST['rate'];
 $date = date('y-m-d');
 $credit = 0;
+ $selectedFacilities = [];
+
+// Example usage: Get the total price of selected facilities
 
 // Perform any necessary data validation here
 
 // Perform the database insert
+// function getFacilityprice($){
+
+//     foreach ($facilityIds as $facilityId) {
+//         $sql = "INSERT INTO booking_facility (bookingId, facilityId) VALUES ('$bookingId', '$facilityId')";
+//         mysqli_query($conn, $sql);
+//     }
+// }
+if (isset($_POST['facility_id'])) {
+    $selectedCheckboxes = $_POST['facility_id'];
+
+    // Process the selected checkboxes as needed
+    foreach ($selectedCheckboxes as $checkboxValue) {
+        // Perform further processing or database operations
+          array_push($selectedFacilities, $checkboxValue);
+    }
+} else {
+    echo "No checkboxes selected.";
+}
+
+function calculateFacilityPrice($facilityIds, $conn) {
+    // Convert the array of facility IDs to a comma-separated string
+    $facilityIdsString = implode(',', $facilityIds);
+
+    // Query to get the sum of prices for the selected facilities
+    $sql = "SELECT SUM(Price) AS total FROM facility WHERE facility_id IN ($facilityIdsString)";
+    $result = mysqli_query($conn, $sql);
+
+    if ($result && mysqli_num_rows($result) > 0) {
+        $row = mysqli_fetch_assoc($result);
+        $totalPrice = $row['total'];
+        return $totalPrice;
+    }
+
+    return 0; // Return 0 if no facilities or prices found
+}
+
 
 if($bookId==null && empty($bookId)){
 
+//check if the textbox empty and trim them before insertion
+   
 
 $sql = "INSERT INTO bookings
         VALUES (null,'$hallId', '$customerId', '$startDate', '$endDate', '$bookStatus', '$attendee', '$rate',null,null)";
@@ -29,10 +70,11 @@ $lastInsertedID = mysqli_insert_id($conn);
 if ($query) {
     // Calculate debit amount
     $debit = calculateDebit($rate, $attendee);
-
+    $totalPrice = calculateFacilityPrice($selectedFacilities,$conn);
+    $totaldebit=$debit+$totalPrice;
     // Insert into transactions table
     $transactionSql = "INSERT INTO transactions (refID, custid, credit, transactionDate, debit) 
-                       VALUES ('$lastInsertedID', '$customerId', '$credit', '$date', '$debit')";
+                       VALUES ('$lastInsertedID', '$customerId', '$credit', '$date', '$totaldebit')";
 
     $transactionQuery = mysqli_query($conn, $transactionSql);
 
