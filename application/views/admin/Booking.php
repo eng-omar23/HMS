@@ -33,6 +33,8 @@
                                 <div class="card">
                                     <div class="card-body">
                                         <!-- Tab panes -->
+                                        <div class="alert alert-danger" id="error"> </div>
+                    <div class="alert alert-success" id="success"></div>
                                         <div class="tab-content p-3">
                                             <div class="tab-pane active" id="all-order" role="tabpanel">
                                                 <form>
@@ -364,9 +366,9 @@
                 alert(resp)
                  var res = jQuery.parseJSON(resp);
                  if (res.status == 200) {
-                    window.location.href = 'Booking.php';
-                //    $("#success").css("display", "block");
-                //     $("#success").text(res.message);
+                    //window.location.href = 'Booking.php';
+                   $("#success").css("display", "block");
+                    $("#success").text(res.message);
               }     else if (res.status == 404) {
                 //   $("#success").css("display", "none");
                 //    $("#error").css("display", "block");

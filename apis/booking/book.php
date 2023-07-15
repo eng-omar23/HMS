@@ -14,9 +14,6 @@ $date = date('y-m-d');
 $credit = 0;
  $selectedFacilities = [];
 
-// Example usage: Get the total price of selected facilities
-
-// Perform any necessary data validation here
 
 // Perform the database insert
 // function getFacilityprice($){
@@ -70,8 +67,8 @@ $lastInsertedID = mysqli_insert_id($conn);
 if ($query) {
     // Calculate debit amount
     $debit = calculateDebit($rate, $attendee);
-    $totalPrice = calculateFacilityPrice($selectedFacilities,$conn);
-    $totaldebit=$debit+$totalPrice;
+    $totalFacilityPrice = calculateFacilityPrice($selectedFacilities,$conn);
+    $totaldebit=$debit+$totalFacilityPrice;
     // Insert into transactions table
     $transactionSql = "INSERT INTO transactions (refID, custid, credit, transactionDate, debit) 
                        VALUES ('$lastInsertedID', '$customerId', '$credit', '$date', '$totaldebit')";
@@ -87,14 +84,14 @@ if ($query) {
     } else {
         $result = [
             'message' => 'Failed to create transaction.',
-            'status' => 400
+            'status' => 404
         ];
         echo json_encode($result);
     }
 } else {
     $result = [
         'message' => 'Failed to create booking.',
-        'status' => 400
+        'status' => 404
     ];
     echo json_encode($result);
 }
