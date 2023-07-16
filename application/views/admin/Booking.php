@@ -1,7 +1,40 @@
 <?php include 'header.php'; ?>
 <?php include 'nav.php'; ?>   
 <?php include '../../../conn.php'; ?>   
-    
+<style>
+  .checkbox-label {
+    display: inline-block;
+    margin-left: 5px;
+    font-size: 12px;
+    font-weight: bold;
+ 
+    color: #333;
+  }
+
+  .custom-checkbox {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    width: 20px;
+   
+    height: 20px;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    outline: none;
+    cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s;
+  }
+
+  .custom-checkbox:checked {
+    background-color: #2196F3;
+    border-color: #2196F3;
+  }
+
+  .custom-checkbox:focus {
+    box-shadow: 0 0 3px #2196F3;
+  }
+</style>
+
 
 
        <!-- ============================================================== -->
@@ -281,16 +314,50 @@
                                                 <label for="formrow-email-input" class="form-label">attend</label>
                                                 <input type="text" class="form-control" id="attend" name="attend" placeholder="Enter Attendee">
                                             </div>
+                                            
+
                                 </div>
                                 </div>
                                             
+                                <div class="row">
+                             
+                                <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="Food">Food</label>
+                                    <select name="food" class="form-control" id="food">
+                                    <?php
 
+                                        $sql="select * from food";
+                                        $result=mysqli_query($conn,$sql);
+                                        if(mysqli_num_rows($result) > 0 ){
+                                            
+                                            while($row = mysqli_fetch_array($result)){
+                                                ?>
                                            
+                                                <option value="<?php echo $row['foodPrice']?>"><?php echo $row['foodType']?></option>
+                                                <?php
+                                            }
 
-                                            <div class="mb-3">
-                                                <label for="formrow-email-input" class="form-label">Rate</label>
+                                        }
+                                        else{
+                                            ?>
+                                            <option> NO Data found</option>
+                                            <?php
+                                        }
+                                        ?>
+                                    </select>
+                                </div>  
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                            <label for="formrow-email-input" class="form-label">Rate</label>
                                                 <input type="text" class="form-control" id="rate" name="rate" placeholder="Enter Rate">
-                                            </div>
+                                          
+                                </div>
+                                </div>
+                               
+                             
+                                </div>  
                                             
                                            <div class="mb-3">
                                             <?php
@@ -303,8 +370,8 @@
                                             while($row = mysqli_fetch_array($result)){
                                                 ?>  
                                          
-                                                 <label for="checkbox" class="form-label"class="form-label">  <?php echo $row['facility_name']?></label>        
-                                            <input type="checkbox" id="<?php echo $row['facility_id[]']?>" name="facility_id[]" value="<?php echo $row['facility_id']?>">
+                                                 <label for="checkbox" class="form-label" class="checkbox-label">  <?php echo $row['facility_name']?></label>        
+                                            <input type="checkbox" class="custom-checkbox" id="<?php echo $row['facility_id[]']?>" name="facility_id[]" value="<?php echo $row['facility_id']?>">
                                                 <?php
                                             }
 
@@ -424,6 +491,18 @@ function deleteItem(itemId) {
         }
     });
 }
-    </script>
+
+
+
+  // Get references to the select element and the textbox
+  const selectElement = document.getElementById('food');
+  const textboxElement = document.getElementById('rate');
+
+  // Listen for the change event on the select element
+  selectElement.addEventListener('change', function() {
+    // Set the value of the textbox to the selected option value
+    textboxElement.value = selectElement.value;
+  });
+</script>
 <!-- 
 goood jop -->

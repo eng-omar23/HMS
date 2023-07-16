@@ -13,16 +13,22 @@ $rate = $_POST['rate'];
 $date = date('y-m-d');
 $credit = 0;
  $selectedFacilities = [];
+ $food=$_POST['food'];
+
+ 
+ function getFoodprice($conn,$sql){
+    $query=mysqli_query($conn,$sql);
+    if($query &&  $row=mysqli_fetch_row($query)){
+       
+        return $row;
+    }
+return 0;
+   
+ }
+
+ 
 
 
-// Perform the database insert
-// function getFacilityprice($){
-
-//     foreach ($facilityIds as $facilityId) {
-//         $sql = "INSERT INTO booking_facility (bookingId, facilityId) VALUES ('$bookingId', '$facilityId')";
-//         mysqli_query($conn, $sql);
-//     }
-// }
 if (isset($_POST['facility_id'])) {
     $selectedCheckboxes = $_POST['facility_id'];
 
@@ -65,6 +71,8 @@ $query = mysqli_query($conn, $sql);
 $lastInsertedID = mysqli_insert_id($conn);
 
 if ($query) {
+
+
     // Calculate debit amount
     $debit = calculateDebit($rate, $attendee);
     $totalFacilityPrice = calculateFacilityPrice($selectedFacilities,$conn);
