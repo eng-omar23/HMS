@@ -66,8 +66,7 @@
                                 <div class="card">
                                     <div class="card-body">
                                         <!-- Tab panes -->
-                                        <div class="alert alert-danger" id="error"> </div>
-                    <div class="alert alert-success" id="success"></div>
+                                        
                                         <div class="tab-content p-3">
                                             <div class="tab-pane active" id="all-order" role="tabpanel">
                                                 <form>
@@ -215,10 +214,15 @@
                     <div class="modal-dialog modal-lg" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
+                         
                                 <h5 class="modal-title" id="orderdetailsModalLabel">Booking</h5>
+                              
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
+                          
                             <div class="modal-body">
+                            <div class="alert alert-danger" id="error"> </div>
+                              <div class="alert alert-success" id="success"></div>
                             <form id="Book" method="post" action="../../../apis/booking/book.php" >
                             <input type="hidden" class="form-control" id="bookid" name="bookid">
 
@@ -393,7 +397,9 @@
                                     </div>
                                     <div class="modal-footer">
                                 <button type="submit" class="btn btn-primary"  id="btnbooking">Save Changes</button>
+                                
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btnClose">Close</button>
+                           
                             </div>
                                 </form>
                             </div>

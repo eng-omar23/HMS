@@ -3,21 +3,21 @@ require_once "../../conn.php";
 require_once "../functions.php";
 
 
-if (isset($_POST['foodid'])) {
-    $id = $_POST['foodid'];
+if (isset($_POST['facility_id'])) {
+    $id = $_POST['facility_id'];
     $id = mysqli_real_escape_string($conn, $id);
-    $sql = "SELECT * FROM food WHERE foodId = '$id'";
+    $sql = "SELECT * FROM facility WHERE facility_id = '$id'";
     $result = mysqli_query($conn, $sql);
 
     if ($result && mysqli_num_rows($result) > 0) {
         $row = mysqli_fetch_assoc($result);
 
-        $foodData = [
-            'fid' => $row['foodId'],
-            'type' => $row['foodType'],
-            'price' => $row['foodPrice'],
+        $FaciData = [
+            'fid' => $row['facility_id'],
+            'type' => $row['facility_name'],
+            'price' => $row['Price'],
         ];
-        echo json_encode($foodData);
+        echo json_encode($FaciData);
     } else {
         echo json_encode(['error' => 'Food not found']);
     }

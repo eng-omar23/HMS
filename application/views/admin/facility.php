@@ -84,8 +84,6 @@ $n=1;
                             $Faci_name = $row['facility_name'];
                             $price = $row['Price'];
                            
-                         
-                            
                       
                             // Display the data
                             echo "<tr>";
@@ -95,10 +93,10 @@ $n=1;
                          
                             echo "<td>
                             <li class='list-inline-item'>
-                            <a href='#' class='text-success p-2 edit-btn' data-bs-toggle='modal' data-bs-target='.orderdetailsModal' data-id='$Faci_id'><i class='bx bxs-edit-alt'></i></a>
+                            <a href='#' class='text-success p-2 edit-btn' data-bs-toggle='modal' data-bs-target='#facilityModal' data-id='$Faci_id'><i class='bx bxs-edit-alt'></i></a>
                             </li>
                             <li class='list-inline-item'>
-                            <a href='#' class='text-danger p-2 delete-btn' data-item-id='$Faci_id'><i class='bx bxs-trash'></i></a>
+                            <a href='#' class='text-danger p-2 delete-btn' data-item-id='$Faci_id' ><i class='bx bxs-trash'></i></a>
                         </li></td>";
                             echo "</tr>";
                             $n++;
@@ -132,7 +130,7 @@ $n=1;
     <!-- End Page-content -->
 
     <!-- Modal -->
-    <div class="modal fade orderdetailsModal" tabindex="-1" role="dialog" aria-labelledby="orderdetailsModalLabel"
+    <div class="modal fade " id="facilityModal" tabindex="-1" role="dialog" aria-labelledby="orderdetailsModalLabel"
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
@@ -222,9 +220,9 @@ $("#facility").submit(function(e) {
 
 $(document).ready(function() {
     $('.edit-btn').click(function() {
-        var cid = parseInt($(this).data('id'), 10);
+        var fac_id = parseInt($(this).data('id'), 10);
         $.ajax({
-            url: "../../../apis/Facility/facilities.php",
+            url: "../../../apis/Facility/getFacility.php",
             type: 'POST',
             data: {
                 facility_id: fac_id
@@ -233,9 +231,9 @@ $(document).ready(function() {
                 alert(response)
                 var FaciData = JSON.parse(response);
 
-                console.log(FaciData.fname);
-                $('#cname').val(FaciData.fname);
-                $('#fac_id').val(FaciData.fac_id);
+            
+                $('#fname').val(FaciData.type);
+                $('#fac_id').val(FaciData.fid);
                 $('#price').val(FaciData.price);
 
 

@@ -15,8 +15,8 @@ $credit = 0;
  $selectedFacilities = [];
  $food=$_POST['food'];
 
- 
- function getFoodprice($conn,$sql){
+
+ function getHallPrice($conn,$sql){
     $query=mysqli_query($conn,$sql);
     if($query &&  $row=mysqli_fetch_row($query)){
        
@@ -25,6 +25,11 @@ $credit = 0;
 return 0;
    
  }
+
+//  if(empty($food)){
+//     $sql="select "
+    
+//  }
 
  
 
