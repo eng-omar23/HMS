@@ -130,7 +130,7 @@ $n=1;
     <!-- End Page-content -->
 
     <!-- Modal -->
-    <div class="modal fade " id="facilityModal" tabindex="-1" role="dialog" aria-labelledby="orderdetailsModalLabel"
+    <div class="modal fade orderdetailsModal" id="facilityModal" tabindex="-1" role="dialog" aria-labelledby="orderdetailsModalLabel"
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
