@@ -49,7 +49,7 @@ if ($query) {
          $totalFacilityPrice = calculateFacilityPrice($selectedFacilities, $conn);
          $debit = calculateDebit($newRate, $duration);
          $totalDebit = $debit + $totalFacilityPrice;
-         $sql="update bookings set Rate= '$newRate' where booking_id='$lastInsertedID'";
+         $sql="update bookings set Rate= '$newRate' ,bookingType='1' where booking_id='$lastInsertedID'";
          $query=mysqli_query($conn,$sql);
     } 
     else{ 

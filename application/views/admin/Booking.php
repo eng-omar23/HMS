@@ -243,7 +243,7 @@
                                         $query="select * from halls";
                                         $result=mysqli_query($conn,$query);
                                         ?>
-                                        <option value=""> Choose Halls </option>
+                                        <option value=""> Choose Customer </option>
                                         <?php
                                         if($result&& mysqli_num_rows($result)>0){
                                             while($row = mysqli_fetch_assoc($result)){
