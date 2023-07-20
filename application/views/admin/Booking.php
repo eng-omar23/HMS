@@ -114,7 +114,8 @@
                                                                 <th scope="col">Rate</th>
                                                                 <th scope="col">Balance</th>
                                                                 <th scope="col">date</th>
-                                                                <th scope="col">Action</th>
+                                                                <th scope="col">All Action</th>
+                                                              
                                                             </tr>
                                                             
                                                         </thead>
@@ -173,20 +174,31 @@
                           
                             echo "<td>$balance</td>";
                             echo "<td>$date</td>";
-                            echo "<td>
-                            <li class='list-inline-item'>
-                            <a href='#' class='text-success p-2 edit-btn' data-bs-toggle='modal' data-bs-target='.orderdetailsModal' data-id='$id '><i class='bx bxs-edit-alt'></i></a>
-                            </li>
-                            <li class='list-inline-item'>
-                            <a href='#' class='text-danger p-2 delete-btn' data-item-id='$id '><i class='bx bxs-trash'></i></a>
-                        </li>
-                        
+                        //     echo "<td>
+                        //     <li class='list-inline-item'>
+                        //     <a href='#' class='text-success p-2 edit-btn' data-bs-toggle='modal' data-bs-target='.orderdetailsModal' data-id='$id '><i class='bx bxs-edit-alt'></i></a>
+                        //     </li>
+                        //     <li class='list-inline-item'>
+                        //     <a href='#' class='text-danger p-2 delete-btn' data-item-id='$id'><i class='bx bxs-trash'></i></a>
+                        // </li>
+                       
+
+                        // </td>";
+                        ?>
+
+                        <td>
+                        <button class='btn btn-dark btn-sm dropdown-toggle' type='button' data-bs-toggle='dropdown' aria-haspopup='true' aria-expanded='false' data-item-id='<?php echo $id; ?>'>Action</button>
+                        <div class='dropdown-menu dropdown-menu-end'>
+                            <a class='dropdown-item text-success p-2 edit-btn' data-bs-toggle='modal' data-bs-target='.orderdetailsModal' data-item-id='<?php echo $id; ?>' href='#'><i class='bx bxs-edit-alt'></i>Update</a>
+                            <a class='dropdown-item text-danger p-2 edit-btn' data-bs-toggle='modal' data-bs-target='.orderdetailsModal' data-id='<?php echo $id; ?>' href='#'>Reception</a>
+                            <a class='dropdown-item text-secondary p-2 delete-btn' data-bs-toggle='modal' data-item-id='<?php echo $id; ?>' href='#'><i class='bx bxs-trash'></i>Delete</a>
+                            <a class='dropdown-item text-dark p-2 edit-btn' data-bs-toggle='modal' data-bs-target='.orderdetailsModal' data-id='<?php echo $id; ?>' href='#'><i class='bx bxs-money'></i>Refund</a>
+                            <a class='dropdown-item text-warning p-2 edit-btn' data-bs-toggle='modal' data-bs-target='.orderdetailsModal' data-id='<?php echo $id; ?>' href='#'>Discount</a>
+                            <a class='dropdown-item text-info p-2 cancel-btn'  data-bs-toggle='modal' data-item-id='<?php echo $id; ?>'href='#'>Cancel</a>
+                        </div>
+                    </td>
+                    <?php
                     
-                        
-                     
-                    
-                        
-                        </td>";
                             echo "</tr>";
                             $n+=+1;
                         }
@@ -454,7 +466,59 @@
         var itemId = $(this).data('item-id');
         deleteItem(itemId);
     });
+    $('.edit-btn').click(function() {
    
+        var bid = parseInt($(this).data('item-id'), 10);
+       
+        $.ajax({
+            url:"../../../apis/booking/getBooking.php",
+            type: 'POST',
+            data: { bid: bid },
+            success: function(response) {
+                alert(response)
+                var bdata = JSON.parse(response);
+                
+                console.log(bdata.id);
+                $('#bookid').val(bdata.id);
+                $('#bstatus').val(bdata.STATUS);
+                $('#rate').val(bdata.rate);
+                $('#startDate').val(bdata.sdate);
+                $('#hallId').val(bdata.hall_id);
+                $('#endDate').val(bdata.edate);
+                $('#attend').val(bdata.attend);
+                $('#food').val(bdata.food).change();
+                $('#cid').val(bdata.cname).change();
+                
+                $('#starttime').val(bdata.starttime);
+                $('#endtime').val(bdata.endtime);
+
+             
+          
+           
+          
+          
+            }
+        });
+    });
+    $('.cancel-btn').click(function() {
+    var cancelid = parseInt($(this).data('data-item-id'), 10);
+    function cancell(cancelid) {
+    $.ajax({
+        url:"../../../apis/booking/cancel.php",
+        method: 'POST',
+        data: { cancelid: cancelid },
+        success: function(response) {
+            window.location.href = 'booking.php';
+            console.log(response);
+            // Reload the page or update the UI as needed
+        },
+        error: function(xhr, status, error) {
+            // Handle errors
+            console.error(error);
+        }
+    });
+}
+});
     $("#error").css("display", "none");
     $("#success").css("display", "none");
    
@@ -493,38 +557,6 @@
  
 
    
-    $('.edit-btn').click(function() {
-        var bid = parseInt($(this).data('id'), 10);
-        $.ajax({
-            url:"../../../api/booking/getBooking.php",
-            type: 'POST',
-            data: { bid: bid },
-            success: function(response) {
-                alert(response)
-                var bdata = JSON.parse(response);
-                
-                console.log(bdata.cname);
-                $('#id').val(bdata.id);
-                $('#bstatus').val(bdata.STATUS);
-                $('#rate').val(bdata.rate);
-                $('#sdate').val(bdata.sdate);
-                $('#htype').val(bdata.htype);
-                $('#edate').val(bdata.edate);
-                $('#attend').val(bdata.attend);
-                $('#food').val(bdata.balance);
-                $('#firstname').val(bdata.firstname);
-                $('#htype').val(bdata.htype);
-                $('#htype').val(bdata.starttime);
-                $('#htype').val(bdata.endtime);
-
-             
-          
-           
-          
-          
-            }
-        });
-    });
 
 
 
@@ -548,15 +580,8 @@ function deleteItem(itemId) {
 
 
 
-  // Get references to the select element and the textbox
-  const selectElement = document.getElementById('food');
-  const textboxElement = document.getElementById('rate');
 
-  // Listen for the change event on the select element
-  selectElement.addEventListener('change', function() {
-    // Set the value of the textbox to the selected option value
-    textboxElement.value = selectElement.value;
-  });
+
 </script>
 <!-- 
 goood jop -->

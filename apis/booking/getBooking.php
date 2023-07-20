@@ -6,33 +6,36 @@ require '../functions.php';
 if (isset($_POST['bid'])) {
     $id = $_POST['bid'];
     $id = mysqli_real_escape_string($conn, $id);
-    $sql = 'SELECT b.bookingType as btype,b.starttime as tfrom,b.endtime Tto, b.booking_id AS id, DATE(b.created_at) AS bdate, b.updated_at AS bupdatedate, c.firstname AS cname, b.booking_status AS STATUS, h.hall_type AS htype, b.start_date AS sdate, b.end_date AS edate, b.attendee AS attend, b.Rate AS rate, SUM(tr.debit - tr.credit) AS balance FROM hbs.bookings b LEFT JOIN hbs.transactions tr ON b.booking_id = tr.refID LEFT JOIN hbs.customers c ON c.custid = tr.custid LEFT JOIN hbs.halls h ON h.hall_id = b.hall_id GROUP BY b.booking_id;';
+    $sql = "SELECT f.foodType as ftype,f.foodId as fid, b.bookingType AS btype, b.starttime AS tfrom,
+     b.endtime AS tto, b.booking_id AS id, DATE(b.created_at) AS bdate, c.firstname AS cname, 
+     b.booking_status AS STATUS, h.hall_type AS htype,b.hall_id as hid,
+     b.start_date AS sdate, b.end_date AS edate, b.attendee AS attend ,b.customer_id as cid
+     FROM hbs.bookings b LEFT JOIN hbs.transactions tr ON b.booking_id = tr.refID
+      LEFT JOIN hbs.customers c ON c.custid = tr.custid LEFT JOIN hbs.halls h ON h.hall_id = b.hall_id
+       LEFT JOIN hbs.food f ON f.foodId = b.foodId WHERE b.booking_id= '$id' ";
+ 
     $result = mysqli_query($conn, $sql);
 
     if ($result && mysqli_num_rows($result) > 0) {
         $row = mysqli_fetch_assoc($result);
 
         $bdata = [
-           'cname'  =>$row['cname'],
+           'cname'  =>$row['cid'],
             'id'  => $row['id'],
             'status' =>$row['STATUS'],
-            'rate' => $row['rate'],
-            'htype'  => $row['htype'],
+            'hall_id'  => $row['hid'],
             'sdate' => $row['sdate'],
             'edate' => $row['edate'],
             'starttime' => $row['tfrom'],
-            'endtime' => $row['Tto'],
+            'endtime' => $row['tto'],
             'attend' => $row['attend'] ,
-            'balance' =>$row['balance'],
-            'btype'=>$row['btype'],
             'date' =>$row['bdate'],
-            'cid' => $row['custid'],
-            'cname' => $row['firstname'],
-           
+            'food' => $row['fid'],
+         
             
         ];
         echo json_encode($bdata);
     } else {
-        echo json_encode(['error' => 'Customer Not found']);
+        echo json_encode(['error' => 'Booking Not found']);
     }
 }

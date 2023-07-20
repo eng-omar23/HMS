@@ -89,4 +89,62 @@ if ($query) {
     echo json_encode($result);
 }
 }
+else{
+    $sql = "UPDATE bookings
+    SET hall_id ='$hallId', 
+    customer_id ='$customerId', 
+    start_date ='$startDate', 
+    end_date ='$endDate',
+    starttime = '$starttime',
+    endtime ='$endtime',
+    booking_status = '$bookStatus',
+    bookingType ='$bookingType', 
+    attendee ='$attendee',
+    Rate= '$rate', 
+    created_at ='$date', 
+    foodId='$food'
+    WHERE booking_id = '$bookId'";
+
+
+$query = mysqli_query($conn, $sql);
+if($query){
+    if ($food == null && empty($food)) {
+
+        $duration = calculateTimeDuration($starttime, $endtime);
+        $newRate = getHallPrice($conn, $hallId);
+        $totalFacilityPrice = calculateFacilityPrice($selectedFacilities, $conn);
+        $debit = calculateDebit($newRate, $duration);
+        $totalDebit = $debit + $totalFacilityPrice;
+        $sql="update bookings set Rate= '$newRate' ,bookingType='1' where booking_id='$bookId'";
+        $query=mysqli_query($conn,$sql);
+   } 
+   else{ 
+    $rate= getFoodprice($conn,$food);
+    $debit = calculateDebit($rate, $attendee);
+    $totalFacilityPrice = calculateFacilityPrice($selectedFacilities, $conn);
+    $totalDebit = $debit + $totalFacilityPrice;
+    $sql="update bookings set Rate= '$rate' ,bookingType='0' where booking_id='$bookId'";
+    $query=mysqli_query($conn,$sql);
+}
+ // Insert into transactions table
+ $transactionSql = "INSERT INTO transactions (refID, custid, credit, transactionDate, debit) 
+ VALUES ('$bookId', '$customerId', '$credit', '$date', '$totalDebit')";
+$transactionQuery = mysqli_query($conn, $transactionSql);
+
+if ($transactionQuery) {
+$result = [
+'message' => 'Booking Updated successfully.',
+'status' => 200
+];
+echo json_encode($result);
+} else {
+$result = [
+'message' => 'Failed to Updated transaction.',
+'status' => 404
+];
+echo json_encode($result);
+}
+}
+
+}
 ?>
