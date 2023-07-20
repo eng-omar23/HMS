@@ -11,13 +11,14 @@ $starttime = trim($_POST['starttime']);
 $endtime = trim($_POST['endtime']);
 $bookStatus = trim($_POST['bstatus']);
 $attendee = trim($_POST['attend']);
-$rate = trim($_POST['rate']);
+$rate = 0;
 $date = date('Y-m-d');
 $credit = 0;
 $bookingType=0;
 $selectedFacilities = isset($_POST['facility_id']) ? $_POST['facility_id'] : [];
 $food = $_POST['food'];
 
+// Define the ALTER TABLE query
 
 
 if (isset($_POST['facility_id'])) {
@@ -34,9 +35,10 @@ if (isset($_POST['facility_id'])) {
 
 // Ensure required fields are not empty
 if (empty($bookId)) {
+
 // Insert into bookings table
-$sql = "INSERT INTO bookings (hall_id, customer_id, start_date, end_date, booking_status,bookingType, attendee, rate, created_at)
-        VALUES ('$hallId', '$customerId', '$startDate', '$endDate', '$bookStatus','$bookingType', '$attendee', '$rate', '$date')";
+$sql = "INSERT INTO bookings (hall_id, customer_id, start_date, end_date,starttime,endtime, booking_status,bookingType, attendee, rate, created_at,foodid)
+        VALUES ('$hallId', '$customerId', '$startDate', '$endDate','$starttime','$endtime', '$bookStatus','$bookingType', '$attendee', '$rate', '$date','$food')";
 $query = mysqli_query($conn, $sql);
 $lastInsertedID = mysqli_insert_id($conn);
 
@@ -53,9 +55,12 @@ if ($query) {
          $query=mysqli_query($conn,$sql);
     } 
     else{ 
+        $rate= getFoodprice($conn,$food);
         $debit = calculateDebit($rate, $attendee);
         $totalFacilityPrice = calculateFacilityPrice($selectedFacilities, $conn);
         $totalDebit = $debit + $totalFacilityPrice;
+        $sql="update bookings set Rate= '$rate' ,bookingType='0' where booking_id='$lastInsertedID'";
+        $query=mysqli_query($conn,$sql);
     }
 
     // Insert into transactions table

@@ -180,6 +180,7 @@
                             <li class='list-inline-item'>
                             <a href='#' class='text-danger p-2 delete-btn' data-item-id='$id '><i class='bx bxs-trash'></i></a>
                         </li>
+                        
                     
                         
                      
@@ -351,7 +352,7 @@
                                             
                                 <div class="row">
                              
-                                <div class="col-md-6">
+                                
                                 <div class="mb-3">
                                     <label for="Food">Food</label>
                                     <select name="food" class="form-control" id="food">
@@ -368,7 +369,7 @@
                                                 ?>
                                               
                                                
-                                                <option value="<?php echo $row['foodPrice']?>"><?php echo $row['foodType']?></option>
+                                                <option value="<?php echo $row['foodId']?>"><?php echo $row['foodType']?></option>
                                                 <?php
                                             }
 
@@ -381,17 +382,18 @@
                                         ?>
                                     </select>
                                 </div>  
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                            <label for="formrow-email-input" class="form-label">Rate</label>
-                                                <input type="text" class="form-control" id="rate" name="rate" readonly=true>
-                                          
-                                </div>
-                                </div>
+                          
+                             
                                
                              
                                 </div>  
+                   
+                                    <div class="mb-3">
+                                            <!-- <label for="formrow-email-input" class="form-label">Rate</label> -->
+                                                <input type="hidden" class="form-control" id="rate" name="rate" readonly=true>
+                                          
+                           
+                                </div>
                                             
                                            <div class="mb-3">
                                             <?php
@@ -492,21 +494,32 @@
 
    
     $('.edit-btn').click(function() {
-        var cid = parseInt($(this).data('id'), 10);
+        var bid = parseInt($(this).data('id'), 10);
         $.ajax({
             url:"../../../api/booking/getBooking.php",
             type: 'POST',
-            data: { custid: cid },
+            data: { bid: bid },
             success: function(response) {
                 alert(response)
-                var customerData = JSON.parse(response);
+                var bdata = JSON.parse(response);
                 
-                console.log(customerData.cname);
-                $('#cname').val(customerData.cname);
-                $('#cid').val(customerData.cid);
-                $('#address').val(customerData.caddress);
-                $('#number').val(customerData.cphone);
-                $('#email').val(customerData.cemail);
+                console.log(bdata.cname);
+                $('#id').val(bdata.id);
+                $('#bstatus').val(bdata.STATUS);
+                $('#rate').val(bdata.rate);
+                $('#sdate').val(bdata.sdate);
+                $('#htype').val(bdata.htype);
+                $('#edate').val(bdata.edate);
+                $('#attend').val(bdata.attend);
+                $('#food').val(bdata.balance);
+                $('#firstname').val(bdata.firstname);
+                $('#htype').val(bdata.htype);
+                $('#htype').val(bdata.starttime);
+                $('#htype').val(bdata.endtime);
+
+             
+          
+           
           
           
             }

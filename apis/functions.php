@@ -68,6 +68,25 @@ function getHallPrice($conn, $hallId) {
       
 }
 
+function getFoodprice($conn, $foodid) {
+    $sql = " SELECT * from food WHERE foodId = '$foodid'";
+    $query = mysqli_query($conn, $sql);
+    if ($query) {
+        $result = mysqli_fetch_array($query);
+        $foodPrice = $result['foodPrice'];
+        if ($foodPrice <=! 0){
+            return $foodPrice;
+
+        
+      
+    }
+}
+    else{
+        return 0;
+    }
+      
+}
+
 
 
 
