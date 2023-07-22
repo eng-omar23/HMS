@@ -128,7 +128,7 @@ if($query){
 }
  // Insert into transactions table
  $transactionSql = "INSERT INTO transactions (refID, tranType,custid, credit, transactionDate, debit) 
- VALUES ('$lastInsertedID','Booking', '$customerId', '$credit', '$date', '$totalDebit')";
+ VALUES ('$bookId','Booking', '$customerId', '$credit', '$date', '$totalDebit')";
 $transactionQuery = mysqli_query($conn, $transactionSql);
 
 if ($transactionQuery) {
