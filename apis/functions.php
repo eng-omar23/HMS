@@ -68,6 +68,25 @@ function getHallPrice($conn, $hallId) {
       
 }
 
+function getFoodprice($conn, $foodid) {
+    $sql = " SELECT * from food WHERE foodId = '$foodid'";
+    $query = mysqli_query($conn, $sql);
+    if ($query) {
+        $result = mysqli_fetch_array($query);
+        $foodPrice = $result['foodPrice'];
+        if ($foodPrice <=! 0){
+            return $foodPrice;
+
+        
+      
+    }
+}
+    else{
+        return 0;
+    }
+      
+}
+
 
 
 
@@ -82,6 +101,19 @@ function calculateTimeDuration($startTime, $endTime) {
     $durationInHours = $duration / 3600;
 
     return $durationInHours;
+}
+
+function getCustomerID($conn, $name)
+{
+    $sql = "SELECT * FROM customers WHERE firstname='$name'";
+    $query = mysqli_query($conn, $sql);
+    if ($query) {
+        $data = mysqli_fetch_array($query);
+        $cid = $data['custid'];
+        return $cid;
+    } else {
+        return 0;
+    }
 }
 // $starttime = "09:00";
 // $endtime = "11:30";
