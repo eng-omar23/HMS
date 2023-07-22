@@ -66,8 +66,7 @@
                                 <div class="card">
                                     <div class="card-body">
                                         <!-- Tab panes -->
-                                        <div class="alert alert-danger" id="error"> </div>
-                    <div class="alert alert-success" id="success"></div>
+                                        
                                         <div class="tab-content p-3">
                                             <div class="tab-pane active" id="all-order" role="tabpanel">
                                                 <form>
@@ -110,6 +109,7 @@
                                                                 <th scope="col">StarDate</th>
                                                                 <th scope="col">EndDate</th>
                                                                 <th scope="col">Status</th>
+                                                                <th scope="col">Type</th>
                                                                 <th scope="col">Attendee</th>
                                                                 <th scope="col">Rate</th>
                                                                 <th scope="col">Balance</th>
@@ -120,7 +120,7 @@
                                                         </thead>
                                                         <?php
                 // Select query
-                $sql = "SELECT b.booking_id AS id, b.created_at AS bdate, b.updated_at AS bupdatedate, c.firstname AS cname, b.booking_status AS STATUS, h.hall_type AS htype, b.start_date AS sdate, b.end_date AS edate, b.attendee AS attend, b.Rate AS rate, SUM(tr.debit - tr.credit) AS balance FROM hbs.bookings b LEFT JOIN hbs.transactions tr ON b.booking_id = tr.refID LEFT JOIN hbs.customers c ON c.custid = tr.custid LEFT JOIN hbs.halls h ON h.hall_id = b.hall_id GROUP BY b.booking_id";
+                $sql = "SELECT  b.bookingType as btype, b.booking_id AS id, DATE(b.created_at) AS bdate, b.updated_at AS bupdatedate, c.firstname AS cname, b.booking_status AS STATUS, h.hall_type AS htype, b.start_date AS sdate, b.end_date AS edate, b.attendee AS attend, b.Rate AS rate, SUM(tr.debit - tr.credit) AS balance FROM hbs.bookings b LEFT JOIN hbs.transactions tr ON b.booking_id = tr.refID LEFT JOIN hbs.customers c ON c.custid = tr.custid LEFT JOIN hbs.halls h ON h.hall_id = b.hall_id GROUP BY b.booking_id";
                 $result = mysqli_query($conn, $sql);
                 $n=1;
                 // Check if the query was successful
@@ -137,6 +137,7 @@
                             $edate = $row['edate'];
                             $attend = $row['attend'];
                             $balance = $row['balance'];
+                            $btype=$row['btype'];
                             $date = $row['bdate'];
                             // $date = $row['bdate'];
                             
@@ -158,6 +159,12 @@
                            }
                            else {
                             echo "<td style='color: Red; font-weight: bold; font-style: italic;'>Cancelled</td>";
+                           }
+                           if($btype==0){
+                            echo "<td>onlyHall</td>";
+                           }
+                           else{
+                            echo "<td>withFood</td>";
                            }
                    
                             echo "<td>$attend</td>";
@@ -215,10 +222,15 @@
                     <div class="modal-dialog modal-lg" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
+                         
                                 <h5 class="modal-title" id="orderdetailsModalLabel">Booking</h5>
+                              
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
+                          
                             <div class="modal-body">
+                            <div class="alert alert-danger" id="error"> </div>
+                              <div class="alert alert-success" id="success"></div>
                             <form id="Book" method="post" action="../../../apis/booking/book.php" >
                             <input type="hidden" class="form-control" id="bookid" name="bookid">
 
@@ -295,6 +307,20 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="formrow-address-input" class="form-label">Start Time</label>
+                                                <input type="time" class="form-control" id="starttime" name="starttime">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="formrow-email-input" class="form-label">End Time</label>
+                                                <input type="time" class="form-control" id="endtime" name="endtime" >
+                                            </div>
+                                        </div>
+                                    </div>
 
                                     <div class="row">
                                     <div class="col-md-6">
@@ -330,10 +356,14 @@
                                         $sql="select * from food";
                                         $result=mysqli_query($conn,$sql);
                                         if(mysqli_num_rows($result) > 0 ){
-                                            
+                                            ?>
+                                            <option value="">choose food Type </option>
+                                            <?php
                                             while($row = mysqli_fetch_array($result)){
+                                  
                                                 ?>
-                                           
+                                              
+                                               
                                                 <option value="<?php echo $row['foodPrice']?>"><?php echo $row['foodType']?></option>
                                                 <?php
                                             }
@@ -351,7 +381,7 @@
                                 <div class="col-md-6">
                                     <div class="mb-3">
                                             <label for="formrow-email-input" class="form-label">Rate</label>
-                                                <input type="text" class="form-control" id="rate" name="rate" placeholder="Enter Rate">
+                                                <input type="text" class="form-control" id="rate" name="rate" readonly=true>
                                           
                                 </div>
                                 </div>
@@ -393,7 +423,9 @@
                                     </div>
                                     <div class="modal-footer">
                                 <button type="submit" class="btn btn-primary"  id="btnbooking">Save Changes</button>
+                                
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btnClose">Close</button>
+                           
                             </div>
                                 </form>
                             </div>
@@ -409,6 +441,8 @@
 
     <script>
         $(document).ready(function(){
+           
+     
     $('.delete-btn').click(function(e) {
         e.preventDefault();
         var itemId = $(this).data('item-id');
@@ -433,9 +467,10 @@
                 alert(resp)
                  var res = jQuery.parseJSON(resp);
                  if (res.status == 200) {
-                    //window.location.href = 'Booking.php';
+                    
                    $("#success").css("display", "block");
                     $("#success").text(res.message);
+                    window.location.href = 'Booking.php';
               }     else if (res.status == 404) {
                 //   $("#success").css("display", "none");
                 //    $("#error").css("display", "block");
@@ -450,7 +485,8 @@
            
    
  
-$(document).ready(function() {
+
+   
     $('.edit-btn').click(function() {
         var cid = parseInt($(this).data('id'), 10);
         $.ajax({
@@ -472,7 +508,7 @@ $(document).ready(function() {
             }
         });
     });
-});
+
 
 
 function deleteItem(itemId) {
@@ -491,6 +527,7 @@ function deleteItem(itemId) {
         }
     });
 }
+
 
 
 

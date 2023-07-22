@@ -82,6 +82,7 @@ include '../../../conn.php';
                 <th scope="col">#</th>
                 <th scope="col">Hall Name</th>
                 <th scope="col">Location</th>
+                <th scope="col">Price</th>
                 <th scope="col">Caapcity</th>
                 <th scope="col">Description</th>
                 <th scope="col">Photo</th>
@@ -102,6 +103,7 @@ include '../../../conn.php';
                         while ($row = mysqli_fetch_assoc($result)) {
                             $hall_id = $row['hall_id'];
                             $type = $row['hall_type'];
+                            $price = $row['hallPrice'];
                             $location = $row['location'];
                             $capacity = $row['capacity'];
                             $desc = $row['hall_desc'];
@@ -112,10 +114,12 @@ include '../../../conn.php';
                             echo "<tr>";
                             echo "<td>$hall_id</td>";
                             echo "<td>$type</td>";
+                            echo "<td>$price</td>";
                             echo "<td>$location</td>";
                             echo "<td>$capacity</td>";
                             echo "<td>$desc</td>";
                             echo "<td>$date</td>";
+                            
                             echo "<td><img src='../../../images/$photo' alt='Halls Logo' class='logo-thumbnail'></td>";
                             echo "<td>
                             
@@ -162,7 +166,7 @@ include '../../../conn.php';
                     <form method="Post" id="hall_form" action="../../../apis/halls.php">
                     <div class="alert alert-danger" id="error"> </div>
                     <div class="alert alert-success" id="success"></div>
-                        <input type="fffden" name="hall_id" id="hall_id">
+                        <input type="hidden" name="hall_id" id="hall_id">
 
                         <div class="row">
                             <div class="col-md-6">
@@ -180,10 +184,16 @@ include '../../../conn.php';
                         </div>
 
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="formrow-email-input" class="form-label">Hall Capacity</label>
                                     <input type="text" class="form-control" id="hcapacity" name="hcapacity" placeholder="Hall Capacity....">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="formrow-email-input" class="form-label">Hall Price</label>
+                                    <input type="text" class="form-control" id="hprice" name="hprice" placeholder="Hall Capacity....">
                                 </div>
                             </div>
                         </div>    
@@ -281,9 +291,9 @@ $(document).ready(function(){
 
 $(document).ready(function() {
     $('.edit-btn').click(function() {
-        var faci_id = parseInt($(this).data('id'), 10);
+        var hallid = parseInt($(this).data('id'), 10);
         $.ajax({
-            url: '../../../apis/halls.php',
+            url: '../../../apis/halls/gethalls.php',
             type: 'POST',
             data: { hallid: hallid },
             success: function(response) {
@@ -292,7 +302,8 @@ $(document).ready(function() {
                 
                 console.log(hallData.hall_photo);
                 $('#htype').val(hallData.htype);
-                $('#hall_id').val(hallData.fff);
+                $('#hall_id').val(hallData.hid);
+                $('#hprice').val(hallData.hprice);
                 $('#hlocation').val(hallData.hlocation);
                 $('#hdesc').val(hallData.hdesc);
                 $('#hcapacity').val(hallData.hcapacity);
@@ -305,7 +316,7 @@ $(document).ready(function() {
 
 function deleteItem(itemId) {
     $.ajax({
-        url: '../../../apis/halls.php',
+        url: '../../../apis/halls/delete.php',
         method: 'POST',
         data: { itemId: itemId },
         success: function(response) {
