@@ -102,6 +102,19 @@ function calculateTimeDuration($startTime, $endTime) {
 
     return $durationInHours;
 }
+
+function getCustomerID($conn, $name)
+{
+    $sql = "SELECT * FROM customers WHERE firstname='$name'";
+    $query = mysqli_query($conn, $sql);
+    if ($query) {
+        $data = mysqli_fetch_array($query);
+        $cid = $data['custid'];
+        return $cid;
+    } else {
+        return 0;
+    }
+}
 // $starttime = "09:00";
 // $endtime = "11:30";
 

@@ -64,8 +64,8 @@ if ($query) {
     }
 
     // Insert into transactions table
-    $transactionSql = "INSERT INTO transactions (refID, custid, credit, transactionDate, debit) 
-                       VALUES ('$lastInsertedID', '$customerId', '$credit', '$date', '$totalDebit')";
+    $transactionSql = "INSERT INTO transactions (refID, tranType,custid, credit, transactionDate, debit) 
+                       VALUES ('$lastInsertedID','Booking', '$customerId', '$credit', '$date', '$totalDebit')";
     $transactionQuery = mysqli_query($conn, $transactionSql);
 
     if ($transactionQuery) {
@@ -127,8 +127,8 @@ if($query){
     $query=mysqli_query($conn,$sql);
 }
  // Insert into transactions table
- $transactionSql = "INSERT INTO transactions (refID, custid, credit, transactionDate, debit) 
- VALUES ('$bookId', '$customerId', '$credit', '$date', '$totalDebit')";
+ $transactionSql = "INSERT INTO transactions (refID, tranType,custid, credit, transactionDate, debit) 
+ VALUES ('$lastInsertedID','Booking', '$customerId', '$credit', '$date', '$totalDebit')";
 $transactionQuery = mysqli_query($conn, $transactionSql);
 
 if ($transactionQuery) {
