@@ -3,6 +3,82 @@
         <!-- ============================================================== -->
         <!-- Start right Content here -->
         <!-- ============================================================== -->
+
+        <?php 
+        
+            include '../../../conn.php';
+            // Query to retrieve the data from the database
+            $sql = "SELECT count(*) as total FROM bookings WHERE booking_status = 0";
+
+            $result = $conn->query($sql);
+
+            if ($result->num_rows > 0) {
+                $row = $result->fetch_assoc();
+                $pendingCount = $row['total'];
+            } else {
+                $pendingCount = 0;
+            }
+
+            $conn->close();
+        ?>
+
+
+        <?php 
+        
+            include '../../../conn.php';
+            // Query to retrieve the data from the database
+            $sql = "SELECT count(*) as total FROM bookings WHERE booking_status = 1";
+
+            $result = $conn->query($sql);
+
+            if ($result->num_rows > 0) {
+                $row = $result->fetch_assoc();
+                $ApprovedCount = $row['total'];
+            } else {
+                $ApprovedCount = 0;
+            }
+
+            $conn->close();
+        ?>
+
+        <?php 
+        
+            include '../../../conn.php';
+            // Query to retrieve the data from the database
+            $sql = "SELECT count(*) as total FROM bookings WHERE booking_status not in (0,1)";
+
+            $result = $conn->query($sql);
+
+            if ($result->num_rows > 0) {
+                $row = $result->fetch_assoc();
+                $CancelledCount = $row['total'];
+            } else {
+                $CancelledCount = 0;
+            }
+
+            $conn->close();
+        ?>
+
+        <?php 
+        
+            include '../../../conn.php';
+            // Query to retrieve the data from the database
+            $sql = "SELECT count(*) as total FROM bookings";
+
+            $result = $conn->query($sql);
+
+            if ($result->num_rows > 0) {
+                $row = $result->fetch_assoc();
+                $TotalCount = $row['total'];
+            } else {
+                $TotalCount = 0;
+            }
+
+            $conn->close();
+        ?>
+
+        
+
         <div class="main-content">
 
             <div class="page-content">
@@ -30,12 +106,11 @@
                                                         <i class="bx bx-copy-alt"></i>
                                                     </span>
                                                 </div>
-                                                <h5 class="font-size-14 mb-0">Orders</h5>
+                                                <h5 class="font-size-14 mb-0">Hall Pending</h5>
                                             </div>
                                             <div class="text-muted mt-4">
-                                                <h4>1,452 <i class="mdi mdi-chevron-up ms-1 text-success"></i></h4>
+                                                <h4><?php echo $pendingCount; ?></h4>
                                                 <div class="d-flex">
-                                                    <span class="badge badge-soft-success font-size-12"> + 0.2% </span> <span class="ms-2 text-truncate">From previous period</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -51,12 +126,11 @@
                                                         <i class="bx bx-archive-in"></i>
                                                     </span>
                                                 </div>
-                                                <h5 class="font-size-14 mb-0">Revenue</h5>
+                                                <h5 class="font-size-14 mb-0">Hall Approved</h5>
                                             </div>
                                             <div class="text-muted mt-4">
-                                                <h4>$ 28,452 <i class="mdi mdi-chevron-up ms-1 text-success"></i></h4>
+                                            <h4><?php echo $ApprovedCount; ?></h4>
                                                 <div class="d-flex">
-                                                    <span class="badge badge-soft-success font-size-12"> + 0.2% </span> <span class="ms-2 text-truncate">From previous period</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -72,13 +146,12 @@
                                                         <i class="bx bx-purchase-tag-alt"></i>
                                                     </span>
                                                 </div>
-                                                <h5 class="font-size-14 mb-0">Average Price</h5>
+                                                <h5 class="font-size-14 mb-0">Hall Cancelled</h5>
                                             </div>
                                             <div class="text-muted mt-4">
-                                                <h4>$ 16.2 <i class="mdi mdi-chevron-up ms-1 text-success"></i></h4>
+                                            <h4><?php echo $CancelledCount; ?></h4>
                                                 
                                                 <div class="d-flex">
-                                                    <span class="badge badge-soft-warning font-size-12"> 0% </span> <span class="ms-2 text-truncate">From previous period</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -94,13 +167,12 @@
                                                         <i class="bx bx-purchase-tag-alt"></i>
                                                     </span>
                                                 </div>
-                                                <h5 class="font-size-14 mb-0">Average Price</h5>
+                                                <h5 class="font-size-14 mb-0">Total Hall</h5>
                                             </div>
                                             <div class="text-muted mt-4">
-                                                <h4>$ 16.2 <i class="mdi mdi-chevron-up ms-1 text-success"></i></h4>
+                                            <h4><?php echo $TotalCount; ?></h4>
                                                 
                                                 <div class="d-flex">
-                                                    <span class="badge badge-soft-warning font-size-12"> 0% </span> <span class="ms-2 text-truncate">From previous period</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -112,7 +184,7 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-xl-8">
+                        <div class="col-xl-6">
                             <div class="card">
                                 <div class="card-body">
                                     <div class="clearfix">
@@ -159,7 +231,7 @@
                             </div>
                         </div>
 
-                        <div class="col-xl-4">
+                        <div class="col-xl-6">
                             <div class="card">
                                 <div class="card-body">
                                     <h4 class="card-title mb-4">Sales Analytics</h4>
@@ -167,25 +239,30 @@
                                     <div>
                                         <div id="donut-chart" class="apex-charts"></div>
                                     </div>
-
                                     <div class="text-center text-muted">
                                         <div class="row">
-                                            <div class="col-4">
-                                                <div class="mt-4">
-                                                    <p class="mb-2 text-truncate"><i class="mdi mdi-circle text-primary me-1"></i> Product A</p>
-                                                    <h5>$ 2,132</h5>
+                                            <div class="col-3">
+                                                <div class="mt-3">
+                                                    <p class="mb-2 text-truncate"><i class="mdi mdi-circle text-primary me-1"></i>Pending Halls</p>
+                                                    <h5><?php echo $pendingCount; ?></h5>
                                                 </div>
                                             </div>
-                                            <div class="col-4">
-                                                <div class="mt-4">
-                                                    <p class="mb-2 text-truncate"><i class="mdi mdi-circle text-success me-1"></i> Product B</p>
-                                                    <h5>$ 1,763</h5>
+                                            <div class="col-3">
+                                                <div class="mt-3">
+                                                    <p class="mb-2 text-truncate"><i class="mdi mdi-circle text-success me-1"></i>Approved Halls</p>
+                                                    <h5><?php echo $ApprovedCount; ?></h5>
                                                 </div>
                                             </div>
-                                            <div class="col-4">
-                                                <div class="mt-4">
-                                                    <p class="mb-2 text-truncate"><i class="mdi mdi-circle text-danger me-1"></i> Product C</p>
-                                                    <h5>$ 973</h5>
+                                            <div class="col-3">
+                                                <div class="mt-3">
+                                                    <p class="mb-2 text-truncate"><i class="mdi mdi-circle text-danger me-1"></i>Cancelled Halls</p>
+                                                    <h5><?php echo $CancelledCount; ?></h5>
+                                                </div>
+                                            </div>
+                                            <div class="col-3">
+                                                <div class="mt-3">
+                                                    <p class="mb-2 text-truncate"><i class="mdi mdi-circle text-secondary me-1"></i>Total Halls</p>
+                                                    <h5><?php echo $TotalCount; ?></h5>
                                                 </div>
                                             </div>
                                         </div>
