@@ -28,7 +28,7 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `company` (
-  `CompanyID` int(11) NOT NULL,
+  `CompanyID` int(11) primary key AUTO_INCREMENT,
   `CompanyName` varchar(250) NOT NULL,
   `Address` varchar(50) NOT NULL,
   `Phone` varchar(30) NOT NULL,
@@ -37,8 +37,7 @@ CREATE TABLE `company` (
   `Description` text NOT NULL,
   `Status` varchar(20) NOT NULL,
   `ActionDate` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
+);
 --
 -- Dumping data for table `company`
 --

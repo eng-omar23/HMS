@@ -1,5 +1,6 @@
 <?php include 'header.php'; ?>
 <?php include 'nav.php'; ?>   
+<?php include '../../../conn.php'; ?>   
     
 
 
@@ -63,11 +64,60 @@
                                                                 <th scope="col">Phone Number</th>
                                                                 <th scope="col">Email</th>
                                                                 <th scope="col">Address</th>
+                                                                <th scope="col">Action</th>
                                                             </tr>
                                                             
                                                         </thead>
-                                                        <tbody>
-                                                        </tbody>
+                                                        <?php
+                // Select query
+                $sql = "SELECT * FROM customers WHERE 1";
+                $result = mysqli_query($conn, $sql);
+                $n=1;
+
+                // Check if the query was successful
+                if ($result) {
+                    // Check if there are any rows returned
+                    if (mysqli_num_rows($result) > 0) {
+                        while ($row = mysqli_fetch_assoc($result)) {
+                            $cid = $row['custid'];
+                            $address = $row['address'];
+                            $name = $row['firstname'];
+                            $email = $row['email'];
+                            $phone = $row['phone'];
+                         
+                            $date = $row['date'];
+                      
+                            // Display the data
+                            echo "<tr>";
+                            echo "<td>$$n</td>";                         
+                            echo "<td>$name</td>";                         
+                            echo "<td>$email</td>";
+                         
+                            echo "<td>$phone</td>";
+                            echo "<td>$date</td>";
+                            echo "<td>$address</td>";
+                            echo "<td>
+                            <li class='list-inline-item'>
+                            <a href='#' class='text-success p-2 edit-btn' data-bs-toggle='modal' data-bs-target='.orderdetailsModal' data-id='$cid'><i class='bx bxs-edit-alt'></i></a>
+                            </li>
+                            <li class='list-inline-item'>
+                            <a href='#' class='text-danger p-2 delete-btn' data-item-id='$cid'><i class='bx bxs-trash'></i></a>
+                        </li></td>";
+                            echo "</tr>";
+                            $n++;
+                        }
+                    } else {
+                        echo "<tr><td colspan='6'>No Customers found</td></tr>";
+                    }
+                } else {
+                    echo "Error: " . mysqli_error($conn);
+                }
+
+                mysqli_close($conn);
+            ?>
+            
+
+        </tbody>
                                                     </table>
                                                 </div>
                                             </div>
@@ -93,23 +143,24 @@
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                            <form>
+                            <form id="customers" action="../../../apis/customers/customers.php" method="post">
+                            <input type="hidden" class="form-control" id="cid" name="cid">
                                     <div class="mb-3">
                                         <label for="formrow-firstname-input" class="form-label">Full Name</label>
-                                        <input type="text" class="form-control" id="txtFullname" name="Fullname" placeholder="Enter Fullname">
+                                        <input type="text" class="form-control" id="cname" name="cname" placeholder="Enter Fullname">
                                     </div>
 
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="mb-3">
                                                 <label for="formrow-address-input" class="form-label">Phone Number</label>
-                                                <input type="text" class="form-control" id="txtPhone" name="Phone Number" placeholder="Enter Phone Number">
+                                                <input type="text" class="form-control" id="number" name="number" placeholder="Enter Phone Number">
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="mb-3">
                                                 <label for="formrow-email-input" class="form-label">Address</label>
-                                                <input type="number" class="form-control" id="txtAddress" name="tell" placeholder="Enter Address">
+                                                <input type="text" class="form-control" id="address" name="address" placeholder="Enter Address">
                                             </div>
                                         </div>
                                     </div>
@@ -119,7 +170,7 @@
                                          
                                             <div class="mb-3">
                                                 <label for="formrow-email-input" class="form-label">Email</label>
-                                                <input type="email" class="form-control" id="txtEmail" name="Email" placeholder="Enter Customer Email">
+                                                <input type="email" class="form-control" id="email" name="email" placeholder="Enter Customer Email">
                                             </div>
                                          
 
@@ -127,13 +178,13 @@
                                         
 
                                     </div>
- 
-                                </form>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="btnCustomer">Save Changes</button>
+                                    <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary"  id="btnCustomer">Save Changes</button>
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btnClose">Close</button>
                             </div>
+                                </form>
+                            </div>
+                         
                         </div>
                     </div>
                 </div>
@@ -142,3 +193,89 @@
     </div>
 
     <?php include 'footer.php'; ?>
+
+    <script>
+        $(document).ready(function(){
+    $('.delete-btn').click(function(e) {
+        e.preventDefault();
+        var itemId = $(this).data('item-id');
+        deleteItem(itemId);
+    });
+   
+    $("#error").css("display", "none");
+    $("#success").css("display", "none");
+   
+                })
+    $("#customers").submit(function(e){   
+             e.preventDefault();
+             $.ajax({
+                url:"../../../apis/customers/customers.php",
+                 data: new FormData($(this)[0]),
+                cache: false,
+                contentType: false,
+                processData: false,
+                 method: 'POST',
+                type: 'POST',
+                success: function(resp) {
+                alert(resp)
+                 var res = jQuery.parseJSON(resp);
+                 if (res.status == 200) {
+                    window.location.href = 'customer.php';
+                //    $("#success").css("display", "block");
+                //     $("#success").text(res.message);
+              }     else if (res.status == 404) {
+                //   $("#success").css("display", "none");
+                //    $("#error").css("display", "block");
+                //    $("#error").text(res.message);
+              }
+            
+                 }
+             });
+
+
+         });
+           
+   
+ 
+$(document).ready(function() {
+    $('.edit-btn').click(function() {
+        var cid = parseInt($(this).data('id'), 10);
+        $.ajax({
+            url: "../../../apis/customers/getCustomers.php",
+            type: 'POST',
+            data: { custid: cid },
+            success: function(response) {
+                alert(response)
+                var customerData = JSON.parse(response);
+                
+                console.log(customerData.cname);
+                $('#cname').val(customerData.cname);
+                $('#cid').val(customerData.cid);
+                $('#address').val(customerData.caddress);
+                $('#number').val(customerData.cphone);
+                $('#email').val(customerData.cemail);
+          
+          
+            }
+        });
+    });
+});
+
+
+function deleteItem(itemId) {
+    $.ajax({
+        url:"../../../apis/customers/delete.php",
+        method: 'POST',
+        data: { itemId: itemId },
+        success: function(response) {
+            window.location.href = 'customer.php';
+            console.log(response);
+            // Reload the page or update the UI as needed
+        },
+        error: function(xhr, status, error) {
+            // Handle errors
+            console.error(error);
+        }
+    });
+}
+    </script>

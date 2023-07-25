@@ -18,13 +18,39 @@
                                     <div>
                                         <a href="Customer.php" class="dropdown-item" key="t-alerts">Customers</a>
                                         <a href="hall.php" class="dropdown-item" key="t-buttons">Halls</a>
+                                       <a href="user.php" class="dropdown-item" key="t-buttons">users</a>
+                                        <a href="facility.php" class="dropdown-item" key="t-buttons">Facility</a>
+                                        <a href="food.php" class="dropdown-item" key="t-buttons">Food</a> 
+                                        
+
                                     </div>
                                 </div>
                             </div>
 
                         </div>
                     </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle arrow-none" href="#" id="topnav-uielement" role="button"
+                        >
+                            <i class="bx bx-tone me-2"></i>
+                            <span key="t-ui-elements"> Booking</span> 
+                            <div class="arrow-down"></div>
+                        </a>
 
+                        <div class="dropdown-menu mega-dropdown-menu px-2 dropdown-mega-menu-sm"
+                            aria-labelledby="topnav-uielement">
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    <div>
+                                      
+                                        <a href="Booking.php" class="dropdown-item" key="t-buttons">Booking</a> 
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle arrow-none" href="#" id="topnav-components" role="button"
                         >
@@ -47,7 +73,7 @@
                                     <span key="t-forms">Company</span> <div class="arrow-down"></div>
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="topnav-form">
-                                    <a href="company.php" class="dropdown-item" key="t-form-elements">Create Company</a>
+                                    <a href="../../../company.php" class="dropdown-item" key="t-form-elements">Create Company</a>
                                 </div>
                             </div>
                         </div>
