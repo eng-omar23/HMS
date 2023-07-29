@@ -36,7 +36,7 @@ if (isset($_POST['facility_id'])) {
 // Check if the customer ID is set in the session
 if (isset($_SESSION['email'])) {
     $sql="select * from customers where email='$email'";
-    $customerID = getCustid($conn,$sql);
+    $customerID = getCustomerID($conn,$sql);
 } else {
     // Handle the case when the customer ID is not set in the session
     echo json_encode(['message' => 'Customer ID not found in session.', 'status' => 404]);
