@@ -11,7 +11,7 @@
                             </div>
                         </div>
                     </div>
-                </footer>
+                </footer>1
                            
             </div>
             <!-- end main content-->
@@ -29,5 +29,6 @@
         <!-- Saas dashboard init -->
         <script src="../../../assets/js/pages/saas-dashboard.init.js"></script>
         <script src="../../../assets/js/app.js"></script>
+
     </body>
 </html>

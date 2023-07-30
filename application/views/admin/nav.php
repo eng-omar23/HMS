@@ -91,7 +91,7 @@
                                     <span key="t-invoices">Halls</span> <div class="arrow-down"></div>
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="topnav-invoice">
-                                    <a href="#" class="dropdown-item" key="t-invoice-list">Hall Report</a>
+                                    <a href="hallReport.php" class="dropdown-item" key="t-invoice-list">Hall Report</a>
                                 </div>
                             </div>
                         </div>
