@@ -74,7 +74,7 @@
                 // Select query
                 $sql = "SELECT * FROM facility WHERE 1";
                 $result = mysqli_query($conn, $sql);
-$n=1;
+                $n=1;
                 // Check if the query was successful
                 if ($result) {
                     // Check if there are any rows returned
@@ -130,8 +130,8 @@ $n=1;
     <!-- End Page-content -->
 
     <!-- Modal -->
-    <div class="modal fade orderdetailsModal" id="facilityModal" tabindex="-1" role="dialog" aria-labelledby="orderdetailsModalLabel"
-        aria-hidden="true">
+    <div class="modal fade orderdetailsModal" id="facilityModal" tabindex="-1" role="dialog"
+        aria-labelledby="orderdetailsModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -175,8 +175,46 @@ $n=1;
 
 <?php include 'footer.php'; ?>
 
+<style>
+        /* Custom styles for the table */
+        .dataTables_wrapper {
+            padding: 20px;
+        }
+
+        .dataTables_filter {
+            float: right;
+        }
+
+        .dataTables_paginate {
+            float: right;
+        }
+    </style>
+<!-- Include jQuery, Bootstrap, and DataTables -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.4/js/dataTables.bootstrap4.min.js"></script>
+
+<!-- Add this to your HTML file -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.all.min.js"></script>
+
+<!-- SweetAlert CSS -->
+<link rel="stylesheet" href="path/to/sweetalert2.min.css">
+
+<!-- Your other HTML code -->
+
+<!-- SweetAlert JS -->
+<script src="path/to/sweetalert2.min.js"></script>
+
+
+
+
+
 <script>
 $(document).ready(function() {
+
+    $('#tblFacility').DataTable();
+    $('.dataTables_length').addClass('bs-select');
+
     $('.delete-btn').click(function(e) {
         e.preventDefault();
         var itemId = $(this).data('item-id');
@@ -187,34 +225,64 @@ $(document).ready(function() {
     $("#success").css("display", "none");
 
 })
+
+
+$(document).ready(function() {
+    $('.delete-btn').click(function(e) {
+        e.preventDefault();
+        var itemId = $(this).data('item-id');
+        deleteItem(itemId);
+    });
+
+    $("#error").css("display", "none");
+    $("#success").css("display", "none");
+
+}) 
+
+
 $("#facility").submit(function(e) {
     e.preventDefault();
+    var form = $(this); // Store the form element in a variable
+
     $.ajax({
         url: "../../../apis/Facility/facilities.php",
-        data: new FormData($(this)[0]),
+        data: new FormData(form[0]),
         cache: false,
         contentType: false,
         processData: false,
         method: 'POST',
         type: 'POST',
         success: function(resp) {
-            alert(resp)
             var res = jQuery.parseJSON(resp);
             if (res.status == 200) {
-                window.location.href = 'facility.php';
-                //    $("#success").css("display", "block");
-                //     $("#success").text(res.message);
-            } else if (res.status == 404) {
-                //   $("#success").css("display", "none");
-                //    $("#error").css("display", "block");
-                //    $("#error").text(res.message);
-            }
+                // Use SweetAlert success alert
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: res.message,
+                    onClose: function() {
+                        // Reset the form fields or hide the form
+                        form[0].reset(); // Use this line to reset form fields
+                        // OR
+                        // form.hide(); // Use this line to hide the form
 
+                        // Redirect to 'facility.php'
+                        window.location.href = 'facility.php';
+                    }
+                });
+            } else if (res.status == 404) {
+                // Use SweetAlert error alert
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: res.message
+                });
+            }
         }
     });
-
-
 });
+
+
 
 
 
@@ -231,7 +299,7 @@ $(document).ready(function() {
                 alert(response)
                 var FaciData = JSON.parse(response);
 
-            
+
                 $('#fname').val(FaciData.type);
                 $('#fac_id').val(FaciData.fid);
                 $('#price').val(FaciData.price);
@@ -245,23 +313,49 @@ $(document).ready(function() {
 
 
 function deleteItem(itemId) {
-    $.ajax({
-        url: "../../../apis/Facility/delete.php",
-        method: 'POST',
-        data: {
-            itemId: itemId
-        },
-        success: function(response) {
-            window.location.href = 'facility.php';
-            console.log(response);
-            // Reload the page or update the UI as needed
-        },
-        error: function(xhr, status, error) {
-            // Handle errors
-            console.error(error);
+    // Use SweetAlert for delete confirmation
+    Swal.fire({
+        title: 'Are you sure?',
+        text: 'You are about to delete this item. This action cannot be undone.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Delete',
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // If the user clicks 'Delete', proceed with the delete operation
+            $.ajax({
+                url: "../../../apis/Facility/delete.php",
+                method: 'POST',
+                data: {
+                    itemId: itemId
+                },
+                success: function(response) {
+                    // Use SweetAlert success alert
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Deleted',
+                        text: 'The item has been successfully deleted.',
+                    }).then(() => {
+                        // After showing the success alert, redirect to 'facility.php'
+                        window.location.href = 'facility.php';
+                    });
+                },
+                error: function(xhr, status, error) {
+                    // Use SweetAlert error alert
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'An error occurred while deleting the item.',
+                    });
+                    console.error(error);
+                }
+            });
         }
     });
 }
+
 </script>
 
 

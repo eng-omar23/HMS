@@ -76,7 +76,7 @@ include '../../../conn.php';
                                     </form>
 
                                  <div class="table-responsive mt-2">
-    <table class="table table-hover datatable dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+    <table class="table table-hover datatable dt-responsive nowrap" id ="tblHall" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
         <thead>
             <tr>
                 <th scope="col">#</th>
@@ -233,7 +233,47 @@ include '../../../conn.php';
     </div>
     <?php include 'footer.php'; ?>
     <!-- <script src="../../../js/halls.js"></script> -->
-    <script>  
+ 
+<style>
+        /* Custom styles for the table */
+        .dataTables_wrapper {
+            padding: 20px;
+        }
+
+        .dataTables_filter {
+            float: right;
+        }
+
+        .dataTables_paginate {
+            float: right;
+        }
+    </style>
+<!-- Include jQuery, Bootstrap, and DataTables -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.4/js/dataTables.bootstrap4.min.js"></script>
+
+<!-- Add this to your HTML file -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.all.min.js"></script>
+
+
+<script>
+$(document).ready(function() {
+
+    $('#tblHall ').DataTable();
+    $('.dataTables_length').addClass('bs-select');
+
+    $('.delete-btn').click(function(e) {
+        e.preventDefault();
+        var itemId = $(this).data('item-id');
+        deleteItem(itemId);
+    });
+
+    $("#error").css("display", "none");
+    $("#success").css("display", "none");
+
+})
+
 $(document).ready(function(){
     $('.delete-btn').click(function(e) {
         e.preventDefault();
