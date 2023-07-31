@@ -21,6 +21,7 @@
                                        <a href="user.php" class="dropdown-item" key="t-buttons">users</a>
                                         <a href="facility.php" class="dropdown-item" key="t-buttons">Facility</a>
                                         <a href="food.php" class="dropdown-item" key="t-buttons">Food</a> 
+                                        <a href="expense.php" class="dropdown-item" key="t-buttons">Expense</a> 
                                         
 
                                     </div>
