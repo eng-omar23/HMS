@@ -17,7 +17,7 @@
     <!-- CSS styles -->
     <style>
         .container {
-            margin-top: 40px;
+            margin-top: -10%;
         }
         .sign {
             background: #00487a; 
@@ -115,12 +115,12 @@
                                         <!-- <p class="text-muted">Sign in to continue to Skote.</p> -->
                                     </div>
 
-                                    <div class="mt-4">
-                                        <form>
+                                    <div class="mt-2">
+                                        <form id="login" action="../../../apis/login_handler.php" method="Post">
 
                                             <div class="mb-3">
-                                                <label for="username" class="form-label">Username</label>
-                                                <input type="text" class="form-control" id="username" placeholder="Enter username">
+                                                <label for="username" class="form-label">Email</label>
+                                                <input type="Email" class="form-control" name="Email" id="Email" placeholder="Enter Email">
                                             </div>
 
                                             <div class="mb-3">
@@ -129,7 +129,7 @@
                                                 </div>
                                                 <label class="form-label">Password</label>
                                                 <div class="input-group auth-pass-inputgroup">
-                                                    <input type="password" class="form-control" placeholder="Enter password" aria-label="Password" aria-describedby="password-addon">
+                                                    <input type="password" class="form-control" name="password" id="password" placeholder="Enter password" aria-label="Password" aria-describedby="password-addon">
                                                     <button class="btn btn-light " type="button" id="password-addon"><i class="mdi mdi-eye-outline"></i></button>
                                                 </div>
                                             </div>
@@ -210,3 +210,55 @@
 
 </body>
 </html>
+
+<script>
+     $("#login").submit(function(e){   
+            e.preventDefault();
+            $.ajax({
+                url:"../../../apis/login_handler.php",
+                    data: new FormData($(this)[0]),
+                cache: false,
+                contentType: false,
+                processData: false,
+                    method: 'POST',
+                type: 'POST',
+                success: function(resp) {
+                    var res = jQuery.parseJSON(resp);
+                    
+                    if (res.status == 300) {
+                        Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: res.message,
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = 'adminDashboard.php';
+                            }
+                        });
+                    }
+                    else if (res.status == 500) {
+                        Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: res.message,
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = 'dashboard.php';
+                            }
+                        });
+                    }
+                     else if (res.status == 404) {
+                        // Use SweetAlert for error message
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: res.message,
+                        });
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error fetching data:', error);
+                }
+            });
+        });
+</script>

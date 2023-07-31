@@ -1,11 +1,17 @@
 <?php
  session_start();
-require '../conn.php';
+require_once '../conn.php';
 
 $email = $_POST['Email'];
-$pass = $_POST['Password'];
+$pass = $_POST['password'];
 
 if (empty($email) || empty($pass)) {
+    $result = [
+        'message' => 'All fields are required',
+        'status' => 404
+    ];
+    echo json_encode($result);
+    return;
     // Handle empty email or password here
 } else {
     // Sanitize user input to prevent SQL injection (recommended)
@@ -24,14 +30,26 @@ if (empty($email) || empty($pass)) {
         $_SESSION['email'] = $row['email']; // Store the user type in the session
 
         if ($type == "admin") {
-            header("Location: ../application/views/admin/adminDashboard.php");
-            exit(); // Important to exit after the header redirect
+            $result = [
+                'message' => 'User successfully accessed the system.',
+                'status' => 300
+            ];
+            echo json_encode($result);
+            return;
+
         } else {
-            header("Location: ../application/views/customer/dashboard.php");
+            $result = [
+                'message' => 'Customer Login successfully.',
+                'status' => 500
+            ];
             exit(); // Important to exit after the header redirect
         }
     } else {
-        echo "User does not exist";
+        $result = [
+            'message' => 'Customer Login successfully.',
+            'status' => 404
+        ];
+        exit();
     }
 }
 ?>

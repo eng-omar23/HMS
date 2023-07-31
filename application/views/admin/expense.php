@@ -202,12 +202,25 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                    <form id="Expense" action="../../../apis/expenses/pay.php" method="post">
+                    <form id="Pay" action="../../../apis/expenses/pay.php" method="post">
     <input type="hidden" class="form-control" id="payid" name="payid">
-    
+    <input type="hidden" class="form-control" id="expensesId" name="expensesId">
+    <div class="row">
+      
+      <div class="mb-3">
+          <label for="formrow-amount-input" class="form-label">Expense Type</label>
+          <input type="text" class="form-control" id="extype" name="extype" placeholder="Enter Expense type">
+      </div>
+      <div class="mb-3">
+          <label for="formrow-amount-input" class="form-label">Expense due</label>
+          <input type="number" class="form-control" id="expdue" name="expdue" placeholder="Enter Expense Due">
+      </div>
+
+
+</div>
     <div class="mb-3">
-        <label for="formrow-expense-type-input" class="form-label">Expense Type</label>
-        <select name="paytype" class="form-control" id="paytype">
+        <label for="formrow-expense-type-input" class="form-label">Payment Type</label>
+        <select name="paytype" class="form-control" id="paytype" >
             <option value="">Choose Payment Type</option>
             <option value="EVC">EVC</option>
             <option value="">EDAHAB</option>
@@ -320,7 +333,43 @@
                 }
             });
         });
-           
+        $("#Pay").submit(function(e){   
+            e.preventDefault();
+            $.ajax({
+                url:"../../../apis/expenses/Pay.php",
+                    data: new FormData($(this)[0]),
+                cache: false,
+                contentType: false,
+                processData: false,
+                    method: 'POST',
+                type: 'POST',
+                success: function(resp) {
+                    var res = jQuery.parseJSON(resp);
+                    
+                    if (res.status == 200) {
+                        Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: res.message,
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = 'expense.php';
+                            }
+                        });
+                    } else if (res.status == 404) {
+                        // Use SweetAlert for error message
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: res.message,
+                        });
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error fetching data:', error);
+                }
+            });
+        });
         $(document).ready(function() {
             $('.edit-btn').click(function() {
 
@@ -339,6 +388,29 @@
                         $('#expense_type').val(customerData.type);
                         $('#expense_id').val(customerData.expid);
                         $('#description').val(customerData.desc);
+
+                
+                    }
+                });
+            });
+        });
+        $(document).ready(function() {
+            $('.pay-btn').click(function() {
+
+                var expense_id = parseInt($(this).data('item-id'), 10);
+             
+                $.ajax({
+                    url: "../../../apis/expenses/getExpense.php",
+                    type: 'POST',
+                    data: { expense_id: expense_id },
+                    success: function(response) {
+                        
+                        var customerData = JSON.parse(response);
+                        
+                        // console.log(customerData.type);
+                        $('#extype').val(customerData.type);
+                        $('#expdue').val(customerData.amount);
+                        $('#expensesId').val(customerData.expid);
 
                 
                     }
