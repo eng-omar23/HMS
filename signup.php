@@ -6,16 +6,18 @@
   <title>Sign Up</title>
   <!-- Bootstrap 5 CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- SweetAlert2 CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.css">
 </head>
 <body>
-
 <div class="container mt-5">
   <div class="row justify-content-center">
     <div class="col-lg-6">
       <div class="card shadow">
         <div class="card-body">
           <h2 class="card-title text-center">Sign Up</h2>
-          <form id="signupForm" action="./apis/signupHandler.php" method="post">
+          <form id="signupForm" action="signupHandler.php" method="post">
             <div class="row mb-3">
               <div class="col">
                 <label for="name" class="form-label">Full Name</label>
@@ -65,9 +67,13 @@
 <!-- jQuery -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+<!-- SweetAlert2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.all.min.js"></script>
+
+<!-- Your custom JavaScript code (AJAX form submission) -->
 <script>
-  // Form submission using AJAX
-  $('#signupForm').submit(function(e) {
+// Form submission using AJAX
+$('#signupForm').submit(function(e) {
     e.preventDefault(); // Prevent default form submission behavior
 
     // Collect form data
@@ -75,7 +81,7 @@
 
     // AJAX request
     $.ajax({
-      url: './apis/signupHandler.php',
+      url: 'signupHandler.php',
       type: 'POST',
       data: formData,
       success: function(resp) {
@@ -83,16 +89,29 @@
         var res = jQuery.parseJSON(resp);
         if (res.status == 200) {
           // User created successfully
-          alert(res.message);
-          window.location.href = "login.php"; // Redirect to success page
+          Swal.fire({
+            icon: 'success',
+            title: 'Success',
+            text: res.message,
+          }).then(function() {
+            window.location.href = "login.php"; // Redirect to success page
+          });
         } else {
           // Failed to create user
-          alert(res.message);
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: res.message,
+          });
         }
       },
       error: function(xhr, status, error) {
         // Handle error response from the server
-        alert('Error: ' + error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Error: ' + error,
+        });
       }
     });
   });
