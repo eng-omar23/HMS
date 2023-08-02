@@ -11,6 +11,18 @@ function allqueryHandler($conn, $sql) {
         return false;
     }
 }
+
+//check hall capacity
+function getHallCapacity($conn,$hall_id){
+    $sql="select * from halls where hall_id='$hall_id'";
+    $query=mysqli_query($conn,$sql);
+    if($result=mysqli_fetch_array($query)){
+        $capacity=$result['capacity'];
+        return $capacity;
+    }
+    return 0;
+    
+}
 function if_record_exists($conn,$sql){
     $query=mysqli_query($conn,$sql);
     if ($query && mysqli_num_rows($query)){

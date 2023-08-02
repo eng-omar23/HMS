@@ -61,7 +61,32 @@ if (empty($bid)) {
         exit;
     }
 
-    // Insert data into the database using prepared statement
+    $hall_capacity=getHallCapacity($conn,$hall_id);
+      if ( $hall_capacity< $attend){
+        $result = [
+            'message' => 'The hall is big enought to house all these attendee choose bigger hall .',
+            'status' => 404
+        ];
+        echo json_encode($result);
+        exit;
+    }
+   
+ $checkRecord=if_record_exists($conn,"select * from booking where startdate='$startDate' and enddate='$endDate' and startime=$stime?' and '$etime'");
+      if ($checkRecord) {
+
+  $result = [
+                'message' => 'Booking Already exists.',
+                'status' => 200
+            ];
+            echo json_encode($result);
+   exit();
+        }
+
+   
+   else{
+
+
+        // Insert data into the database using prepared statement
     $sql = "INSERT INTO bookings
             (hall_id, customer_id, start_date, end_date, starttime, endtime, booking_status,
             bookingType, attendee, Rate, foodId) 
@@ -101,7 +126,7 @@ if (empty($bid)) {
         $transactionSql = "INSERT INTO transactions (refID, tranType, custid, credit, transactionDate, debit) 
                            VALUES (?, 'cusBooking', ?, ?, ?, ?)";
         $stmt = mysqli_prepare($conn, $transactionSql);
-        mysqli_stmt_bind_param($stmt, "iidsd", $lastInsertedID, $customerID, $credit, $date, $totalDebit);
+        mysqli_stmt_bind_param($stmt, "iidsd", $lastInsertedID,'custBooking', $customerID, $credit, $date, $totalDebit);
         $transactionQuery = mysqli_stmt_execute($stmt);
 
         if ($transactionQuery) {
@@ -124,4 +149,6 @@ if (empty($bid)) {
         ];
         echo json_encode($result);
     }
+}  
+
 }
