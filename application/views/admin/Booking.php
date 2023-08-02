@@ -623,11 +623,8 @@
                                             <!-- <input type="checkbox" class="custom-checkbox" id="<?php echo $row['facility_id[]']?>" name="facility_id[]" value="<?php echo $row['facility_id']?>"> -->
                                             <!-- <input type="checkbox" class="custom-checkbox" id="facility1" name="facility_id[]" value="1">
                                             <input type="checkbox" class="custom-checkbox" id="facility2" name="facility_id[]" value="2"> -->
-                                            <input type="checkbox" id="checkbox" name="facility_id[]" value="1">
-<label for="checkbox" class="form-label checkbox-label"><?php echo $row['facility_name']?></label>
-
-
-
+                                            <input type="checkbox" id="checkbox" name="facility_id[]" value="<?php echo $row['facility_id']?>">
+                                            <label for="checkbox" class="form-label checkbox-label"><?php echo $row['facility_name']?></label>
                                                 <?php
                                             }
 

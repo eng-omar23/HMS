@@ -3,22 +3,31 @@ session_start();
 require_once "../../conn.php";
 require_once "../functions.php";
 
-$hall_id = $_POST['hall_id'];
+// Check if the customer ID is set in the session
+if (!isset($_SESSION['email'])) {
+    $result = [
+        'message' => 'Customer ID Not Found.',
+        'status' => 404
+    ];
+    echo json_encode($result);
+    exit;
+}
+
+$hall_id = $_POST['hid'];
 $bid = $_POST['bid'];
 $startDate = $_POST['startDate'];
 $endDate = $_POST['endDate'];
-$stime = $_POST['stime'];
-$etime = $_POST['etime'];
+$stime = $_POST['starttime'];
+$etime = $_POST['endtime'];
 $attend = $_POST['attend'];
 $food = $_POST['food'];
-$upfront = $_POST['Upfront'];
-$date=date('y-m-d');
+$credit = $_POST['upfront'];
+$date = date('y-m-d');
 $bookingStatus = 0;
 $bookingType = 0;
-$credit = $upfront;
 $rate = 0;
-$customerID=0;
-$email=$_SESSION['email'];
+$customerID = 0;
+$email = $_SESSION['email'];
 $facility_ids = isset($_POST['facility_id']) ? $_POST['facility_id'] : [];
 
 if (isset($_POST['facility_id'])) {
@@ -30,54 +39,70 @@ if (isset($_POST['facility_id'])) {
         array_push($facility_ids, $checkboxValue);
     }
 } else {
-    echo "No checkboxes selected.";
-}
-
-// Check if the customer ID is set in the session
-if (isset($_SESSION['email'])) {
-    $sql="select * from customers where email='$email'";
-    $customerID = getCustomerID($conn,$sql);
-} else {
-    // Handle the case when the customer ID is not set in the session
-    echo json_encode(['message' => 'Customer ID not found in session.', 'status' => 404]);
+    $result = [
+        'message' => 'No checkboxes selected.',
+        'status' => 404
+    ];
+    echo json_encode($result);
     exit;
 }
 
-if ($bid == null || empty($bid)) {
+// Get the customer ID from the session
+$sql = "SELECT * FROM customers WHERE email = '$email'";
+$customerID = getCustomerID($conn, $sql);
 
-    // Insert data into the database
-    $sql = "INSERT INTO bookings (hall_id,customer_id,start_date,end_date,starttime,endtime,booking_status,
-    bookingType,attendee,Rate,foodId)
-    VALUES ('$hall_id', '$customerID', '$startDate', '$endDate', '$stime', '$etime', 
-                    '$bookingStatus', '$bookingType', '$attend','$rate','$food')
-                    ";
+if (empty($bid)) {
+    if (empty($startDate) || empty($endDate) || empty($stime) || empty($etime) || empty($attend)) {
+        $result = [
+            'message' => 'All fields are required.',
+            'status' => 404
+        ];
+        echo json_encode($result);
+        exit;
+    }
 
-    $query = mysqli_query($conn, $sql);
+    // Insert data into the database using prepared statement
+    $sql = "INSERT INTO bookings
+            (hall_id, customer_id, start_date, end_date, starttime, endtime, booking_status,
+            bookingType, attendee, Rate, foodId) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+    $stmt = mysqli_prepare($conn, $sql);
+    mysqli_stmt_bind_param($stmt, "iisssiiisii", $hall_id, $customerID, $startDate, $endDate, $stime, $etime,
+        $bookingStatus, $bookingType, $attend, $rate, $food);
+
+    $query = mysqli_stmt_execute($stmt);
     $lastInsertedID = mysqli_insert_id($conn);
+
     if ($query) {
-       
-        // // Calculate debit amount
+        // Calculate debit amount
         if ($food == null && empty($food)) {
             $duration = calculateTimeDuration($stime, $etime);
             $newRate = getHallPrice($conn, $hall_id);
             $totalFacilityPrice = calculateFacilityPrice($facility_ids, $conn);
             $debit = calculateDebit($newRate, $duration);
             $totalDebit = $debit + $totalFacilityPrice;
-            $sql = "UPDATE bookings SET Rate = '$newRate', bookingType = '1' WHERE booking_id = '$lastInsertedID'";
-            $query = mysqli_query($conn, $sql);
+            $sql = "UPDATE bookings SET Rate = ?, bookingType = '1' WHERE booking_id = ?";
+            $stmt = mysqli_prepare($conn, $sql);
+            mysqli_stmt_bind_param($stmt, "di", $newRate, $lastInsertedID);
+            $query = mysqli_stmt_execute($stmt);
         } else {
             $rate = getFoodPrice($conn, $food);
             $debit = calculateDebit($rate, $attend);
             $totalFacilityPrice = calculateFacilityPrice($facility_ids, $conn);
             $totalDebit = $debit + $totalFacilityPrice;
-            $sql = "UPDATE bookings SET Rate = '$rate', bookingType = '0' WHERE booking_id = '$lastInsertedID'";
-            $query = mysqli_query($conn, $sql);
+            $sql = "UPDATE bookings SET Rate = ?, bookingType = '0' WHERE booking_id = ?";
+            $stmt = mysqli_prepare($conn, $sql);
+            mysqli_stmt_bind_param($stmt, "di", $rate, $lastInsertedID);
+            $query = mysqli_stmt_execute($stmt);
         }
 
         // Insert into transactions table
         $transactionSql = "INSERT INTO transactions (refID, tranType, custid, credit, transactionDate, debit) 
-                           VALUES ('$lastInsertedID', 'cusBooking', '$customerID', '$credit', '$date', '$totalDebit')";
-        $transactionQuery = mysqli_query($conn, $transactionSql);
+                           VALUES (?, 'cusBooking', ?, ?, ?, ?)";
+        $stmt = mysqli_prepare($conn, $transactionSql);
+        mysqli_stmt_bind_param($stmt, "iidsd", $lastInsertedID, $customerID, $credit, $date, $totalDebit);
+        $transactionQuery = mysqli_stmt_execute($stmt);
 
         if ($transactionQuery) {
             $result = [
@@ -85,8 +110,7 @@ if ($bid == null || empty($bid)) {
                 'status' => 200
             ];
             echo json_encode($result);
-        } 
-        else {
+        } else {
             $result = [
                 'message' => 'Failed to create transaction.',
                 'status' => 404
@@ -101,5 +125,3 @@ if ($bid == null || empty($bid)) {
         echo json_encode($result);
     }
 }
-?>
-

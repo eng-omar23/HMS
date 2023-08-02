@@ -2,6 +2,72 @@
 <?php include_once 'header.php'; ?>
 <?php include_once 'nav.php'; ?>
 <?php include_once '../../../conn.php'; ?>
+
+<style>
+  /* CSS for facility checkboxes */
+  .form-check {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .form-check-input {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    cursor: pointer;
+  }
+
+  .form-check-label {
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+  }
+
+  /* Custom checkbox style */
+  .form-check-input[type="checkbox"] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border: 2px solid #6c757d;
+    border-radius: 4px;
+    outline: none;
+    transition: 0.2s;
+  }
+
+  .choose-facility-heading {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+  }
+
+  .form-check-input[type="checkbox"]:checked {
+    background-color: #007bff;
+    border-color: #007bff;
+  }
+
+  .form-check-input[type="checkbox"]:checked::before {
+    content: "\2713";
+    display: block;
+    text-align: center;
+    font-size: 14px;
+    line-height: 16px;
+    color: #fff;
+  }
+
+  /* Hover style */
+  .form-check-input[type="checkbox"]:hover {
+    background-color: #f1f1f1;
+  }
+
+  /* Focus style */
+  .form-check-input[type="checkbox"]:focus {
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+  }
+</style>
+
     <!-- end main content-->
     <div class="main-content">
         <!-- START Page-content -->
@@ -93,7 +159,7 @@ $fullname=$record['firstname'];
                                     <div class="col-lg-1 d-none d-lg-block">
                                         <div class="clearfix mt-4 mt-lg-0">
                                             <div class="dropdown float-end">
-                                                <button class="btn btn-sm btn-primary dropdown-toggle " data-bs-target=".orderdetailsModal"  data-bs-toggle="modal" data-item-id="<?php echo $id; ?>" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <button class="btn btn-sm btn-primary btn-book dropdown-toggle " data-bs-target=".orderdetailsModal"  data-bs-toggle="modal" data-item-id="<?php echo $row['hall_id']; ?>" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                     <i class=""></i>Book Now</button>
                                                 <!-- <div class="dropdown-menu dropdown-menu-end">
                                                     <a class="dropdown-item" href="#">Action</a>
@@ -122,20 +188,17 @@ $fullname=$record['firstname'];
                
                 <!-- end row -->
                 <!-- Modal -->
-                <div class="modal fade orderdetailsModal" tabindex="-1" role="dialog" aria-labelledby="orderdetailsModalLabel" aria-hidden="true">
+                <div class="modal fade orderdetailsModal " tabindex="-1" role="dialog" aria-labelledby="orderdetailsModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-lg" role="document">
                         <div class="modal-content">
-                            <div class="modal-header">
-                         
+                            <div class="modal-header">     
                                 <h5 class="modal-title" id="orderdetailsModalLabel">Booking</h5>
-                              
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
-                          
                             <div class="modal-body">
-                    
-                            <form id="Book" method="post" action="../../../apis/booking/book.php" >
-                            <input type="hidden" class="form-control" id="bookid" name="bookid">
+                            <form id="BookingForm" method="post" action="../../../apis/booking/custBooking.php" >
+                            <input type="hidden" class="form-control" id="bid" name="bid">
+                            <input type="hidden" class="form-control" id="hid" name="hid">
 
                                     <div class="row">
                                         <div class="col-md-6">
@@ -165,27 +228,19 @@ $fullname=$record['firstname'];
                                             </div>
                                         </div>
                                     </div>
-
                                     <div class="row">
-                            
-                            
                                     <div class="mb-3">
                                                 <label for="formrow-email-input" class="form-label">attend</label>
                                                 <input type="text" class="form-control" id="attend" name="attend" placeholder="Enter Attendee">
                                             </div>
-                                            
-
                                 </div>
-                              
-                                            
-                                <div class="row">
-                             
                                 
+                                <div class="row">
+                                <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="Food">Food</label>
                                     <select name="food" class="form-control" id="food">
                                     <?php
-
                                         $sql="select * from food";
                                         $result=mysqli_query($conn,$sql);
                                         if(mysqli_num_rows($result) > 0 ){
@@ -195,8 +250,6 @@ $fullname=$record['firstname'];
                                             while($row = mysqli_fetch_array($result)){
                                   
                                                 ?>
-                                              
-                                               
                                                 <option value="<?php echo $row['foodId']?>"><?php echo $row['foodType']?></option>
                                                 <?php
                                             }
@@ -210,10 +263,14 @@ $fullname=$record['firstname'];
                                         ?>
                                     </select>
                                 </div>  
-                          
-                             
-                               
-                             
+                                </div> 
+                                <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="formrow-email-input" class="form-label">Upfront</label>
+                                                <input type="text" class="form-control" id="upfront" name="upfront" placeholder="Enter Upfront Amount " >
+                                            </div>
+                                        </div> 
+
                                 </div>  
                    
                                     <div class="mb-3">
@@ -222,53 +279,42 @@ $fullname=$record['firstname'];
                                           
                            
                                 </div>
-                                            
-                                           <div class="mb-3">
-                                            <?php
-                                        $sql="select * from facility";
-                                        $result=mysqli_query($conn,$sql);
-                                        if(mysqli_num_rows($result) > 0 ){
-                                            ?>
-                                            <h6>choose Facility</h1>
-                                            <?php
-                                            while($row = mysqli_fetch_array($result)){
-                                                ?>  
-                                         
-                                                 <!-- <label for="checkbox" class="form-label" class="checkbox-label">  <?php echo $row['facility_name']?></label>         -->
-                                            <!-- <input type="checkbox" class="custom-checkbox" id="<?php echo $row['facility_id[]']?>" name="facility_id[]" value="<?php echo $row['facility_id']?>"> -->
-                                            <!-- <input type="checkbox" class="custom-checkbox" id="<?php echo $row['facility_id[]']?>" name="facility_id[]" value="<?php echo $row['facility_id']?>"> -->
-                                            <!-- <input type="checkbox" class="custom-checkbox" id="facility1" name="facility_id[]" value="1">
-                                            <input type="checkbox" class="custom-checkbox" id="facility2" name="facility_id[]" value="2"> -->
-                                            <input type="checkbox" id="checkbox" name="facility_id[]" value="1">
-<label for="checkbox" class="form-label checkbox-label"><?php echo $row['facility_name']?></label>
-
-
-
-                                                <?php
-                                            }
-
-                                        }
-                                        else{
-                                            ?>
-                                            <option> NO Data found</option>
-                                            <?php
-                                        }
-                                        ?>
-                                           
-
-                                            </div>
+                                <div class="mb-3">
+                                    <center>
+                                    <h6 class="choose-facility-heading">Choose Facility That would included in your service</h6>
+                                    </center>
+                        <?php
+                        $sql = "select * from facility";
+                        $result = mysqli_query($conn, $sql);
+                        if (mysqli_num_rows($result) > 0) {
+                            $checkboxCounter = 1;
+                            while ($row = mysqli_fetch_array($result)) {
+                                $facilityId = $row['facility_id'];
+                                $facilityName = $row['facility_name'];
+                        ?>
+                                <div class="form-check">
+                                    <input type="checkbox" id="facility<?php echo $checkboxCounter; ?>" class="form-check-input" name="facility_id[]" value="<?php echo $facilityId; ?>">
+                                    <label for="facility<?php echo $checkboxCounter; ?>" class="form-check-label"><?php echo $facilityName; ?></label>
+                                </div>
+                        <?php
+                                $checkboxCounter++;
+                            }
+                        } else {
+                            echo "<p>No facilities found</p>";
+                        }
+                        ?>
+                    </div>
 
                                             <div class="row">
                            
                                     </div>
                                    
                                     </div>
-                                    <div class="modal-footer">
-                                <button type="submit" class="btn btn-primary"  id="btnbooking">Save Changes</button>
-                                
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btnClose">Close</button>
-                           
-                            </div>
+                                <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary ">Save Changes</button>
+                               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btnClose">Close</button>
+
+                                        </div>
                                 </form>
                             </div>
                          
@@ -289,16 +335,32 @@ $fullname=$record['firstname'];
     <!-- end main content-->
 <?php include 'footer.php'; ?>
 
-
+    <!-- Include jQuery, Bootstrap, and DataTables -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.4/js/dataTables.bootstrap4.min.js"></script>
+ 
+ <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.all.min.js"></script>
 <script>
-       $("#customers").submit(function(e){   
+  
+$(".btn-book").click(function() {
+      // Get the ID from the clicked button
+      var id = $(this).data("item-id");
+
+      // Set the ID to the hidden input field
+      $("#hid").val(id);
+    
+      
+    });
+       $("#BookingForm").submit(function(e){   
             e.preventDefault();
+           
             $.ajax({
-                url:"../../../apis/booking/custBooking.php",
+                url:"../../../apis/booking/custBooking.php", 
                     data: new FormData($(this)[0]),
-                cache: false,
-                contentType: false,
-                processData: false,
+                   cache: false,
+                   contentType: false,
+                  processData: false,
                     method: 'POST',
                 type: 'POST',
                 success: function(resp) {
@@ -314,6 +376,7 @@ $fullname=$record['firstname'];
                                 window.location.href = 'dashboard.php';
                             }
                         });
+                       // alert('sucess')
                     } else if (res.status == 404) {
                         // Use SweetAlert for error message
                         Swal.fire({
@@ -321,6 +384,7 @@ $fullname=$record['firstname'];
                             title: 'Error',
                             text: res.message,
                         });
+                    //alert('failure')
                     }
                 },
                 error: function (xhr, status, error) {
@@ -328,4 +392,5 @@ $fullname=$record['firstname'];
                 }
             });
         });
+  
 </script>
