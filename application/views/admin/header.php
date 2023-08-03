@@ -1,6 +1,3 @@
-<?php // Get the username from the session
-$type = $_SESSION['type'];
-?>
 <!doctype html>
 <html lang="en">
 <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
@@ -47,7 +44,7 @@ $type = $_SESSION['type'];
                             data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <img class="rounded-circle header-profile-user"
                                 src="../../../assets/images/users/avatar-1.jpg" alt="Header Avatar">
-                            <span class="d-none d-xl-inline-block ms-1" key="t-henry"><?php echo $type; ?></span>
+                            <span class="d-none d-xl-inline-block ms-1" key="t-henry">Henry</span>
                             <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
                         </button>
                         <div class="dropdown-menu dropdown-menu-end">
