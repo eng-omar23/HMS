@@ -114,6 +114,40 @@
             }
             $conn->close();
         ?>
+
+        <?php
+            include '../../../conn.php';
+            $now = new DateTime();
+            $SDate = $now->format('Y-m-01');
+            $EDate = $now->format('Y-m-t');
+            // Query to retrieve the data from the database
+            $sql = "SELECT SUM(COALESCE(debit, 0) - COALESCE(credit, 0)) as total FROM transactions WHERE created_at BETWEEN '$SDate' AND '$EDate';";
+            $result = $conn->query($sql);       
+            if ($result->num_rows > 0) {
+                $row = $result->fetch_assoc();
+                $ThisMonth = $row['total'];
+            } else {
+                $ThisMonth = 0;
+            }
+            $conn->close();
+        ?>
+
+        <?php
+            include '../../../conn.php';
+            $SDate = date("Y-m-d", mktime(0, 0, 0, date("m")-1, 1));
+            $EDate = date("Y-m-d", mktime(0, 0, 0, date("m"), 0));
+            // Query to retrieve the data from the database
+            $sql = "SELECT SUM(COALESCE(debit, 0) - COALESCE(credit, 0)) as total FROM transactions WHERE created_at BETWEEN '$SDate' AND '$EDate'";
+            $result = $conn->query($sql);       
+            if ($result->num_rows > 0) {
+                $row = $result->fetch_assoc();
+                $PreMonth = $row['total'];
+            } else {
+                $PreMonth = 0;
+            }
+            $conn->close();
+        ?>
+
         <div class="main-content">
             <div class="page-content">
                 <div class="container-fluid">
@@ -263,11 +297,19 @@
                                     <div class="clearfix">
                                         <div class="float-end">
                                             <div class="input-group input-group-sm">
-                                                <select class="form-select form-select-sm">
-                                                    <option value="JA" selected>Jan</option>
-                                                    <option value="DE">Dec</option>
-                                                    <option value="NO">Nov</option>
+                                                <select class="form-select form-select-sm" id="monthSelect" onchange="updateH4Value()">
+                                                    <option value="JA">Jan</option>
+                                                    <option value="FE">Feb</option>
+                                                    <option value="MR">Mar</option>
+                                                    <option value="AP">Apr</option>
+                                                    <option value="MA">May</option>
+                                                    <option value="JU">Jun</option>
+                                                    <option value="JL">Jul</option>
+                                                    <option value="AU">Aug</option>
+                                                    <option value="SE">Seb</option>
                                                     <option value="OC">Oct</option>
+                                                    <option value="NO">Nov</option>
+                                                    <option value="DE">Dec</option>
                                                 </select>
                                                 <label class="input-group-text">Month</label>
                                             </div>
@@ -280,7 +322,7 @@
                                             <div class="text-muted">
                                                 <div class="mb-4">
                                                     <p>This month</p>
-                                                    <h4>$2453.35</h4>
+                                                    <h4><?php echo $ThisMonth; ?></h4>
                                                     <div><span class="badge badge-soft-success font-size-12 me-1"> + 0.2% </span> From previous period</div>
                                                 </div>
 
@@ -290,7 +332,7 @@
                                                 
                                                 <div class="mt-4">
                                                     <p class="mb-2">Last month</p>
-                                                    <h5>$2281.04</h5>
+                                                    <h4 id="preMonthValue"><?php echo $PreMonth; ?></h4>
                                                 </div>
                                                 
                                             </div>
@@ -312,4 +354,51 @@
     <?php include 'footer.php'; ?>
     <!-- Include jQuery -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    
+    <!-- Add the id attribute to the h4 element -->
+    <!-- Add the id attribute to the h4 element -->
+    <h4 id="preMonthValue"><?php echo $PreMonth; ?></h4>
+
+    <script>
+        function updateH4Value() {
+            const selectedMonth = document.getElementById("monthSelect").value;
+            const h4Element = document.getElementById("preMonthValue");
+
+            const monthColumns = {
+                "JA": "january_column",
+                "FE": "february_column",
+                "MR": "march_column",
+                "AP": "april_column",
+                "MA": "may_column",
+                "JU": "june_column",
+                "JL": "july_column",
+                "AU": "august_column",
+                "SE": "september_column",
+                "OC": "october_column",
+                "NO": "november_column",
+                "DE": "december_column"
+            };
+
+            if (monthColumns[selectedMonth]) {
+                const columnName = monthColumns[selectedMonth];
+                fetchMonthValueFromDatabase('table_name', columnName).then(value => {
+                    h4Element.innerHTML = value;
+                }).catch(error => {
+                    console.error(error);
+                    h4Element.innerHTML = "Error: Failed to fetch value";
+                });
+            } else {
+                h4Element.innerHTML = "No data available for this month";
+            }
+        }
+
+        function fetchMonthValueFromDatabase(tableName, columnName) {
+            return fetch(`fetch_data.php?table=${tableName}&column=${columnName}`)
+                .then(response => response.json())
+                .then(data => {
+                    return data.total || 0;
+                });
+        }
+    </script>
+
+
+
