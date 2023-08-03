@@ -1,253 +1,204 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-
-
-<!-- Mirrored from skote-h-light.codeigniter.themesbrand.com/auth-login-2 by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 11 Jun 2023 12:23:26 GMT -->
-<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
 <head>
+<!-- Latest version of jQuery from Google CDN -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
-    <meta charset="utf-8" />
-<title>HMS</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
-<meta content="Themesbrand" name="author" />
-<!-- App favicon -->
-<link rel="shortcut icon" href="assets/images/favicon.ico">
+<!-- Latest version of jQuery from Microsoft CDN -->
+<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.6.0.min.js"></script>
 
-    <!-- CSS styles -->
+<!-- Latest version of jQuery from jQuery's CDN -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
     <style>
-        .container {
-            margin-top: -10%;
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
         }
-        .sign {
-            background: #00487a; 
-            /* background: #485ec4; */
+
+        .login-container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 5px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+            max-width: 400px;
+            width: 100%;
         }
-        .log {
-            background: #FFFFFF;
+
+        .form-group {
+            margin-bottom: 20px;
         }
-        .col-xl-6 {
-         /* border-radius: 20px; */
+
+        label {
+            display: block;
+            margin-bottom: 5px;
         }
-        .text-center {
-            margin-top: 70px;
+
+        input {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
         }
-        .btn-primary {
-    color: #fff;
-    background-color: #00487a !important;
-    border-color: #00487a !important;
-}
+
+        .password-toggle {
+            position: relative;
+        }
+
+        .password-toggle .password-icon {
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            cursor: pointer;
+        }
+
+        .submit-btn {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        .signup-btn {
+            margin-left: 5%;
+            background-color: #808190;
+            color: #fff4ff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        .submit-btn:hover {
+            background-color: #0056b3;
+        }
+
+        .error-message {
+            color: #ff0000;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        .signup-btn {
+        background-color: #4CAF50; /* Green color */
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        font-size: 16px;
+        border-radius: 3px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+        margin-right: 10px; /* Add some spacing between buttons */
+        text-decoration: none; /* Remove underline from the link */
+    }
+
+    .signup-btn:hover {
+        background-color: #45a049; /* Darker green color on hover */
+    }
+
+    /* Center the buttons horizontally */
+    .button-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 20px; /* Add some margin at the top of the button container */
+    }
+</style>
     </style>
-
-    <!-- owl.carousel css -->
-    <link rel="stylesheet" href="assets/libs/owl.carousel/assets/owl.carousel.min.css">
-
-    <link rel="stylesheet" href="assets/libs/owl.carousel/assets/owl.theme.default.min.css">
-
-    <!-- Bootstrap Css -->
-<link href="assets/css/bootstrap.min.css" id="bootstrap-style" rel="stylesheet" type="text/css" />
-<!-- Icons Css -->
-<link href="assets/css/icons.min.css" rel="stylesheet" type="text/css" />
-<!-- App Css-->
-<link href="assets/css/app.min.css" id="app-style" rel="stylesheet" type="text/css" />
 </head>
+ <!-- Latest version of jQuery from Google CDN -->
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    
+    <!-- Add the necessary DataTables CSS and JS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.4/css/dataTables.bootstrap4.min.css">
+    <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.4/js/dataTables.bootstrap4.min.js"></script>
 
-<body class="">
-
-    <div>
-        <div class="container">
-            <div class="row" style="    margin-top: 20%;   ">
-
-                <div class="sign col-xl-6" style="border-radius: 10px 0 0 10px; box-shadow: -5px 5px 10px rgb(49 48 48 / 50%);">
-                    <div class="p-md-12 p-2">
-                        <div class="w-100">
-                            <div class="bg"></div>
-                            <div class="d-flex h-100 flex-column">
-                                
-                                <div class="p-12 mt-auto">
-                                    <div class="row justify-content-center">
-                                        <div class="col-lg-10">
-                                            <div class="text-center">
-
-                                                <h4 class="mb-4 text-white"><i class="bx bxs-quote-alt-left text-white h1 align-middle me-3"></i><span class="text-white">5k</span>+ Satisfied clients  <i class="bx bxs-quote-alt-right text-white h1 align-middle me-3"></i></h4>
-                                                <div dir="ltr" class="mt-20">
-                                                    <div class="owl-carousel owl-theme auth-review-carousel" id="auth-review-carousel">
-                                                        <div class="item">
-                                                            <div class="py-6">
-                                                                <p class="font-size-16 mb-6 text-white">" Fantastic theme with a ton of options. 
-                                                                    If you just want the HTML to integrate with your project, 
-                                                                    then this is the package. You can find the files in the 'dist' folder...
-                                                                    no need to install git and all the other stuff the documentation talks about. "</p>
-
-                                                                <div>
-                                                                    <h4 class="font-size-16 text-white">Aweys</h4>
-                                                                    <p class="font-size-14 mb-0 text-white">- Skote User</p>
-                                                                </div>
-                                                            </div>
-
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- end col -->
-
-                <div class="log col-xl-6" style="border-radius: 0 10px 10px 0;  box-shadow: 5px 5px 10px rgb(49 48 48 / 50%);">
-                    <div class="p-md-12 p-2">
-                        <div class="w-100">
-
-                            <div class="d-flex flex-column h-100">
-                                <div class="mb-4 mb-md-5">
-                                    
-                                </div>
-                                <div class="my-auto">
-
-                                    <div>
-                                        <h5 class="text-primary">Welcome Back !</h5>
-                                        <!-- <p class="text-muted">Sign in to continue to Skote.</p> -->
-                                    </div>
-
-                                    <div class="mt-2">
-                                        <form id="login" action="../../../apis/login_handler.php" method="Post">
-
-                                            <div class="mb-3">
-                                                <label for="username" class="form-label">Email</label>
-                                                <input type="Email" class="form-control" name="Email" id="Email" placeholder="Enter Email">
-                                            </div>
-
-                                            <div class="mb-3">
-                                                <div class="float-end">
-                                                    <a href="auth-recoverpw-2.html" class="text-muted">Forgot password?</a>
-                                                </div>
-                                                <label class="form-label">Password</label>
-                                                <div class="input-group auth-pass-inputgroup">
-                                                    <input type="password" class="form-control" name="password" id="password" placeholder="Enter password" aria-label="Password" aria-describedby="password-addon">
-                                                    <button class="btn btn-light " type="button" id="password-addon"><i class="mdi mdi-eye-outline"></i></button>
-                                                </div>
-                                            </div>
-
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="remember-check">
-                                                <label class="form-check-label" for="remember-check">
-                                                    Remember me
-                                                </label>
-                                            </div>
-
-                                            <div class="mt-3 d-grid">
-                                                <button class="btn btn-primary waves-effect waves-light" type="submit">Log In</button>
-                                            </div>
-
-<!-- 
-                                            <div class="mt-4 text-center">
-                                                <h5 class="font-size-14 mb-3">Sign in with</h5>
-
-                                                <ul class="list-inline">
-                                                    <li class="list-inline-item">
-                                                        <a href="javascript::void()" class="social-list-item bg-primary text-white border-primary">
-                                                            <i class="mdi mdi-facebook"></i>
-                                                        </a>
-                                                    </li>
-                                                    <li class="list-inline-item">
-                                                        <a href="javascript::void()" class="social-list-item bg-info text-white border-info">
-                                                            <i class="mdi mdi-twitter"></i>
-                                                        </a>
-                                                    </li>
-                                                    <li class="list-inline-item">
-                                                        <a href="javascript::void()" class="social-list-item bg-danger text-white border-danger">
-                                                            <i class="mdi mdi-google"></i>
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </div> -->
-
-                                        </form>
-                                        <div class="mt-5 text-center">
-                                            <p>If You Are Customer  ? <a href="auth-register-2.html" class="fw-medium text-primary"> Signup now </a> </p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- <div class="mt-4 mt-md-5 text-center">
-                                    <p class="mb-0">© <script>
-                                            document.write(new Date().getFullYear())
-                                        </script> Skote. Crafted with <i class="mdi mdi-heart text-danger"></i> by Themesbrand</p>
-                                </div> -->
-                            </div>
-
-
-                        </div>
-                    </div>
-                </div>
-                <!-- end col -->
+    <!-- SweetAlert2 CSS and JS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.all.min.js"></script>
+<body>
+    <div class="login-container">
+        <center><h2>Armaan Halls </h2></center>
+        
+        <form id="login-form" action="loginhandler.php" method="post">
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="Email" required>
             </div>
-            <!-- end row -->
+            <div class="form-group password-toggle">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+                <span class="password-icon" onclick="togglePasswordVisibility()">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="20" height="20">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 12h12M6 12a4 4 0 011-2.533M6 12a4 4 0 001 2.533m11.132-1.979a9 9 0 10-12.263 0m12.263 0H6"></path>
+                    </svg>
+                </span>
+            </div>
+            <div class="button-container">
+            <button type="submit" class="submit-btn">Login</button>
+            <a href="signup.php" class="signup-btn">Signup</a>
         </div>
-        <!-- end container-fluid -->
+        <p class="error-message" id="error-message"></p>
+    </div>
+        
+        </form>
     </div>
 
-    <!-- JAVASCRIPT -->
-<script src="assets/libs/jquery/jquery.min.js"></script>
-<script src="assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
-<script src="assets/libs/metismenu/metisMenu.min.js"></script>
-<script src="assets/libs/simplebar/simplebar.min.js"></script>
-<script src="assets/libs/node-waves/waves.min.js"></script>
-    <!-- owl.carousel js -->
-    <script src="assets/libs/owl.carousel/owl.carousel.min.js"></script>
-
-    <!-- auth-2-carousel init -->
-    <script src="assets/js/pages/auth-2-carousel.init.js"></script>
-
-    <!-- App js -->
-    <script src="assets/js/app.js"></script>
-
-</body>
-</html>
-
+    <!-- JavaScript to handle form submission -->
+   
 <script>
-     $("#login").submit(function(e){   
+       function togglePasswordVisibility() {
+            // Your password visibility toggle function...
+        }
+
+        $("#login-form").submit(function (e) {
             e.preventDefault();
             $.ajax({
-                url:"../../../apis/login_handler.php",
-                    data: new FormData($(this)[0]),
+                url: "loginhandler.php",
+                data: new FormData($(this)[0]),
                 cache: false,
                 contentType: false,
                 processData: false,
-                    method: 'POST',
+                method: 'POST',
                 type: 'POST',
-                success: function(resp) {
+                success: function (resp) {
                     var res = jQuery.parseJSON(resp);
-                    
+
                     if (res.status == 300) {
                         Swal.fire({
-                        icon: 'success',
-                        title: 'Success',
-                        text: res.message,
+                            icon: 'success',
+                            title: 'Success',
+                            text: res.message,
                         }).then((result) => {
                             if (result.isConfirmed) {
-                                window.location.href = 'adminDashboard.php';
+                                window.location.href = './application/views/admin/adminDashboard.php';
                             }
                         });
-                    }
-                    else if (res.status == 500) {
+                    } else if (res.status == 500) {
                         Swal.fire({
-                        icon: 'success',
-                        title: 'Success',
-                        text: res.message,
+                            icon: 'success',
+                            title: 'Success',
+                            text: res.message,
                         }).then((result) => {
                             if (result.isConfirmed) {
-                                window.location.href = 'dashboard.php';
+                                window.location.href = './application/views/customer/dashboard.php';
                             }
                         });
-                    }
-                     else if (res.status == 404) {
+                    } else if (res.status == 404) {
                         // Use SweetAlert for error message
                         Swal.fire({
                             icon: 'error',
@@ -261,4 +212,7 @@
                 }
             });
         });
+    </script>
 </script>
+</body>
+</html>

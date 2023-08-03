@@ -14,137 +14,171 @@ $attendee = trim($_POST['attend']);
 $rate = 0;
 $date = date('Y-m-d');
 $credit = 0;
-$bookingType=0;
+$bookingType = 0;
 $selectedFacilities = isset($_POST['facility_id']) ? $_POST['facility_id'] : [];
 $food = $_POST['food'];
 
-// Define the ALTER TABLE query
-
-
-if (isset($_POST['facility_id'])) {
-    $selectedCheckboxes = $_POST['facility_id'];
-
-    // Process the selected checkboxes as needed
-    foreach ($selectedCheckboxes as $checkboxValue) {
-        // Perform further processing or database operations
-        array_push($selectedFacilities, $checkboxValue);
+// Function to handle facilities checkboxes
+function handleFacilities(&$selectedFacilities) {
+    if (isset($_POST['facility_id'])) {
+        $selectedCheckboxes = $_POST['facility_id'];
+        // Process the selected checkboxes as needed
+        foreach ($selectedCheckboxes as $checkboxValue) {
+            // Perform further processing or database operations
+            array_push($selectedFacilities, $checkboxValue);
+        }
+    } else {
+        echo "No checkboxes selected.";
     }
-} else {
-    echo "No checkboxes selected.";
 }
 
-// Ensure required fields are not empty
-if (empty($bookId)) {
+// Start transaction
+mysqli_begin_transaction($conn, MYSQLI_TRANS_START_READ_WRITE);
 
-// Insert into bookings table
-$sql = "INSERT INTO bookings (hall_id, customer_id, start_date, end_date,starttime,endtime, booking_status,bookingType, attendee, rate, created_at,foodid)
-        VALUES ('$hallId', '$customerId', '$startDate', '$endDate','$starttime','$endtime', '$bookStatus','$bookingType', '$attendee', '$rate', '$date','$food')";
-$query = mysqli_query($conn, $sql);
-$lastInsertedID = mysqli_insert_id($conn);
+try {
+    // Ensure required fields are not empty
+    if (empty($bookId)) {
+        // Insert into bookings table
+        $sql = "INSERT INTO bookings (hall_id, customer_id, start_date, end_date, starttime, endtime, booking_status, bookingType, attendee, rate, created_at, foodid)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $stmt = mysqli_prepare($conn, $sql);
+        mysqli_stmt_bind_param($stmt, "ssssssssssss", $hallId, $customerId, $startDate, $endDate, $starttime, $endtime, $bookStatus, $bookingType, $attendee, $rate, $date, $food);
+        mysqli_stmt_execute($stmt);
+        $lastInsertedID = mysqli_insert_id($conn);
+        mysqli_stmt_close($stmt);
 
-if ($query) {
-    // Calculate debit amount
-    if ($food == null && empty($food)) {
+        // Insert selected facilities into booking_facility table
+        foreach ($selectedFacilities as $facility_id) {
+            $sql = "INSERT INTO booking_facility (booking_id, facility_id, date) VALUES (?, ?, ?)";
+            $stmt = mysqli_prepare($conn, $sql);
+            mysqli_stmt_bind_param($stmt, "sss", $lastInsertedID, $facility_id, $date);
+            mysqli_stmt_execute($stmt);
+            mysqli_stmt_close($stmt);
+        }
 
-         $duration = calculateTimeDuration($starttime, $endtime);
-         $newRate = getHallPrice($conn, $hallId);
-         $totalFacilityPrice = calculateFacilityPrice($selectedFacilities, $conn);
-         $debit = calculateDebit($newRate, $duration);
-         $totalDebit = $debit + $totalFacilityPrice;
-         $sql="update bookings set Rate= '$newRate' ,bookingType='1' where booking_id='$lastInsertedID'";
-         $query=mysqli_query($conn,$sql);
-    } 
-    else{ 
-        $rate= getFoodprice($conn,$food);
-        $debit = calculateDebit($rate, $attendee);
-        $totalFacilityPrice = calculateFacilityPrice($selectedFacilities, $conn);
-        $totalDebit = $debit + $totalFacilityPrice;
-        $sql="update bookings set Rate= '$rate' ,bookingType='0' where booking_id='$lastInsertedID'";
-        $query=mysqli_query($conn,$sql);
-    }
+        handleFacilities($selectedFacilities);
 
-    // Insert into transactions table
-    $transactionSql = "INSERT INTO transactions (refID, tranType,custid, credit, transactionDate, debit) 
-                       VALUES ('$lastInsertedID','Booking', '$customerId', '$credit', '$date', '$totalDebit')";
-    $transactionQuery = mysqli_query($conn, $transactionSql);
+        // Calculate debit amount
+        if ($food == null && empty($food)) {
+            $duration = calculateTimeDuration($starttime, $endtime);
+            $newRate = getHallPrice($conn, $hallId);
+            $totalFacilityPrice = calculateFacilityPrice($selectedFacilities, $conn);
+            $debit = calculateDebit($newRate, $duration);
+            $totalDebit = $debit + $totalFacilityPrice;
+            $sql = "UPDATE bookings SET Rate = ?, bookingType = '1' WHERE booking_id = ?";
+            $stmt = mysqli_prepare($conn, $sql);
+            mysqli_stmt_bind_param($stmt, "ss", $newRate, $lastInsertedID);
+            mysqli_stmt_execute($stmt);
+            mysqli_stmt_close($stmt);
+        } else {
+            $rate = getFoodprice($conn, $food);
+            $debit = calculateDebit($rate, $attendee);
+            $totalFacilityPrice = calculateFacilityPrice($selectedFacilities, $conn);
+            $totalDebit = $debit + $totalFacilityPrice;
+            $sql = "UPDATE bookings SET Rate = ?, bookingType = '0' WHERE booking_id = ?";
+            $stmt = mysqli_prepare($conn, $sql);
+            mysqli_stmt_bind_param($stmt, "ss", $rate, $lastInsertedID);
+            mysqli_stmt_execute($stmt);
+            mysqli_stmt_close($stmt);
+        }
+        $booking='Booking';
+        // Insert into transactions table
+        $transactionSql = "INSERT INTO transactions (refID, tranType, custid, credit, transactionDate, debit) 
+                           VALUES (?, ?, ?, ?, ?, ?)";
+        $stmt = mysqli_prepare($conn, $transactionSql);
+        mysqli_stmt_bind_param($stmt, "ssssss", $lastInsertedID, $booking, $customerId, $credit, $date, $totalDebit);
+        mysqli_stmt_execute($stmt);
+        mysqli_stmt_close($stmt);
 
-    if ($transactionQuery) {
+        // Commit the transaction
+        mysqli_commit($conn);
+
         $result = [
             'message' => 'Booking created successfully.',
             'status' => 200
         ];
         echo json_encode($result);
     } else {
-        $result = [
-            'message' => 'Failed to create transaction.',
-            'status' => 404
-        ];
-        echo json_encode($result);
+        // Update bookings table
+        $sql = "UPDATE bookings
+                SET hall_id = ?, customer_id = ?, start_date = ?, end_date = ?, starttime = ?, endtime = ?, booking_status = ?, 
+                bookingType = ?, attendee = ?, Rate = ?, created_at = ?, foodid = ?
+                WHERE booking_id = ?";
+        $stmt = mysqli_prepare($conn, $sql);
+        mysqli_stmt_bind_param($stmt, "sssssssssssss", $hallId, $customerId, $startDate, $endDate, $starttime, $endtime, $bookStatus, $bookingType, $attendee, $rate, $date, $food, $bookId);
+        $query = mysqli_stmt_execute($stmt);
+
+        if ($query) {
+            // Delete existing facilities associated with the booking
+            $deleteFacilitiesSql = "DELETE FROM booking_facility WHERE booking_id = ?";
+            $stmt = mysqli_prepare($conn, $deleteFacilitiesSql);
+            mysqli_stmt_bind_param($stmt, "s", $bookId);
+            mysqli_stmt_execute($stmt);
+            mysqli_stmt_close($stmt);
+
+            // Insert selected facilities into booking_facility table
+            foreach ($selectedFacilities as $facility_id) {
+                $sql = "INSERT INTO booking_facility (booking_id, facility_id, date) VALUES (?, ?, ?)";
+                $stmt = mysqli_prepare($conn, $sql);
+                mysqli_stmt_bind_param($stmt, "sss", $bookId, $facility_id, $date);
+                mysqli_stmt_execute($stmt);
+                mysqli_stmt_close($stmt);
+            }
+
+            handleFacilities($selectedFacilities);
+
+            // Calculate debit amount and update Rate
+            if ($food == null && empty($food)) {
+                $duration = calculateTimeDuration($starttime, $endtime);
+                $newRate = getHallPrice($conn, $hallId);
+                $totalFacilityPrice = calculateFacilityPrice($selectedFacilities, $conn);
+                $debit = calculateDebit($newRate, $duration);
+                $totalDebit = $debit + $totalFacilityPrice;
+                $sql = "UPDATE bookings SET Rate = ?, bookingType = '1' WHERE booking_id = ?";
+                $stmt = mysqli_prepare($conn, $sql);
+                mysqli_stmt_bind_param($stmt, "ss", $newRate, $bookId);
+                mysqli_stmt_execute($stmt);
+                mysqli_stmt_close($stmt);
+            } else {
+                $rate = getFoodprice($conn, $food);
+                $debit = calculateDebit($rate, $attendee);
+                $totalFacilityPrice = calculateFacilityPrice($selectedFacilities, $conn);
+                $totalDebit = $debit + $totalFacilityPrice;
+                $sql = "UPDATE bookings SET Rate = ?, bookingType = '0' WHERE booking_id = ?";
+                $stmt = mysqli_prepare($conn, $sql);
+                mysqli_stmt_bind_param($stmt, "ss", $rate, $bookId);
+                mysqli_stmt_execute($stmt);
+                mysqli_stmt_close($stmt);
+            }
+
+            // Insert into transactions table
+            $transactionSql = "INSERT INTO transactions (refID, tranType, custid, credit, transactionDate, debit) 
+                               VALUES (?, ?, ?, ?, ?, ?)";
+                               
+            $stmt = mysqli_prepare($conn, $transactionSql);
+            mysqli_stmt_bind_param($stmt, "ssssss", $bookId, $booking, $customerId, $credit, $date, $totalDebit);
+            mysqli_stmt_execute($stmt);
+            mysqli_stmt_close($stmt);
+
+            // Commit the transaction
+            mysqli_commit($conn);
+
+            $result = [
+                'message' => 'Booking updated successfully.',
+                'status' => 200
+            ];
+            echo json_encode($result);
+        } else {
+            throw new Exception("Failed to update booking.");
+        }
     }
-} else {
+} catch (Exception $e) {
+    // Rollback the transaction in case of any error
+    mysqli_rollback($conn);
     $result = [
-        'message' => 'Failed to create booking.',
+        'message' => $e->getMessage(),
         'status' => 404
     ];
     echo json_encode($result);
-}
-}
-else{
-    $sql = "UPDATE bookings
-    SET hall_id ='$hallId', 
-    customer_id ='$customerId', 
-    start_date ='$startDate', 
-    end_date ='$endDate',
-    starttime = '$starttime',
-    endtime ='$endtime',
-    booking_status = '$bookStatus',
-    bookingType ='$bookingType', 
-    attendee ='$attendee',
-    Rate= '$rate', 
-    created_at ='$date', 
-    foodId='$food'
-    WHERE booking_id = '$bookId'";
-
-
-$query = mysqli_query($conn, $sql);
-if($query){
-    if ($food == null && empty($food)) {
-
-        $duration = calculateTimeDuration($starttime, $endtime);
-        $newRate = getHallPrice($conn, $hallId);
-        $totalFacilityPrice = calculateFacilityPrice($selectedFacilities, $conn);
-        $debit = calculateDebit($newRate, $duration);
-        $totalDebit = $debit + $totalFacilityPrice;
-        $sql="update bookings set Rate= '$newRate' ,bookingType='1' where booking_id='$bookId'";
-        $query=mysqli_query($conn,$sql);
-   } 
-   else{ 
-    $rate= getFoodprice($conn,$food);
-    $debit = calculateDebit($rate, $attendee);
-    $totalFacilityPrice = calculateFacilityPrice($selectedFacilities, $conn);
-    $totalDebit = $debit + $totalFacilityPrice;
-    $sql="update bookings set Rate= '$rate' ,bookingType='0' where booking_id='$bookId'";
-    $query=mysqli_query($conn,$sql);
-}
- // Insert into transactions table
- $transactionSql = "INSERT INTO transactions (refID, tranType,custid, credit, transactionDate, debit) 
- VALUES ('$bookId','Booking', '$customerId', '$credit', '$date', '$totalDebit')";
-$transactionQuery = mysqli_query($conn, $transactionSql);
-
-if ($transactionQuery) {
-$result = [
-'message' => 'Booking Updated successfully.',
-'status' => 200
-];
-echo json_encode($result);
-} else {
-$result = [
-'message' => 'Failed to Updated transaction.',
-'status' => 404
-];
-echo json_encode($result);
-}
-}
-
 }
 ?>

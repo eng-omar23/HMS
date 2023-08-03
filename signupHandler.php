@@ -1,6 +1,6 @@
 <?php
 require_once "../conn.php";
-
+echo "hellow world ";
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Get form data
     $fullName = $_POST['name'];
@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Perform form validation (You can add more validation as needed)
     if (empty($fullName) || empty($email) || empty($address) || empty($phone) || empty($password) || empty($confirmPassword)) {
         $response = [
-            'status' => 400,
+            'status' => 404,
             'message' => 'All fields are required.'
         ];
         echo json_encode($response);
@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $response = [
-            'status' => 400,
+            'status' => 404,
             'message' => 'Invalid email format.'
         ];
         echo json_encode($response);
@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($password !== $confirmPassword) {
         $response = [
-            'status' => 400,
+            'status' => 404,
             'message' => 'Passwords do not match.'
         ];
         echo json_encode($response);
@@ -48,7 +48,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($result) {
         // User created successfully
-
         $insertCustomers = "INSERT INTO customers (firstname, phone, address, email, date) 
                             VALUES ('$fullName', '$phone', '$address', '$email', '$date')";
         $succes=mysqli_query($conn, $insertCustomers);
