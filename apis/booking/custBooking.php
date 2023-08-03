@@ -37,6 +37,7 @@ if (isset($_POST['facility_id'])) {
     foreach ($selectedCheckboxes as $checkboxValue) {
         // Perform further processing or database operations
         array_push($facility_ids, $checkboxValue);
+
     }
 } else {
     $result = [
@@ -76,7 +77,7 @@ if (empty($bid)) {
 
   $result = [
                 'message' => 'Booking Already exists.',
-                'status' => 200
+                'status' => 404
             ];
             echo json_encode($result);
    exit();
@@ -98,7 +99,7 @@ if (empty($bid)) {
 
     $query = mysqli_stmt_execute($stmt);
     $lastInsertedID = mysqli_insert_id($conn);
-
+        
     if ($query) {
         // Calculate debit amount
         if ($food == null && empty($food)) {
@@ -126,7 +127,7 @@ if (empty($bid)) {
         $transactionSql = "INSERT INTO transactions (refID, tranType, custid, credit, transactionDate, debit) 
                            VALUES (?, 'cusBooking', ?, ?, ?, ?)";
         $stmt = mysqli_prepare($conn, $transactionSql);
-        mysqli_stmt_bind_param($stmt, "iidsd", $lastInsertedID,'custBooking', $customerID, $credit, $date, $totalDebit);
+        mysqli_stmt_bind_param($stmt, "iidsd", $lastInsertedID, $customerID, $credit, $date, $totalDebit);
         $transactionQuery = mysqli_stmt_execute($stmt);
 
         if ($transactionQuery) {

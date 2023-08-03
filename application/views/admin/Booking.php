@@ -600,44 +600,40 @@
                              
                                 </div>  
                    
-                                    <div class="mb-3">
-                                            <!-- <label for="formrow-email-input" class="form-label">Rate</label> -->
-                                                <input type="hidden" class="form-control" id="rate" name="rate" readonly=true>
-                                          
-                           
-                                </div>
-                                            
-                                           <div class="mb-3">
-                                            <?php
-                                        $sql="select * from facility";
-                                        $result=mysqli_query($conn,$sql);
-                                        if(mysqli_num_rows($result) > 0 ){
-                                            ?>
-                                            <h6>choose Facility</h1>
-                                            <?php
-                                            while($row = mysqli_fetch_array($result)){
-                                                ?>  
-                                         
-                                                 <!-- <label for="checkbox" class="form-label" class="checkbox-label">  <?php echo $row['facility_name']?></label>         -->
-                                            <!-- <input type="checkbox" class="custom-checkbox" id="<?php echo $row['facility_id[]']?>" name="facility_id[]" value="<?php echo $row['facility_id']?>"> -->
-                                            <!-- <input type="checkbox" class="custom-checkbox" id="<?php echo $row['facility_id[]']?>" name="facility_id[]" value="<?php echo $row['facility_id']?>"> -->
-                                            <!-- <input type="checkbox" class="custom-checkbox" id="facility1" name="facility_id[]" value="1">
-                                            <input type="checkbox" class="custom-checkbox" id="facility2" name="facility_id[]" value="2"> -->
-                                            <input type="checkbox" id="checkbox" name="facility_id[]" value="<?php echo $row['facility_id']?>">
-                                            <label for="checkbox" class="form-label checkbox-label"><?php echo $row['facility_name']?></label>
-                                                <?php
-                                            }
+                                <div class="mb-3">
+    <!-- Hidden input to hold the rate value -->
+    <input type="hidden" class="form-control" id="rate" name="rate" readonly=true>
+</div>
 
-                                        }
-                                        else{
-                                            ?>
-                                            <option> NO Data found</option>
-                                            <?php
-                                        }
-                                        ?>
-                                           
+<div class="mb-3">
+    <!-- Hidden input to hold the rate value -->
+    <input type="hidden" class="form-control" id="rate" name="rate" readonly=true>
+</div>
 
-                                            </div>
+<div class="mb-3">
+    <?php
+    $sql = "select * from facility";
+    $result = mysqli_query($conn, $sql);
+    if (mysqli_num_rows($result) > 0) {
+        ?>
+        <h6>Choose Facility</h1>
+        <?php
+        foreach ($result as $row) {
+            ?>  
+            <!-- Use value attribute to store the facility ID -->
+            <input type="checkbox" class="facility-checkbox" name="facility_id[]" id="facilityID" value="<?php echo $row['facility_id']?>">
+            <label class="form-label checkbox-label"><?php echo $row['facility_name']?></label>
+            <?php
+        }
+    } else {
+        ?>
+        <option> NO Data found</option>
+        <?php
+    }
+    ?>
+</div>
+
+
 
                                             <div class="row">
                            
@@ -688,18 +684,34 @@
                 alert(response)
                 var bdata = JSON.parse(response);
                 
-                console.log(bdata.id);
-                $('#bookid').val(bdata.id);
-                $('#bstatus').val(bdata.STATUS);
-                $('#rate').val(bdata.rate);
-                $('#startDate').val(bdata.sdate);
-                $('#hallId').val(bdata.hall_id);
-                $('#endDate').val(bdata.edate);
-                $('#attend').val(bdata.attend);
-                $('#food').val(bdata.food).change();
-                $('#cid').val(bdata.cname).change();  
-                $('#starttime').val(bdata.starttime);
-                $('#endtime').val(bdata.endtime);
+                $('.facility-checkbox').prop('checked', false); // Uncheck all checkboxes initially
+
+$('#bookid').val(bdata.id);
+$('#bstatus').val(bdata.STATUS);
+$('#rate').val(bdata.rate);
+$('#startDate').val(bdata.sdate);
+$('#hallId').val(bdata.hall_id);
+$('#endDate').val(bdata.edate);
+$('#attend').val(bdata.attend);
+$('#food').val(bdata.food).change();
+$('#cid').val(bdata.cname).change();
+$('#starttime').val(bdata.starttime);
+$('#endtime').val(bdata.endtime);
+
+// Object to keep track of processed facility IDs
+const processedFacilities = {};
+
+// Loop through the facilities and set the checkboxes accordingly
+const facilityIds = bdata.facilities;
+facilityIds.forEach((facilityId) => {
+  if (!processedFacilities[facilityId]) {
+    $(`input.facility-checkbox[value="${facilityId}"]`).prop('checked', true);
+    processedFacilities[facilityId] = true;
+  }
+});
+
+
+
 
              
           
@@ -712,13 +724,13 @@
     $('.receipt-btn').click(function() {
 
    var rid = parseInt($(this).data('item-id'), 10);
-   alert(rid)
+   
    $.ajax({
        url:"../../../apis/booking/getReceiption.php",
        type: 'POST',
        data: { rid: rid },
        success: function(response) {
-           alert(response)
+           
            var bdata = JSON.parse(response);
            
            alert(bdata.bid); 
@@ -733,13 +745,13 @@
 $('.refund-btn').click(function() {
 
 var rid = parseInt($(this).data('item-id'), 10);
-alert(rid)
+
 $.ajax({
     url:"../../../apis/booking/getReceiption.php",
     type: 'POST',
     data: { rid: rid },
     success: function(response) {
-        alert(response)
+       
         var bdata = JSON.parse(response);
         
         console.log(bdata.id); 
