@@ -127,6 +127,18 @@ function getCustomerID($conn, $name)
         return 0;
     }
 }
+function getCustomerIdbasedonEmail($conn, $email)
+{
+    $sql = "SELECT * FROM customers WHERE email='$email'";
+    $query = mysqli_query($conn, $sql);
+    if ($query) {
+        $data = mysqli_fetch_array($query);
+        $cid = $data['custid'];
+        return $cid;
+    } else {
+        return 0;
+    }
+}
 // $starttime = "09:00";
 // $endtime = "11:30";
 
