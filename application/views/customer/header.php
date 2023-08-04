@@ -56,7 +56,18 @@ $email = $_SESSION['email'];
                                     </div>
                                 </div>
                             </div>
-                           
+                            <?php 
+                                   $sql = "SELECT * FROM bookings b
+                                   LEFT JOIN customers c ON b.customer_id = c.custid
+                                   WHERE c.email = '$email'";
+                           $query = mysqli_query($conn, $sql);
+                            
+                            while ($row = mysqli_fetch_assoc($query)) {
+
+                                $bstatus = $row['booking_status'];
+                                $updatedAt = strtotime($row['updated_at']);
+                                $time = date('H:i:s', $updatedAt);
+                           ?>
                             <div data-simplebar style="max-height: 230px;">
                                 <a href="javascript: void(0);" class="text-reset notification-item">
                                     <div class="d-flex">
@@ -66,17 +77,27 @@ $email = $_SESSION['email'];
                                             </span>
                                         </div>
                                         <div class="flex-grow-1">
-                                            <h6 class="mb-1" key="t-your-order">Your order is placed</h6>
+                                            <h6 class="mb-1" key="t-your-order"></h6>
                                             <div class="font-size-12 text-muted">
-                                                <p class="mb-1" key="t-grammer">If several languages coalesce the
-                                                    grammar</p>
+                                                <?php if($bstatus==1){
+                                                    ?>
+                                                    <p class="mb-1" key="t-grammer">your booking is approved <?php echo $row['firstname'] ?> </p>
+                                               <?php }
+                                                else if($bstatus==2){
+                                                    ?>
+                                                    <p class="mb-1" key="t-grammer"> your booking is cancelled</p>
+                                               <?php }
+                                               ?>
+                                               
                                                 <p class="mb-0"><i class="mdi mdi-clock-outline"></i> <span
-                                                        key="t-min-ago">3 min ago</span></p>
+                                                        key="t-min-ago"><?php echo $time ?></span></p>
                                             </div>
                                         </div>
                                     </div>
                                 </a>
-                                
+                                <?php
+                            }
+                                ?>
                                
                                 
                             </div>
