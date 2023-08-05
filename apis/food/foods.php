@@ -11,7 +11,7 @@ if (empty($fid)) {
     if (empty($ftype) || empty($fprice)) {
         $result = [
             'message' => 'Food type and price are required.',
-            'status' => 400
+            'status' => 404
         ];
         echo json_encode($result);
         return;
@@ -22,7 +22,7 @@ if (empty($fid)) {
     if ($check) {
         $result = [
             'message' => 'Record already exists.',
-            'status' => 409
+            'status' => 404
         ];
         echo json_encode($result);
         return;
@@ -40,7 +40,7 @@ if (empty($fid)) {
     } else {
         $result = [
             'message' => 'Failed to create food.',
-            'status' => 500
+            'status' => 404
         ];
         echo json_encode($result);
     }
@@ -57,7 +57,7 @@ if (empty($fid)) {
     } else {
         $result = [
             'message' => 'Failed to update food.',
-            'status' => 500
+            'status' => 404
         ];
         echo json_encode($result);
     }

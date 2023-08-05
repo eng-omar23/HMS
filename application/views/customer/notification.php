@@ -72,9 +72,9 @@ $query = mysqli_query($conn, $sql);
                     $bstatus = $row['booking_status'];
                     echo "<td>";
                     if ($bstatus == 1) {
-                        echo "Your booking is pending";
-                    } else if ($bstatus == 0) {
-                        echo "Your booking is confirmed";
+                        echo "Your booking is approved";
+                    } else if ($bstatus == 2) {
+                        echo "Your booking is cancelled";
                     }
                     echo "</td>";
                     echo "<td>

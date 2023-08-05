@@ -1,7 +1,8 @@
 
-<?php
 
-// require '../conn.php';
+<?php  
+
+ //require '../conn.php';
 // Function to delete the item from the database
 function allqueryHandler($conn, $sql) {
     $query = mysqli_query($conn, $sql);
@@ -132,13 +133,14 @@ function getCustomerIdbasedonEmail($conn, $email)
     $sql = "SELECT * FROM customers WHERE email='$email'";
     $query = mysqli_query($conn, $sql);
     if ($query) {
-        $data = mysqli_fetch_array($query);
+        $data = mysqli_fetch_assoc($query);
         $cid = $data['custid'];
         return $cid;
     } else {
-        return 0;
+        return 3;
     }
 }
+
 // $starttime = "09:00";
 // $endtime = "11:30";
 

@@ -81,7 +81,9 @@ $email = $_SESSION['email'];
                                             <div class="font-size-12 text-muted">
                                                 <?php if($bstatus==1){
                                                     ?>
-                                                    <p class="mb-1" key="t-grammer">your booking is approved <?php echo $row['firstname'] ?> </p>
+                                                
+                                                    <h6 class="mb-1" key="t-your-order">Thank you for booking with us <?php echo $row['firstname'] ?></h6>
+                                               
                                                <?php }
                                                 else if($bstatus==2){
                                                     ?>
@@ -95,12 +97,13 @@ $email = $_SESSION['email'];
                                         </div>
                                     </div>
                                 </a>
-                                <?php
-                            }
-                                ?>
+                            
                                
                                 
                             </div>
+                            <?php
+                            }
+                                ?>
                             <div class="p-2 border-top d-grid">
                                 <a class="btn btn-sm btn-link font-size-14 text-center" href="javascript:void(0)">
                                     <i class="mdi mdi-arrow-right-circle me-1"></i> <span key="t-view-more">View

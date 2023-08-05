@@ -192,149 +192,139 @@ $fullname=$record['firstname'];
                 ?>
 
             <!-- end row -->
-            <!-- Modal -->
-            <div class="modal fade orderdetailsModal " tabindex="-1" role="dialog"
-                aria-labelledby="orderdetailsModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="orderdetailsModalLabel">Booking</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+         <!-- Modal -->
+<div class="modal fade orderdetailsModal" tabindex="-1" role="dialog" aria-labelledby="orderdetailsModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="orderdetailsModalLabel">Booking</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="BookingForm" method="post" action="../../../apis/booking/custBooking.php">
+                    <!-- Hidden inputs for booking and hotel IDs -->
+                    <input type="hidden" class="form-control" id="bid" name="bid">
+                    <input type="hidden" class="form-control" id="hid" name="hid">
+
+                    <!-- Start Date and End Date inputs -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="startDate" class="form-label">Start Date</label>
+                                <input type="date" class="form-control" id="startDate" name="startDate" required>
+                            </div>
                         </div>
-                        <div class="modal-body">
-                            <form id="BookingForm" method="post" action="../../../apis/booking/custBooking.php">
-                                <input type="hidden" class="form-control" id="bid" name="bid">
-                                <input type="hidden" class="form-control" id="hid" name="hid">
-
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label for="formrow-address-input" class="form-label">Start Date</label>
-                                            <input type="date" class="form-control" id="startDate" name="startDate">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label for="formrow-email-input" class="form-label">End Date</label>
-                                            <input type="date" class="form-control" id="endDate" name="endDate">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label for="formrow-address-input" class="form-label">Start Time</label>
-                                            <input type="time" class="form-control" id="starttime" name="starttime">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label for="formrow-email-input" class="form-label">End Time</label>
-                                            <input type="time" class="form-control" id="endtime" name="endtime">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="mb-3">
-                                        <label for="formrow-email-input" class="form-label">attend</label>
-                                        <input type="text" class="form-control" id="attend" name="attend"
-                                            placeholder="Enter Attendee">
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label for="Food">Food</label>
-                                            <select name="food" class="form-control" id="food">
-                                                <?php
-                                        $sql="select * from food";
-                                        $result=mysqli_query($conn,$sql);
-                                        if(mysqli_num_rows($result) > 0 ){
-                                            ?>
-                                                <option value="">choose food Type </option>
-                                                <?php
-                                            while($row = mysqli_fetch_array($result)){
-                                  
-                                                ?>
-                                                <option value="<?php echo $row['foodId']?>">
-                                                    <?php echo $row['foodType']?></option>
-                                                <?php
-                                            }
-
-                                        }
-                                        else{
-                                            ?>
-                                                <option> NO Data found</option>
-                                                <?php
-                                        }
-                                        ?>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label for="formrow-email-input" class="form-label">Upfront</label>
-                                            <input type="text" class="form-control" id="upfront" name="upfront"
-                                                placeholder="Enter Upfront Amount ">
-                                        </div>
-                                    </div>
-
-                                </div>
-
-                                <div class="mb-3">
-                                    <!-- <label for="formrow-email-input" class="form-label">Rate</label> -->
-                                    <input type="hidden" class="form-control" id="rate" name="rate" readonly=true>
-
-
-                                </div>
-                                <div class="mb-3">
-                                    <center>
-                                        <h6 class="choose-facility-heading">Choose Facility That would included in your
-                                            service</h6>
-                                    </center>
-                                    <?php
-                        $sql = "select * from facility";
-                        $result = mysqli_query($conn, $sql);
-                        if (mysqli_num_rows($result) > 0) {
-                            $checkboxCounter = 1;
-                            while ($row = mysqli_fetch_array($result)) {
-                                $facilityId = $row['facility_id'];
-                                $facilityName = $row['facility_name'];
-                        ?>
-                                    <div class="form-check">
-                                        <input type="checkbox" id="facility<?php echo $checkboxCounter; ?>"
-                                            class="form-check-input" name="facility_id[]"
-                                            value="<?php echo $facilityId; ?>">
-                                        <label for="facility<?php echo $checkboxCounter; ?>"
-                                            class="form-check-label"><?php echo $facilityName; ?></label>
-                                    </div>
-                                    <?php
-                                $checkboxCounter++;
-                            }
-                        } else {
-                            echo "<p>No facilities found</p>";
-                        }
-                        ?>
-                                </div>
-
-                                <div class="row">
-
-                                </div>
-
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="endDate" class="form-label">End Date</label>
+                                <input type="date" class="form-control" id="endDate" name="endDate" required>
+                            </div>
                         </div>
-                        <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary ">Save Changes</button>
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
-                                id="btnClose">Close</button>
-
-                        </div>
-                        </form>
                     </div>
 
-                </div>
+                    <!-- Start Time and End Time inputs -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="starttime" class="form-label">Start Time</label>
+                                <input type="time" class="form-control" id="starttime" name="starttime" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="endtime" class="form-label">End Time</label>
+                                <input type="time" class="form-control" id="endtime" name="endtime" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Attendee input -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="attend" class="form-label">Attend</label>
+                                <input type="text" class="form-control" id="attend" name="attend" placeholder="Enter Attendee"
+                                    required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Food selection -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="food" class="form-label">Food</label>
+                                <select name="food" class="form-control" id="food" required>
+                                    <?php
+                                        $sql = "select * from food";
+                                        $result = mysqli_query($conn, $sql);
+                                        if (mysqli_num_rows($result) > 0) {
+                                            while ($row = mysqli_fetch_array($result)) {
+                                                $foodId = htmlspecialchars($row['foodId']);
+                                                $foodType = htmlspecialchars($row['foodType']);
+                                                echo "<option value=\"$foodId\">$foodType</option>";
+                                            }
+                                        } else {
+                                            echo "<option value=\"\">No Data found</option>";
+                                        }
+                                    ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="upfront" class="form-label">Upfront</label>
+                                <input type="text" class="form-control" id="upfront" name="upfront"
+                                    placeholder="Enter Upfront Amount">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Hidden input for Rate -->
+                    <div class="mb-3">
+                        <input type="hidden" class="form-control" id="rate" name="rate" readonly>
+                    </div>
+
+                    <!-- Facility selection -->
+                    <div class="mb-3">
+                        <center>
+                            <h6 class="choose-facility-heading">Choose Facility That would be included in your
+                                service</h6>
+                        </center>
+                        <?php
+                            $sql = "select * from facility";
+                            $result = mysqli_query($conn, $sql);
+                            if (mysqli_num_rows($result) > 0) {
+                                $checkboxCounter = 1;
+                                while ($row = mysqli_fetch_array($result)) {
+                                    $facilityId = htmlspecialchars($row['facility_id']);
+                                    $facilityName = htmlspecialchars($row['facility_name']);
+                                    echo "<div class=\"form-check\">";
+                                    echo "<input type=\"checkbox\" id=\"facility$checkboxCounter\" class=\"form-check-input\" name=\"facility_id[]\" value=\"$facilityId\">";
+                                    echo "<label for=\"facility$checkboxCounter\" class=\"form-check-label\">$facilityName</label>";
+                                    echo "</div>";
+                                    $checkboxCounter++;
+                                }
+                            } else {
+                                echo "<p>No facilities found</p>";
+                            }
+                        ?>
+                    </div>
+
+                    <div class="row">
+                        <!-- Additional rows if needed -->
+                    </div>
             </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btnClose">Close</button>
+            </div>
+            </form>
         </div>
+    </div>
+</div>
+
         <!-- end modal -->
 
 
@@ -351,8 +341,7 @@ $fullname=$record['firstname'];
 
 <!-- Include jQuery, Bootstrap, and DataTables -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/1.11.4/js/dataTables.bootstrap4.min.js"></script>
+
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.all.min.js"></script>
 <script>
@@ -365,44 +354,41 @@ $(".btn-book").click(function() {
 
 
 });
-$("#BookingForm").submit(function(e) {
-    e.preventDefault();
-
-    $.ajax({
-        url: "../../../apis/booking/custBooking.php",
-        data: new FormData($(this)[0]),
-        cache: false,
-        contentType: false,
-        processData: false,
-        method: 'POST',
-        type: 'POST',
-        success: function(resp) {
-            var res = jQuery.parseJSON(resp);
-
-            if (res.status == 200) {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Success',
-                    text: res.message,
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        window.location.href = 'dashboard.php';
+$("#BookingForm").submit(function(e){   
+            e.preventDefault();
+            $.ajax({
+                url:"../../../apis/booking/custBooking.php",
+                    data: new FormData($(this)[0]),
+                cache: false,
+                contentType: false,
+                processData: false,
+                    method: 'POST',
+                type: 'POST',
+                success: function(resp) {
+                    var res = jQuery.parseJSON(resp);
+                    
+                    if (res.status == 200) {
+                        Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: res.message,
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                //window.location.href = 'dashboard.php';
+                            }
+                        });
+                    } else if (res.status == 404) {
+                        // Use SweetAlert for error message
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: res.message,
+                        });
                     }
-                });
-                // alert('sucess')
-            } else if (res.status == 404) {
-                // Use SweetAlert for error message
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: res.message,
-                });
-                //alert('failure')
-            }
-        },
-        error: function(xhr, status, error) {
-            console.error('Error fetching data:', error);
-        }
-    });
-});
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error fetching data:', error);
+                }
+            });
+        });
 </script>
