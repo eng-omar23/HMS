@@ -44,7 +44,7 @@
                             id="page-header-notifications-dropdown" data-bs-toggle="dropdown" aria-haspopup="true"
                             aria-expanded="false">
                             <i class="bx bx-bell bx-tada"></i>
-                            <span class="badge bg-danger rounded-pill" id="notificationCount" onclick="updateViewStatus()"></span>
+                            <span class="badge bg-danger rounded-pill" id="notificationCount" "></span>
 
                         </button>
                         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end p-0"
@@ -55,7 +55,7 @@
                                         <h6 class="m-0" key="t-notifications"> Notifications </h6>
                                     </div>
                                     <div class="col-auto">
-                                        <a href="#!" class="small" key="t-view-all"> View All</a>
+                                        <a href="#!" class="small" key="t-view-all" onclick="updateViewStatus()"> View All</a>
                                     </div>
                                 </div>
                             </div>
@@ -110,7 +110,7 @@
                             }  }
                                 ?>
                             <div class="p-2 border-top d-grid">
-                                <a class="btn btn-sm btn-link font-size-14 text-center" href="javascript:void(0)">
+                                <a href='adminnotification.php' class="btn btn-sm btn-link font-size-14 text-center" href="javascript:void(0)">
                                     <i class="mdi mdi-arrow-right-circle me-1"></i> <span key="t-view-more">View
                                         More..</span>
                                 </a>
@@ -187,7 +187,7 @@ $(document).ready(function() {
 function updateViewStatus() {
     // Get the notificationCount element
     var notificationCountElement = $("#notificationCount");
-
+   
     // Get the current value of notificationCount (number of notifications)
     var notificationCount = parseInt(notificationCountElement.text());
 
@@ -195,6 +195,7 @@ function updateViewStatus() {
     if (notificationCount > 0) {
         // Prepare the data to send in the request
         var data = { view_status: 1 }; // You can include additional data if needed
+
 
         // Send the AJAX request with jQuery
         $.ajax({
