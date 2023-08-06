@@ -1,3 +1,7 @@
+
+<?php
+session_start();
+?>
 <!doctype html>
 <html lang="en">
 <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
@@ -55,7 +59,7 @@
                                         <h6 class="m-0" key="t-notifications"> Notifications </h6>
                                     </div>
                                     <div class="col-auto">
-                                        <a href="#!" class="small" key="t-view-all" onclick="updateViewStatus()"> View All</a>
+                                        <a href="#!" class="small" key="t-view-all" onclick="updateViewStatus()"> Mark Read</a>
                                     </div>
                                 </div>
                             </div>
@@ -63,7 +67,7 @@
                             include_once('../../../conn.php');
                                   
                         $sql = "SELECT * FROM bookings b LEFT JOIN customers c ON b.customer_id = c.custid
-                          WHERE b.booking_status = 0 and b.view_status = 0";
+                          WHERE b.booking_status = 0 and b.view_status = 0 LIMIT 4" ;
                            $query = mysqli_query($conn, $sql);
                            if($query){
                             
@@ -124,7 +128,7 @@
                             data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <img class="rounded-circle header-profile-user"
                                 src="../../../assets/images/users/avatar-1.jpg" alt="Header Avatar">
-                            <span class="d-none d-xl-inline-block ms-1" key="t-henry">Henry</span>
+                            <span class="d-none d-xl-inline-block ms-1" key="t-henry"><?php echo $_SESSION['email'] ?></span>
                             <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
                         </button>
                         <div class="dropdown-menu dropdown-menu-end">

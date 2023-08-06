@@ -8,8 +8,10 @@
 session_start(); ?>
 <?php 
  include_once '../../../conn.php'; 
+ include_once 'nav.php'; 
 include_once 'header.php'; 
 include_once 'footer.php'; 
+
 
  
 
@@ -19,7 +21,8 @@ include_once 'footer.php';
 // Retrieve the bookings for the customer from the database
 $sql = "SELECT * FROM bookings b
         LEFT JOIN customers c ON b.customer_id = c.custid
-        LEFT JOIN halls h on h.hall_id=b.hall_id 
+        LEFT JOIN halls h on h.hall_id=b.hall_id where booking_status=0 
+        order by b.booking_id desc
        ";
 $query = mysqli_query($conn, $sql);
 ?>
@@ -68,21 +71,18 @@ $query = mysqli_query($conn, $sql);
                 <?php
                 while ($row = mysqli_fetch_assoc($query)) {
                     $starttime_seconds = strtotime($row['starttime']);
-$endtime_seconds = strtotime($row['endtime']);
-
-// Step 2: Calculate the total time in seconds
-$total_seconds = $endtime_seconds - $starttime_seconds;
-
-// Step 3: Calculate the total time in hours
-$total_hours = $total_seconds / 3600;
+                    $endtime_seconds = strtotime($row['endtime']);
+                    // Step 2: Calculate the total time in seconds
+                    $total_seconds = $endtime_seconds - $starttime_seconds;
+                    // Step 3: Calculate the total time in hours
+                    $total_hours = $total_seconds / 3600;
                     // Display each booking as a row in the table
                     $bid=$row['booking_id'];
                     $hall=$row['hall_type'];
                     // Step 1: Create a DateTime object from the datetime string
-$datetime = new DateTime($row['created_at']);
-
-// Step 2: Format the DateTime object to display only the date
-$date = $datetime->format('Y-m-d');
+                    $datetime = new DateTime($row['created_at']);
+                    // Step 2: Format the DateTime object to display only the date
+                    $date = $datetime->format('Y-m-d');
                     echo "<tr>";
                     echo "<td>" . $row['booking_id'] . "</td>";
                     echo "<td>" . $hall. "</td>";
@@ -124,3 +124,57 @@ $date = $datetime->format('Y-m-d');
     <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.min.js"></script> -->
 </body>
 </html>
+<!-- Include jQuery library -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+<!-- JavaScript/jQuery code -->
+<script>
+    // Function to handle the "Approve" button click
+    $('.edit-btn').on('click', function (event) {
+        event.preventDefault();
+        var bid = $(this).data('id');
+
+        // Send AJAX request to update the booking_status
+        $.ajax({
+            url: 'update_booking_status.php', // Replace with your PHP script URL
+            method: 'POST',
+            data: {
+                bid: bid,
+                booking_status: 'approved', // Change to 'rejected' for the Reject button
+            },
+            success: function (response) {
+                // Handle the response if needed
+                console.log('Booking status updated successfully');
+            },
+            error: function (xhr, status, error) {
+                // Handle errors if any
+                console.error(error);
+            }
+        });
+    });
+
+    // Function to handle the "Reject" button click
+    $('.delete-btn').on('click', function (event) {
+        event.preventDefault();
+        var bid = $(this).data('item-id');
+
+        // Send AJAX request to update the booking_status
+        $.ajax({
+            url: 'update_booking_status.php', // Replace with your PHP script URL
+            method: 'POST',
+            data: {
+                bid: bid,
+                booking_status: 'rejected', // Change to 'approved' for the Approve button
+            },
+            success: function (response) {
+                // Handle the response if needed
+                console.log('Booking status updated successfully');
+            },
+            error: function (xhr, status, error) {
+                // Handle errors if any
+                console.error(error);
+            }
+        });
+    });
+</script>
