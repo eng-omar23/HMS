@@ -839,9 +839,9 @@ $.ajax({
                     $("#success").text(res.message);
                     window.location.href = 'Booking.php';
               }     else if (res.status == 404) {
-                //   $("#success").css("display", "none");
-                //    $("#error").css("display", "block");
-                //    $("#error").text(res.message);
+                  $("#success").css("display", "none");
+                   $("#error").css("display", "block");
+                   $("#error").text(res.message);
               }
             
                  }

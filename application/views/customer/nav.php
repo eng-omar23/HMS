@@ -22,8 +22,8 @@
                                 <div class="col-lg-4">
                                     <div>
 
-                                        <a href="Booking.php" class="dropdown-item" key="t-buttons">View
-                                            History Booking</a>
+                                        <a href="viewBooking.php" class="dropdown-item" key="t-buttons">
+                                            History</a>
 
                                     </div>
                                 </div>
@@ -43,7 +43,8 @@
                                 <div class="col-lg-4">
                                     <div>
 
-                                        <a href="Booking.php" class="dropdown-item" key="t-buttons">Hall Report</a>
+                                        <a href="cusTrans.php" class="dropdown-item" key="t-buttons">Transacions</a>
+                                        <a href="ReceiptReport.php" class="dropdown-item" key="t-buttons">Receipts</a>
 
                                     </div>
                                 </div>
