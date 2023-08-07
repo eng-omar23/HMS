@@ -22,8 +22,7 @@
                                 <div class="col-lg-4">
                                     <div>
 
-                                        <a href="viewBooking.php" class="dropdown-item" key="t-buttons">
-                                            History</a>
+                                        <a href="bookingsHistory.php" class="dropdown-item" key="t-buttons"> History</a>
 
                                     </div>
                                 </div>

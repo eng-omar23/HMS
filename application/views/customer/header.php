@@ -52,14 +52,14 @@ $email = $_SESSION['email'];
                                         <h6 class="m-0" key="t-notifications"> Notifications </h6>
                                     </div>
                                     <div class="col-auto">
-                                       <a href="notification.php" id="viewAllNotificationsLink" class="small" key="t-view-all">View All</a>
+                                        <a href="#!" class="small" key="t-view-all" onclick="updateViewStatus()"> Mark Read</a>
                                     </div>
                                 </div>
                             </div>
                             <?php 
                                    $sql = "SELECT * FROM bookings b
                                    LEFT JOIN customers c ON b.customer_id = c.custid
-                                   WHERE c.email = '$email'";
+                                   WHERE c.email = '$email' and booking_status in (1,2) ";
                            $query = mysqli_query($conn, $sql);
                             
                             while ($row = mysqli_fetch_assoc($query)) {
@@ -105,7 +105,7 @@ $email = $_SESSION['email'];
                             }
                                 ?>
                             <div class="p-2 border-top d-grid">
-                                <a class="btn btn-sm btn-link font-size-14 text-center" href="javascript:void(0)">
+                                <a href="notification.php" id="viewAllNotificationsLink" class="btn btn-sm btn-link font-size-14 text-center" href="javascript:void(0)">
                                     <i class="mdi mdi-arrow-right-circle me-1"></i> <span key="t-view-more">View
                                         More..</span>
                                 </a>
@@ -179,6 +179,41 @@ $(document).ready(function() {
     window.location.href = url;
   });
 });
+
+
+function updateViewStatus() {
+    // Get the notificationCount element
+    var notificationCountElement = $("#notificationCount");
+   
+    // Get the current value of notificationCount (number of notifications)
+    var notificationCount = parseInt(notificationCountElement.text());
+
+    // If there are notifications (count > 0), update the view_status via AJAX
+    if (notificationCount > 0) {
+        // Prepare the data to send in the request
+        var data = { view_status: 1 }; // You can include additional data if needed
+
+
+        // Send the AJAX request with jQuery
+        $.ajax({
+            type: "POST",
+            url: "../admin/update_view_status.php", // Replace "update_view_status.php" with your server-side script URL
+            data: data,
+            success: function (response) {
+                // Request was successful, handle any response if necessary
+                // For example, you could update the UI to show that the view_status was updated.
+                // The response variable contains the response from the server, if any.
+            },
+            error: function (xhr, status, error) {
+                // Request failed, handle the error if necessary
+                console.error(error);
+            }
+        });
+
+        // Update the notificationCount display (optional, you can remove this if you don't want to change the display immediately)
+        notificationCountElement.text("0");
+    }
+}
 </script>
 
 

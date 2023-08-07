@@ -48,7 +48,7 @@ session_start();
                             id="page-header-notifications-dropdown" data-bs-toggle="dropdown" aria-haspopup="true"
                             aria-expanded="false">
                             <i class="bx bx-bell bx-tada"></i>
-                            <span class="badge bg-danger rounded-pill" id="notificationCount" "></span>
+                            <span class="badge bg-danger rounded-pill" id="notificationCount" ></span>
 
                         </button>
                         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end p-0"

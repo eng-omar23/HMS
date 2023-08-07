@@ -9,17 +9,19 @@ session_start(); ?>
 <?php 
  include_once '../../../conn.php'; 
 include_once 'header.php'; 
-include_once 'footer.php'; 
 
+include_once 'footer.php'; 
+// include_once 'nav.php'; 
+?>
  
 
-
+<?php
 
 $email = $_SESSION['email'];
 // Retrieve the bookings for the customer from the database
 $sql = "SELECT * FROM bookings b
         LEFT JOIN customers c ON b.customer_id = c.custid
-        WHERE c.email = '$email'";
+        WHERE c.email = '$email' and booking_status in (1,2)";
 $query = mysqli_query($conn, $sql);
 ?>
 <center>

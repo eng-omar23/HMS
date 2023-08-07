@@ -73,9 +73,9 @@ $query = mysqli_query($conn, $sql);
                     $starttime_seconds = strtotime($row['starttime']);
                     $endtime_seconds = strtotime($row['endtime']);
                     // Step 2: Calculate the total time in seconds
-                    $total_seconds = $endtime_seconds - $starttime_seconds;
+                    $total_seconds =$starttime_seconds -$endtime_seconds ;
                     // Step 3: Calculate the total time in hours
-                    $total_hours = $total_seconds / 3600;
+                    //$total_hours = $total_seconds / 3600;
                     // Display each booking as a row in the table
                     $bid=$row['booking_id'];
                     $hall=$row['hall_type'];
@@ -88,7 +88,7 @@ $query = mysqli_query($conn, $sql);
                     echo "<td>" . $hall. "</td>";
                     // echo "<td>" . $row['starttime'] . "</td>";
                     echo "<td>" . $date. "</td>";
-                    echo "<td>" . $total_hours . " hours</td>";
+                    echo "<td>" . $total_seconds . " hours</td>";
                     // echo "<td>" . $row['endtime'] . "</td>";
                     $bstatus = $row['booking_status'];
                     echo "<td>";
