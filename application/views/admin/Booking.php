@@ -195,7 +195,7 @@
 
                         <td>
                         <button class='btn btn-dark btn-sm dropdown-toggle' type='button' data-bs-toggle='dropdown' aria-haspopup='true' aria-expanded='false' data-item-id='<?php echo $id; ?>'>Action</button>
-                        <div class='dropdown-menu dropdown-menu-end'>
+                        <div class='dropdown-menu dropdown-menu-sm' >
                             <a class='dropdown-item text-success p-2 edit-btn' data-bs-toggle='modal' data-bs-target='.orderdetailsModal' data-item-id='<?php echo $id; ?>' href='#'><i class='bx bxs-edit-alt'></i>Update</a>
                             <a class='dropdown-item text-danger p-2 receipt-btn' data-bs-toggle='modal' data-bs-target='.receiptModal' data-item-id='<?php echo $id; ?>' href='#'><i class='bx bxs-edit-alt'></i>Reception</a>
                             <a class='dropdown-item text-secondary p-2 delete-btn' data-bs-toggle='modal' data-item-id='<?php echo $id; ?>' href='#'><i class='bx bxs-trash'></i>Delete</a>
@@ -839,9 +839,9 @@ $.ajax({
                     $("#success").text(res.message);
                     window.location.href = 'Booking.php';
               }     else if (res.status == 404) {
-                //   $("#success").css("display", "none");
-                //    $("#error").css("display", "block");
-                //    $("#error").text(res.message);
+                  $("#success").css("display", "none");
+                   $("#error").css("display", "block");
+                   $("#error").text(res.message);
               }
             
                  }

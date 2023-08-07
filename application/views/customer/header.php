@@ -1,3 +1,6 @@
+<?php // Get the username from the session
+$type = $_SESSION['type'];
+?>
 <!doctype html>
 <html lang="en">
 <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
@@ -18,6 +21,8 @@
     <link href="../../../assets/css/app.min.css" rel="stylesheet" type="text/css" />
 </head>
 
+
+
 <body data-topbar="dark" data-layout="horizontal">
     <!-- Begin page -->
     <div id="layout-wrapper">
@@ -34,7 +39,7 @@
                             id="page-header-notifications-dropdown" data-bs-toggle="dropdown" aria-haspopup="true"
                             aria-expanded="false">
                             <i class="bx bx-bell bx-tada"></i>
-                            <span class="badge bg-danger rounded-pill">3</span>
+                            <span class="badge bg-danger rounded-pill"  id="notificationCount"></span>
                         </button>
                         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end p-0"
                             aria-labelledby="page-header-notifications-dropdown">
@@ -44,10 +49,22 @@
                                         <h6 class="m-0" key="t-notifications"> Notifications </h6>
                                     </div>
                                     <div class="col-auto">
-                                        <a href="#!" class="small" key="t-view-all"> View All</a>
+                                        <a href="#!" class="small" key="t-view-all" onclick="updateViewStatus()"> Mark Read</a>
                                     </div>
                                 </div>
                             </div>
+                            <?php 
+                                   $sql = "SELECT * FROM bookings b
+                                   LEFT JOIN customers c ON b.customer_id = c.custid
+                                   WHERE c.email = '$email' and booking_status in (1,2) ";
+                           $query = mysqli_query($conn, $sql);
+                            
+                            while ($row = mysqli_fetch_assoc($query)) {
+
+                                $bstatus = $row['booking_status'];
+                                $updatedAt = strtotime($row['updated_at']);
+                                $time = date('H:i:s', $updatedAt);
+                           ?>
                             <div data-simplebar style="max-height: 230px;">
                                 <a href="javascript: void(0);" class="text-reset notification-item">
                                     <div class="d-flex">
@@ -57,70 +74,35 @@
                                             </span>
                                         </div>
                                         <div class="flex-grow-1">
-                                            <h6 class="mb-1" key="t-your-order">Your order is placed</h6>
+                                            <h6 class="mb-1" key="t-your-order"></h6>
                                             <div class="font-size-12 text-muted">
-                                                <p class="mb-1" key="t-grammer">If several languages coalesce the
-                                                    grammar</p>
+                                                <?php if($bstatus==1){
+                                                    ?>
+                                                
+                                                    <h6 class="mb-1" key="t-your-order">Thank you for booking with us <?php echo $row['firstname'] ?></h6>
+                                               
+                                               <?php }
+                                                else if($bstatus==2){
+                                                    ?>
+                                                    <p class="mb-1" key="t-grammer"> your booking is cancelled</p>
+                                               <?php }
+                                               ?>
+                                               
                                                 <p class="mb-0"><i class="mdi mdi-clock-outline"></i> <span
-                                                        key="t-min-ago">3 min ago</span></p>
+                                                        key="t-min-ago"><?php echo $time ?></span></p>
                                             </div>
                                         </div>
                                     </div>
                                 </a>
-                                <a href="javascript: void(0);" class="text-reset notification-item">
-                                    <div class="d-flex">
-                                        <img src="assets/images/users/avatar-3.jpg"
-                                            class="me-3 rounded-circle avatar-xs" alt="user-pic">
-                                        <div class="flex-grow-1">
-                                            <h6 class="mb-1">James Lemire</h6>
-                                            <div class="font-size-12 text-muted">
-                                                <p class="mb-1" key="t-simplified">It will seem like simplified
-                                                    English.
-                                                </p>
-                                                <p class="mb-0"><i class="mdi mdi-clock-outline"></i> <span
-                                                        key="t-hours-ago">1 hours ago</span></p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </a>
-                                <a href="javascript: void(0);" class="text-reset notification-item">
-                                    <div class="d-flex">
-                                        <div class="avatar-xs me-3">
-                                            <span class="avatar-title bg-success rounded-circle font-size-16">
-                                                <i class="bx bx-badge-check"></i>
-                                            </span>
-                                        </div>
-                                        <div class="flex-grow-1">
-                                            <h6 class="mb-1" key="t-shipped">Your item is shipped</h6>
-                                            <div class="font-size-12 text-muted">
-                                                <p class="mb-1" key="t-grammer">If several languages coalesce the
-                                                    grammar</p>
-                                                <p class="mb-0"><i class="mdi mdi-clock-outline"></i> <span
-                                                        key="t-min-ago">3 min ago</span></p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </a>
-
-                                <a href="javascript: void(0);" class="text-reset notification-item">
-                                    <div class="d-flex">
-                                        <img src="assets/images/users/avatar-4.jpg"
-                                            class="me-3 rounded-circle avatar-xs" alt="user-pic">
-                                        <div class="flex-grow-1">
-                                            <h6 class="mb-1">Salena Layfield</h6>
-                                            <div class="font-size-12 text-muted">
-                                                <p class="mb-1" key="t-occidental">As a skeptical Cambridge friend
-                                                    of
-                                                    mine occidental.</p>
-                                                <p class="mb-0"><i class="mdi mdi-clock-outline"></i> <span
-                                                        key="t-hours-ago">1 hours ago</span></p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </a>
+                            
+                               
+                                
                             </div>
+                            <?php
+                            }
+                                ?>
                             <div class="p-2 border-top d-grid">
-                                <a class="btn btn-sm btn-link font-size-14 text-center" href="javascript:void(0)">
+                                <a href="notification.php" id="viewAllNotificationsLink" class="btn btn-sm btn-link font-size-14 text-center" href="javascript:void(0)">
                                     <i class="mdi mdi-arrow-right-circle me-1"></i> <span key="t-view-more">View
                                         More..</span>
                                 </a>
@@ -132,7 +114,7 @@
                             data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <img class="rounded-circle header-profile-user"
                                 src="../../../assets/images/users/avatar-1.jpg" alt="Header Avatar">
-
+                            <span class="d-none d-xl-inline-block ms-1" key="t-henry"><?php echo $email; ?></span>
                             <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
                         </button>
                         <div class="dropdown-menu dropdown-menu-end">
@@ -147,3 +129,95 @@
 
             </div>
         </header>
+
+      
+
+
+<!-- Add jQuery library (Make sure to download the latest version and adjust the URL accordingly) -->
+<!-- Google CDN link for the latest version of jQuery -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.x.x/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+
+<script>
+  // Function to update the notification count using AJAX
+  function updateNotificationCount() {
+    $.ajax({
+        url: 'notification_count_endpoint.php', // Replace with the actual URL of your PHP script
+        type: 'POST',
+        dataType: 'json',
+        success: function (data) {
+            // Update the notification count on the webpage
+            $('#notificationCount').text(data.count);
+
+            // Play the audio when a new notification arrives
+            if (data.newNotification) {
+                var audio = document.getElementById("notificationSound");
+                audio.play();
+            }
+        },
+        error: function () {
+            $('#notificationCount').text('Error loading notification count.');
+        }
+    });
+}
+
+// Call the function to update the notification count initially
+updateNotificationCount();
+
+// Set an interval to update the notification count every few seconds (e.g., 10 seconds)
+setInterval(updateNotificationCount, 10000); // 10000 milliseconds = 10 seconds
+
+s
+ 
+
+
+
+$(document).ready(function() {
+  // Add a click event listener to the "View All" link
+  $('#viewAllNotificationsLink').on('click', function(event) {
+    event.preventDefault(); // Prevent the default link behavior
+    var url = $(this).attr('href'); // Get the URL from the link's 'href' attribute
+
+    // Redirect to the "notification.php" page
+    window.location.href = url;
+  });
+});
+
+
+function updateViewStatus() {
+    // Get the notificationCount element
+    var notificationCountElement = $("#notificationCount");
+   
+    // Get the current value of notificationCount (number of notifications)
+    var notificationCount = parseInt(notificationCountElement.text());
+
+    // If there are notifications (count > 0), update the view_status via AJAX
+    if (notificationCount > 0) {
+        // Prepare the data to send in the request
+        var data = { view_status: 1 }; // You can include additional data if needed
+
+
+        // Send the AJAX request with jQuery
+        $.ajax({
+            type: "POST",
+            url: "../admin/update_view_status.php", // Replace "update_view_status.php" with your server-side script URL
+            data: data,
+            success: function (response) {
+                // Request was successful, handle any response if necessary
+                // For example, you could update the UI to show that the view_status was updated.
+                // The response variable contains the response from the server, if any.
+            },
+            error: function (xhr, status, error) {
+                // Request failed, handle the error if necessary
+                console.error(error);
+            }
+        });
+
+        // Update the notificationCount display (optional, you can remove this if you don't want to change the display immediately)
+        notificationCountElement.text("0");
+    }
+}
+</script>
+
+
