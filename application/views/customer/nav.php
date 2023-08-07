@@ -4,7 +4,8 @@
             <div class="collapse navbar-collapse" id="topnav-menu-content">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link dropdown-toggle arrow-none" href="#" id="topnav-uielement" role="button">
+                        <a class="nav-link dropdown-toggle arrow-none" href="profile.php" id="topnav-uielement"
+                            role="button">
                             <i class="bx bx-tone me-2"></i>
                             <span key="t-ui-elements">Profile</span>
                         </a>
