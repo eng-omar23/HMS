@@ -146,25 +146,32 @@ $email = $_SESSION['email'];
   // Function to update the notification count using AJAX
   function updateNotificationCount() {
     $.ajax({
-      url: 'notification_count_endpoint.php', // Replace with the actual URL of your PHP script
-      type: 'POST',
-      dataType: 'json',
-      success: function (data) {
-        // Update the notification count on the webpage
-        
-        $('#notificationCount').text(data.count);
-      },
-      error: function () {
-        $('#notificationCount').text('Error loading notification count.');
-      }
+        url: 'notification_count_endpoint.php', // Replace with the actual URL of your PHP script
+        type: 'POST',
+        dataType: 'json',
+        success: function (data) {
+            // Update the notification count on the webpage
+            $('#notificationCount').text(data.count);
+
+            // Play the audio when a new notification arrives
+            if (data.newNotification) {
+                var audio = document.getElementById("notificationSound");
+                audio.play();
+            }
+        },
+        error: function () {
+            $('#notificationCount').text('Error loading notification count.');
+        }
     });
-  }
+}
 
-  // Call the function to update the notification count initially
-  updateNotificationCount();
+// Call the function to update the notification count initially
+updateNotificationCount();
 
-//   // Set an interval to update the notification count every few seconds (e.g., 10 seconds)
-  setInterval(updateNotificationCount, 10000); // 10000 milliseconds = 10 seconds
+// Set an interval to update the notification count every few seconds (e.g., 10 seconds)
+setInterval(updateNotificationCount, 10000); // 10000 milliseconds = 10 seconds
+
+s
  
 
 

@@ -9,7 +9,18 @@ include_once "../../../conn.php";
 include_once 'header.php'; 
 include_once 'nav.php'; 
 
+ echo $_SESSION['email'];
 
+ $sql="select c.firstname as name from bookings b
+  left join customers c on b.customer_id =c.custid where c.email='$email'";
+ $query=mysqli_query($conn,$sql);
+ if ($query){
+    $row=mysqli_fetch_array($query);
+    $firstname=$row['name'];
+ }
+else{
+    $firstname='username not found';
+}
 
 
 ?>
@@ -26,7 +37,7 @@ include_once 'nav.php';
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-            <h4 class="mb-sm-0 font-size-18">Booking</h4>
+            <h4 class="mb-sm-0 font-size-18">Booking History for <?php echo $firstname ?>  </h4>
 
             <div class="page-title-right">
                 <ol class="breadcrumb m-0">
@@ -180,10 +191,10 @@ include_once 'nav.php';
                             echo "<td>$date</td>";
                             echo "<td>
                             <li class='list-inline-item'>
-                            <a href='#' class='text-success p-2 edit-btn' data-bs-toggle='modal' data-bs-target='.orderdetailsModal' data-id='$bid'><i class='fas fa-check-circle'></i></a>
+                            <a href='#' class='text-success p-2 edit-btn' data-bs-toggle='modal' data-bs-target='.orderdetailsModal' data-id='$id '><i class='fas fa-check-circle'></i></a>
                             </li>
                             <li class='list-inline-item'>
-                            <a href='#' class='text-danger p-2 delete-btn' data-item-id='$bid'> <i class='fas fa-times-circle'></i></a>
+                            <a href='#' class='text-danger p-2 delete-btn' data-item-id='$id '> <i class='fas fa-times-circle'></i></a>
                         </li></td>";
 echo "</tr>";
                          ?>
