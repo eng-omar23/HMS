@@ -1,8 +1,5 @@
 <?php // Get the username from the session
-include_once '../../../conn.php';
-
-$email = $_SESSION['email'];
-
+$type = $_SESSION['type'];
 ?>
 <!doctype html>
 <html lang="en">
