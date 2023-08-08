@@ -169,7 +169,7 @@ session_start();
 
         // Play the notification sound when a new notification arrives
         if (data.newNotification) {
-          playNotificationSound();
+        //  playNotificationSound();
       
         }
       },
@@ -183,7 +183,7 @@ session_start();
   updateNotificationCount();
 
 //   // Set an interval to update the notification count every few seconds (e.g., 10 seconds)
-  //setInterval(updateNotificationCount, 10000); // 10000 milliseconds = 10 seconds
+  setInterval(updateNotificationCount, 10000); // 10000 milliseconds = 10 seconds
  
 
 

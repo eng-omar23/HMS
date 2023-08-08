@@ -1,6 +1,6 @@
-<?php include 'header.php'; ?>
-<?php include 'nav.php'; ?>   
-<?php include '../../../conn.php'; ?>   
+<?php include 'header.php'; 
+include 'nav.php';   
+include '../../../conn.php'; ?>   
 <style>
   .checkbox-label {
     display: inline-block;
@@ -194,8 +194,8 @@
                         ?>
 
                         <td>
-                        <button class='btn btn-dark btn-sm dropdown-toggle' type='button' data-bs-toggle='dropdown' aria-haspopup='true' aria-expanded='false' data-item-id='<?php echo $id; ?>'>Action</button>
-                        <div class='dropdown-menu dropdown-menu-sm' >
+                        <button class='btn btn-info btn-sm dropdown-toggle' type='button' data-bs-toggle='dropdown' aria-haspopup='true' aria-expanded='false' data-item-id='<?php echo $id; ?>'>Action</button>
+                        <div class='dropdown-menu dropdown-menu-end' >
                             <a class='dropdown-item text-success p-2 edit-btn' data-bs-toggle='modal' data-bs-target='.orderdetailsModal' data-item-id='<?php echo $id; ?>' href='#'><i class='bx bxs-edit-alt'></i>Update</a>
                             <a class='dropdown-item text-danger p-2 receipt-btn' data-bs-toggle='modal' data-bs-target='.receiptModal' data-item-id='<?php echo $id; ?>' href='#'><i class='bx bxs-edit-alt'></i>Reception</a>
                             <a class='dropdown-item text-secondary p-2 delete-btn' data-bs-toggle='modal' data-item-id='<?php echo $id; ?>' href='#'><i class='bx bxs-trash'></i>Delete</a>

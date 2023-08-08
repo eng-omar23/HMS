@@ -86,7 +86,7 @@
                                                <?php }
                                                 else if($bstatus==2){
                                                     ?>
-                                                    <p class="mb-1" key="t-grammer"> your booking is cancelled</p>
+                                                   <h6 class="mb-1" key="t-your-order">Thank you for booking is cancelled <?php echo $row['firstname'] ?></h6>
                                                <?php }
                                                ?>
                                                
