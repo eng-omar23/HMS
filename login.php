@@ -8,7 +8,7 @@
         // Query the database for the user
         $query = "SELECT * FROM users WHERE email = '$email' AND password = '$password'";
         $result = mysqli_query($conn, $query);
-        if (mysqli_num_rows($result) == 1) {
+        if (mysqli_num_rows($result) > 0) {
             $row = mysqli_fetch_assoc($result);
             // Set up the session with user information
             $_SESSION['user_id'] = $row['user_id'];
@@ -17,9 +17,11 @@
             // Redirect to the appropriate dashboard
             if ($_SESSION['type'] === 'admin') {
                 header("Location: application/views/admin/adminDashboard.php");
-            } else {
+                
+            exit();
+            } 
                 header("Location: application/views/customer/dashboard.php");
-            }
+           
             exit();
         } else {
             // Handle invalid login credentials
