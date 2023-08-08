@@ -41,7 +41,10 @@ session_start();
 
                 <div class="d-flex">
                 </div>
-
+                <audio id="notificationSound">
+    <source src="mysound.wav" type="audio/mpeg">
+    Your browser does not support the audio element.
+</audio>
                 <div class="d-flex">
                     <div class="dropdown d-inline-block">
                         <button type="button" class="btn header-item noti-icon waves-effect"
@@ -150,6 +153,11 @@ session_start();
 
         <script>
   // Function to update the notification count using AJAX
+  function playNotificationSound() {
+    var sound = document.getElementById("notificationSound");
+    sound.play();
+  }
+
   function updateNotificationCount() {
     $.ajax({
       url: 'notification_count_endpoint.php', // Replace with the actual URL of your PHP script
@@ -157,8 +165,13 @@ session_start();
       dataType: 'json',
       success: function (data) {
         // Update the notification count on the webpage
-        
         $('#notificationCount').text(data.count);
+
+        // Play the notification sound when a new notification arrives
+        if (data.newNotification) {
+        //  playNotificationSound();
+      
+        }
       },
       error: function () {
         $('#notificationCount').text('Error loading notification count.');
