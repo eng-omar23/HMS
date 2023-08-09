@@ -76,10 +76,12 @@
             <!-- container-fluid -->
             <?php 
 $email=$_SESSION['email'];
-$sql="select * from Customers where email='$email'";
+print_r($email);
+$sql="select * from Users where email='$email'";
 $result=mysqli_query($conn,$sql);
 $record=mysqli_fetch_array($result);
-$fullname=$record['firstname'];
+// print_r($record);
+$fullname=$record['username'];
 
 ?>
             <!-- start page title -->

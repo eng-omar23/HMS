@@ -14,6 +14,8 @@
             $_SESSION['user_id'] = $row['user_id'];
             $_SESSION['type'] = $row['type'];
             $_SESSION['username'] = $row['username'];        
+            print_r($row['email']);
+            $_SESSION['email'] = $row['email'];       
             // Redirect to the appropriate dashboard
             if ($_SESSION['type'] === 'admin') {
                 header("Location: application/views/admin/adminDashboard.php");
@@ -206,7 +208,7 @@
                             </div>
                         </form>
                         <div class="mt-5 text-center">
-                            <p>If You Are Customer ? <a href="auth-register-2.html" class="fw-medium text-primary">
+                            <p>If You Are Customer ? <a href="signup.php" class="fw-medium text-primary">
                                     Signup now </a> </p>
                         </div>
                     </div>
