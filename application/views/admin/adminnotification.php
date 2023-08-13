@@ -13,11 +13,6 @@ include_once 'header.php';
 include_once 'footer.php'; 
 
 
- 
-
-
-
-
 // Retrieve the bookings for the customer from the database
 $sql = "SELECT * FROM bookings b
         LEFT JOIN customers c ON b.customer_id = c.custid
@@ -25,6 +20,7 @@ $sql = "SELECT * FROM bookings b
         order by b.booking_id desc
        ";
 $query = mysqli_query($conn, $sql);
+if($query){
 ?>
 <center>
 <div class="row mt-5">
@@ -69,6 +65,9 @@ $query = mysqli_query($conn, $sql);
             </thead>
             <tbody>
                 <?php
+                
+
+              
                 while ($row = mysqli_fetch_assoc($query)) {
                     $starttime_seconds = strtotime($row['starttime']);
                     $endtime_seconds = strtotime($row['endtime']);
@@ -84,7 +83,7 @@ $query = mysqli_query($conn, $sql);
                     // Step 2: Format the DateTime object to display only the date
                     $date = $datetime->format('Y-m-d');
                     echo "<tr>";
-                    echo "<td>" . $row['booking_id'] . "</td>";
+                    echo "<td>" . $bid . "</td>";
                     echo "<td>" . $hall. "</td>";
                     // echo "<td>" . $row['starttime'] . "</td>";
                     echo "<td>" . $date. "</td>";
@@ -98,13 +97,19 @@ $query = mysqli_query($conn, $sql);
                     echo "</td>";
                     echo "<td>
                                                                     <li class='list-inline-item'>
-                                                                    <a href='#' class='text-success p-2 edit-btn' data-bs-toggle='modal' data-bs-target='.orderdetailsModal' data-id='$bid'><i class='fas fa-check-circle'></i></a>
+                                                                    <a href='#' class='text-success p-2 approve-btn'  data-id='$bid'><i class='fas fa-check-circle'></i></a>
                                                                     </li>
                                                                     <li class='list-inline-item'>
-                                                                    <a href='#' class='text-danger p-2 delete-btn' data-item-id='$bid'> <i class='fas fa-times-circle'></i></a>
+                                                                    <a href='#' class='text-danger p-2 reject-btn' data-id='$bid'> <i class='fas fa-times-circle'></i></a>
                                                                 </li></td>";
                     echo "</tr>";
                 }
+            }
+            else{
+                ?>
+                <span> No Records Found</span>
+                <?php
+            }
            
                 ?>
                                        </tbody>
@@ -121,31 +126,32 @@ $query = mysqli_query($conn, $sql);
                 </center>
     <!-- Add Bootstrap JS (Optional) -->
     <!-- You can include it at the end of the body tag if needed -->
-    <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.min.js"></script> -->
+    <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.min.js"></script>  -->
 </body>
 </html>
 <!-- Include jQuery library -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
 
 
 <!-- JavaScript/jQuery code -->
 <script>
     // Function to handle the "Approve" button click
-    $('.edit-btn').on('click', function (event) {
+    $('.approve-btn').on('click', function (event) {
         event.preventDefault();
-        var bid = $(this).data('id');
-
+        var aproveid = $(this).data('id');
+       
         // Send AJAX request to update the booking_status
         $.ajax({
             url: 'update_booking_status.php', // Replace with your PHP script URL
             method: 'POST',
             data: {
-                bid: bid,
-                booking_status: 'approved', // Change to 'rejected' for the Reject button
+                aproveid: aproveid,
+                booking_status: 'approve', // Change to 'rejected' for the Reject button
+              
             },
             success: function (response) {
                 // Handle the response if needed
-                console.log('Booking status updated successfully');
+                window.location.href = "adminnotification.php";
             },
             error: function (xhr, status, error) {
                 // Handle errors if any
@@ -155,21 +161,21 @@ $query = mysqli_query($conn, $sql);
     });
 
     // Function to handle the "Reject" button click
-    $('.delete-btn').on('click', function (event) {
+    $('.reject-btn').on('click', function (event) {
         event.preventDefault();
-        var bid = $(this).data('item-id');
+        var rid = $(this).data('id');
 
         // Send AJAX request to update the booking_status
         $.ajax({
             url: 'update_booking_status.php', // Replace with your PHP script URL
             method: 'POST',
             data: {
-                bid: bid,
-                booking_status: 'rejected', // Change to 'approved' for the Approve button
+                rid: rid,
+                booking_status: 'reject',// Change to 'approved' for the Approve button
             },
             success: function (response) {
                 // Handle the response if needed
-                console.log('Booking status updated successfully');
+                window.location.href = "adminnotification.php";
             },
             error: function (xhr, status, error) {
                 // Handle errors if any

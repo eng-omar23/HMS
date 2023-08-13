@@ -1,16 +1,17 @@
 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Page Title</title>
 
-<style>
-    /* Add this within a <style> tag in the <head> section of your HTML */
-    .custom-dropdown-menu {
-        background-color: #FFD700; /* Change this color to your desired color */
-    }
- 
-</style>
+</head>
+
+
 <?php
 session_start();
 include_once 'header.php'; 
 include_once 'nav.php'; 
+include_once 'footer.php'; 
 
 include_once "../../../conn.php";
 
@@ -29,15 +30,7 @@ else{
 
 
 ?>
-<head>
-    <!-- Add this in the <head> section of your HTML -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-
-
-</head>
- <!-- ============================================================== -->
+========================================================= -->
             <!-- Start right Content here -->
             <!-- ============================================================== -->
             <!-- <div class="main-content">
@@ -100,8 +93,7 @@ else{
                                                         
                                                     </div>
                                                 </form>
-                                                
-                                                <div class="table-responsive mt-2">
+                                
                                         <table class="table table-hover datatable dt-responsive nowrap" id="tblBooking" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                                             <thead>
                                                     <table class="table table-hover datatable dt-responsive nowrap" id ="tblBooking" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
@@ -123,7 +115,7 @@ else{
                                                             </tr>
                                                             
                                                         </thead>
-                                                        <div class="container mt-5">
+                                                        
                                                         <?php
                                                         $email=$_SESSION['email'];
                                                         
@@ -214,32 +206,21 @@ else{
 //                             <a href='#' class='text-danger p-2 delete-btn' data-item-id='$id '> <i class='fas fa-times-circle'></i></a>
 //                         </li></td>";
 // echo "</tr>";
-                         ?>
+?>
 
 <td>
-    <div class='dropdown dropup'>
-        <button class='btn btn-info btn-sm dropdown-toggle' type='button' data-bs-toggle='dropdown' aria-haspopup='true' aria-expanded='false' data-item-id='<?php echo $id; ?>'>
-            Action
-        </button>
-        <div class="dropdown-menu dropdown-menu-top dropdown-menu-end custom-dropdown-menu" style="max-height: 200px; overflow-y: auto;">
-           
-            <a class='dropdown-item text-success p-2 edit-btn' data-bs-toggle='modal' data-bs-target='.orderdetailsModal' data-item-id='<?php echo $id; ?>' href='#'>
-                <i class='bx bxs-edit-alt'></i> Adjustments
-            </a>
-            <a class='dropdown-item text-success p-2 edit-btn' data-bs-toggle='modal' data-bs-target='.orderdetailsModal' data-item-id='<?php echo $id; ?>' href='#'>
-                <i class='bx bxs-edit-alt'></i> Adjustments
-            </a>
-            <a class='dropdown-item text-success p-2 edit-btn' data-bs-toggle='modal' data-bs-target='.orderdetailsModal' data-item-id='<?php echo $id; ?>' href='#'>
-                <i class='bx bxs-edit-alt'></i> Adjustments
-            </a>
-            <!-- Other menu items are commented out for reference -->
-        </div>
-    </div>
+<button class='btn btn-info btn-sm dropdown-toggle' type='button' data-bs-toggle='dropdown' aria-haspopup='true' aria-expanded='false' data-item-id='<?php echo $id; ?>'>Action</button>
+<div class='dropdown-menu dropdown-menu-end' >
+    <a class='dropdown-item text-success p-2 edit-btn' data-bs-toggle='modal' data-bs-target='.orderdetailsModal' data-item-id='<?php echo $id; ?>' href='#'><i class='bx bxs-edit-alt'></i>Adjustment</a>
+    <a class='dropdown-item text-danger p-2 receipt-btn' data-bs-toggle='modal' data-bs-target='.receiptModal' data-item-id='<?php echo $id; ?>' href='#'><i class='bx bxs-edit-alt'></i>cancell</a>
+    <!-- <a class='dropdown-item text-secondary p-2 delete-btn' data-bs-toggle='modal' data-item-id='<?php echo $id; ?>' href='#'><i class='bx bxs-trash'></i>Delete</a>
+    <a class='dropdown-item text-dark p-2 refund-btn' data-bs-toggle='modal' data-bs-target='.refundModal' data-item-id='<?php echo $id; ?>' href='#'><i class='bx bxs-edit-alt'></i>Refund</a>
+    <a class='dropdown-item text-warning p-2 discount-btn' data-bs-toggle='modal' data-bs-target='.discountModal' data-item-id='<?php echo $id; ?>' href='#'><i class='bx bxs-edit-alt'></i>Discount</a>
+    <a class='dropdown-item text-secondary p-2 cancel-btn-btn' data-bs-toggle='modal' data-item-id='<?php echo $id; ?>' href='#'><i class='bx bxs-cancel'></i><i class='bx bxs-edit-alt'></i>Cancel</a> -->
+</div>
 </td>
+<?php
 
-
-                    <?php
-                    
                             // echo "</tr>";
                             $n+=+1;
                         }
@@ -255,8 +236,7 @@ else{
             
 
         </tbody>
-        </div>
-                                                        <tbody class="mt-5"></table>
+    
                                                 </div>
                                             </div>
                                         </div>

@@ -48,14 +48,16 @@ else{
         if ($transactionQuery) {
             $result = [
                 'message' => 'Receipt created successfully.',
-                'status' => 200
+                'status' => 200,
+                'id' => $cid
             ];
             echo json_encode($result);
         } else {
             // Insert failed
             $result = [
                 'message' => 'Failed Receipt.',
-                'status' => 404
+                'status' => 404,
+               
             ];
             echo json_encode($result);
         }

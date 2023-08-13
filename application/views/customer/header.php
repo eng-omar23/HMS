@@ -51,60 +51,10 @@
                                     </div>
                                 </div>
                             </div>
-                            <?php 
-                            // session_start();
-                            include_once('../../../conn.php');
-                            
-                            $email = $_SESSION['email'];
-                                   $sql = "SELECT * FROM bookings b
-                                   LEFT JOIN customers c ON b.customer_id = c.custid
-                                   WHERE c.email = '$email' and booking_status in (1,2) ";
-                           $query = mysqli_query($conn, $sql);
-                            
-                            while ($row = mysqli_fetch_assoc($query)) {
+                            <div id="notificationsContainer" data-simplebar style="max-height: 230px;"></div>
 
-                                $bstatus = $row['booking_status'];
-                                $updatedAt = strtotime($row['updated_at']);
-                                $time = date('H:i:s', $updatedAt);
-                           ?>
-                            <div data-simplebar style="max-height: 230px;">
-                                <a href="javascript: void(0);" class="text-reset notification-item">
-                                    <div class="d-flex">
-                                        <div class="avatar-xs me-3">
-                                            <span class="avatar-title bg-primary rounded-circle font-size-16">
-                                                <i class="bx bx-cart"></i>
-                                            </span>
-                                        </div>
-                                        <div class="flex-grow-1">
-                                            <h6 class="mb-1" key="t-your-order"></h6>
-                                            <div class="font-size-12 text-muted">
-                                                <?php if($bstatus==1){
-                                                    ?>
-                                                
-                                                    <h6 class="mb-1" key="t-your-order">Thank you for booking with us <?php echo $row['firstname'] ?></h6>
-                                               
-                                               <?php }
-                                                else if($bstatus==2){
-                                                    ?>
-                                                   <h6 class="mb-1" key="t-your-order">Thank you for booking is cancelled <?php echo $row['firstname'] ?></h6>
-                                               <?php }
-                                               ?>
-                                               
-                                                <p class="mb-0"><i class="mdi mdi-clock-outline"></i> <span
-                                                        key="t-min-ago"><?php echo $time ?></span></p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </a>
-                            
-                               
-                                
-                            </div>
-                            <?php
-                            }
-                                ?>
                             <div class="p-2 border-top d-grid">
-                                <a href="notification.php" id="viewAllNotificationsLink" class="btn btn-sm btn-link font-size-14 text-center" href="javascript:void(0)">
+                                <a href="bookingsHistory.php" id="viewAllNotificationsLink" class="btn btn-sm btn-link font-size-14 text-center" href="javascript:void(0)">
                                     <i class="mdi mdi-arrow-right-circle me-1"></i> <span key="t-view-more">View
                                         More..</span>
                                 </a>
@@ -116,7 +66,7 @@
                             data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <img class="rounded-circle header-profile-user"
                                 src="../../../assets/images/users/avatar-1.jpg" alt="Header Avatar">
-                            <span class="d-none d-xl-inline-block ms-1" key="t-henry"><?php echo $email; ?></span>
+                            <span class="d-none d-xl-inline-block ms-1" key="t-henry"><?php echo $_SESSION['email'] ; ?></span>
                             <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
                         </button>
                         <div class="dropdown-menu dropdown-menu-end">
@@ -215,4 +165,52 @@ function updateViewStatus() {
         notificationCountElement.text("0");
     }
 }
+
+function fetchNotifications() {
+        $.ajax({
+            url: 'fetch_notifications.php',
+            method: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                var notificationsContainer = $('#notificationsContainer');
+                notificationsContainer.empty();
+
+                $.each(data, function (index, notification) {
+                    var notificationHtml = `
+                        <a href="javascript:void(0);" class="text-reset notification-item">
+                            <div class="d-flex">
+                                <div class="avatar-xs me-3">
+                                    <span class="avatar-title bg-primary rounded-circle font-size-16">
+                                        <i class="bx bx-cart"></i>
+                                    </span>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-1">`;
+                                    
+                    if (notification.status == 1) {
+                        notificationHtml += `Thank you for booking with us ${notification.firstname}`;
+                    } else if (notification.status == 2) {
+                        notificationHtml += `your booking is cancelled ${notification.firstname}`;
+                    }
+                    
+                    notificationHtml += `</h6>
+                                    <div class="font-size-12 text-muted">
+                                        <p class="mb-0"><i class="mdi mdi-clock-outline"></i> <span>${notification.time}</span></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    `;
+                    notificationsContainer.append(notificationHtml);
+                });
+            },
+            error: function (xhr, status, error) {
+                console.error(error);
+            }
+        });
+    }
+
+    // Fetch notifications initially and then fetch every 30 seconds
+    fetchNotifications();
+    setInterval(fetchNotifications, 30000);
 </script>

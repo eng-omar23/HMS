@@ -1,207 +1,124 @@
+<?php require_once 'conn.php'; ?>
+
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Receipt Sample</title>
-    <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css">
 </head>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro&display=swap');
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Source Sans Pro', sans-serif;
+.print-button {
+    background-color: #333; /* Change to dark grey */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-top: 2%;
 }
 
-.container {
-    display: block;
-    width: 100%;
-    background: #fff;
-    max-width: 350px;
-    padding: 25px;
-    margin: 50px auto 0;
-    box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
-}
-
-.receipt_header {
-    padding-bottom: 40px;
-    border-bottom: 1px dashed #000;
-    text-align: center;
-}
-
-.receipt_header h1 {
-    font-size: 20px;
-    margin-bottom: 5px;
-    text-transform: uppercase;
-}
-
-.receipt_header h1 span {
-    display: block;
-    font-size: 25px;
-}
-
-.receipt_header h2 {
-    font-size: 14px;
-    color: #727070;
-    font-weight: 300;
-}
-
-.receipt_header h2 span {
-    display: block;
-}
-
-.receipt_body {
-    margin-top: 25px;
-}
-
-table {
-    width: 100%;
-}
-
-thead,
-tfoot {
-    position: relative;
-}
-
-thead th:not(:last-child) {
-    text-align: left;
-}
-
-thead th:last-child {
-    text-align: right;
-}
-
-thead::after {
-    content: '';
-    width: 100%;
-    border-bottom: 1px dashed #000;
-    display: block;
-    position: absolute;
-}
-
-tbody td:not(:last-child),
-tfoot td:not(:last-child) {
-    text-align: left;
-}
-
-tbody td:last-child,
-tfoot td:last-child {
-    text-align: right;
-}
-
-tbody tr:first-child td {
-    padding-top: 15px;
-}
-
-tbody tr:last-child td {
-    padding-bottom: 15px;
-}
-
-tfoot tr:first-child td {
-    padding-top: 15px;
-}
-
-tfoot::before {
-    content: '';
-    width: 100%;
-    border-top: 1px dashed #000;
-    display: block;
-    position: absolute;
-}
-
-tfoot tr:first-child td:first-child,
-tfoot tr:first-child td:last-child {
-    font-weight: bold;
-    font-size: 20px;
-}
-
-.date_time_con {
-    display: flex;
-    justify-content: center;
-    column-gap: 25px;
-}
-
-.items {
-    margin-top: 25px;
-}
-
-h3 {
-    border-top: 1px dashed #000;
-    padding-top: 10px;
-    margin-top: 25px;
-    text-align: center;
-    text-transform: uppercase;
+.print-button:hover {
+    background-color: #0056b3;
 }
 </style>
-
 <body>
-    <div class="container">
+<div class="container">
         <div class="receipt_header">
-            <h1>Receipt of Sale <span>Shop Name</span></h1>
-            <h2>Address: Lorem Ipsum,
-                1234-5 <span>Tel:+1 012 345 67 89</span></h2>
+            <h1>Receipt of Booking <span>Armaan Halls</span></h1>
+            <h2>Address:Benadir Afgooye Road, 1234-5 <span>Tel:+252 615147843 </span></h2>
+        
+   
+    <!-- Use the styled print button -->
+    <button class="print-button" onclick="printReceipt()">Print Receipt</button>
         </div>
         <div class="receipt_body">
             <div class="date_time_con">
-                <div class="date">11/12/2020</div>
-                <div class="time">11:13:06 AM</div>
+                <div class="date"><?php echo date('m/d/Y'); ?></div>
+                <div class="time"><?php echo date('h:i:s A'); ?></div>
             </div>
             <div class="items">
                 <table>
                     <thead>
-                        <th>QTY</th>
-                        <th>ITEM</th>
-                        <th>AMT</th>
+                        <tr>
+                            <th>Name</th>
+                            <th>Hall</th>
+                            <th>Event date</th>
+                        </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>Lorem ipsum</td>
-                            <td>2.3</td>
-                        </tr>
-                        <tr>
-                            <td>1</td>
-                            <td>Lorem ipsum</td>
-                            <td>2.3</td>
-                        </tr>
-                        <tr>
-                            <td>1</td>
-                            <td>Lorem ipsum</td>
-                            <td>2.3</td>
-                        </tr>
-                        <tr>
-                            <td>1</td>
-                            <td>Lorem ipsum</td>
-                            <td>2.3</td>
-                        </tr>
+                        <?php
+                        $custid=$_GET['id'];
+                        $due = 0;
+                        $balance = 0;
+                        $paid = 0;
+                        $previousName = null; // Track previous customer name
+                        $date=date('y-m-d');
+                        $sql = "SELECT h.hall_type AS hall, c.firstname AS name,b.start_date as sdate ,
+                            COALESCE(t.credit, 0) AS paid, t.debit AS due,
+                            COALESCE(t.debit - t.credit, t.debit) AS balance
+                            FROM bookings AS b
+                            LEFT JOIN transactions AS t ON b.booking_id = t.refID
+                            LEFT JOIN halls AS h ON b.hall_id = h.hall_id
+                            LEFT JOIN customers AS c ON b.customer_id = c.custid where 
+                            b.customer_id='$custid' and t.transactionDate='$date'";
+
+                        $query = mysqli_query($conn, $sql);
+                        if ($query && mysqli_num_rows($query) > 0) {
+                            while ($row = mysqli_fetch_assoc($query)) {
+                                if ($previousName !== $row["name"]) {
+                                    // Display customer name only when it changes
+                                    echo "<tr>";
+                                    echo "<td>" . $row["name"] . "</td>";
+                                    echo "<td>" . $row["hall"] . "</td>";
+                                    echo "<td>" . $row["sdate"] . "</td>";
+                                    echo "</tr>";
+                                    $previousName = $row["name"];
+                                }
+
+                                $paid += $row["paid"];
+                                $due += $row["due"];
+                                $balance += $row["balance"];
+                            }
+
+                            // Display total rows
+                            echo "<tr>";
+                            echo "<td>Total due</td>";
+                            echo "<td></td>";
+                            echo "<td>" . $due ."$" ."</td>";
+                            echo "</tr>";
+                            echo "<tr>";
+                            echo "<td>Total Paid</td>";
+                            echo "<td></td>";
+                            echo "<td>" . $paid ."$". "</td>";
+                            echo "</tr>";
+                            echo "<tr>";
+                            echo "<td>Total Balance</td>";
+                            echo "<td></td>";
+                            echo "<td>" . $balance ."$". "</td>";
+                            echo "</tr>";
+                        } else {
+                            echo "<tr><td colspan='3'>No data available</td></tr>";
+                        }
+                        ?>
                     </tbody>
-                    <tfoot>
-                        <tr>
-                            <td>Total</td>
-                            <td></td>
-                            <td>32.1</td>
-                        </tr>
-                        <tr>
-                            <td>Cash</td>
-                            <td></td>
-                            <td>32.1</td>
-                        </tr>
-                        <tr>
-                            <td>Change</td>
-                            <td></td>
-                            <td>32.1</td>
-                        </tr>
-                    </tfoot>
                 </table>
             </div>
         </div>
         <h3>Thank You !</h3>
     </div>
 </body>
-
 </html>
+<script>
+// Function to print the receipt
+function printReceipt() {
+    // Hide the print button before printing
+    var printButton = document.querySelector('button');
+    printButton.style.display = 'none';
+
+    // Print the page
+    window.print();
+
+    // Restore the print button after printing is done
+    printButton.style.display = 'block';
+}
+</script>

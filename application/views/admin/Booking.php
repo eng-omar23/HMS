@@ -831,13 +831,16 @@ $.ajax({
                  method: 'POST',
                 type: 'POST',
                 success: function(resp) {
-                alert(resp)
+                  
+             
                  var res = jQuery.parseJSON(resp);
                  if (res.status == 200) {
-                    
-                   $("#success").css("display", "block");
-                    $("#success").text(res.message);
-                    window.location.href = 'Booking.php';
+                 id=res.id;
+                 var url = '../../../invoice.php?id=' + id;
+                 window.location.href = url;
+                //    $("#success").css("display", "block");
+                //     $("#success").text(res.message);
+            
               }     else if (res.status == 404) {
                   $("#success").css("display", "none");
                    $("#error").css("display", "block");

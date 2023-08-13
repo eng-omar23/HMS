@@ -12,7 +12,8 @@ if (isset($_POST['itemId'])) {
         $success = allqueryHandler($conn, $sql);
        
         if($success) 
-      {  echo "success.";
+      {  
+        echo "success.";
         exit();
 
         }

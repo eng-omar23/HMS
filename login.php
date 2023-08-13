@@ -14,6 +14,7 @@
             $_SESSION['user_id'] = $row['user_id'];
             $_SESSION['type'] = $row['type'];
             $_SESSION['username'] = $row['username'];        
+            $_SESSION['email'] = $row['email'];        
             // Redirect to the appropriate dashboard
             if ($_SESSION['type'] === 'admin') {
                 header("Location: application/views/admin/adminDashboard.php");

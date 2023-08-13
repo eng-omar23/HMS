@@ -154,13 +154,15 @@ try {
             }
 
             // Insert into transactions table
-            $transactionSql = "INSERT INTO transactions (refID, tranType, custid, credit, transactionDate, debit) 
-                               VALUES (?, ?, ?, ?, ?, ?)";
-                               
-            $stmt = mysqli_prepare($conn, $transactionSql);
-            mysqli_stmt_bind_param($stmt, "ssssss", $bookId, $booking, $customerId, $credit, $date, $totalDebit);
-            mysqli_stmt_execute($stmt);
-            mysqli_stmt_close($stmt);
+            $transactionSql = "UPDATE transactions 
+            SET tranType = ?, custid = ?, credit = ?, transactionDate = ?, debit = ?
+            WHERE refID = ?";
+                         
+$stmt = mysqli_prepare($conn, $transactionSql);
+mysqli_stmt_bind_param($stmt, "ssssss", $booking, $customerId, $credit, $date, $totalDebit, $bookId);
+mysqli_stmt_execute($stmt);
+mysqli_stmt_close($stmt);
+
 
             // Commit the transaction
             mysqli_commit($conn);

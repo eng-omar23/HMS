@@ -66,56 +66,10 @@ session_start();
                                     </div>
                                 </div>
                             </div>
-                            <?php 
-                            include_once('../../../conn.php');
-                                  
-                        $sql = "SELECT * FROM bookings b LEFT JOIN customers c ON b.customer_id = c.custid
-                          WHERE b.booking_status = 0 and b.view_status = 0 LIMIT 4" ;
-                           $query = mysqli_query($conn, $sql);
-                           if($query){
-                            
-                            while ($row = mysqli_fetch_assoc($query)) {
+                            <div id="notificationsContainer" data-simplebar style="max-height: 230px;">
+    <!-- Notifications will be populated here -->
+</div>
 
-                                $bstatus = $row['booking_status'];
-                                $updatedAt = strtotime($row['updated_at']);
-                                $time = date('H:i:s', $updatedAt);
-                                $capitalizedFirstname = ucfirst($row['firstname']);
-                           ?>
-                            <div data-simplebar style="max-height: 230px;">
-                                <a href="javascript: void(0);" class="text-reset notification-item">
-                                    <div class="d-flex">
-                                        <div class="avatar-xs me-3">
-                                            <span class="avatar-title bg-primary rounded-circle font-size-16">
-                                                <i class="bx bx-cart"></i>
-                                            </span>
-                                        </div>
-                                        <div class="flex-grow-1">
-                                            <h6 class="mb-1" key="t-your-order"></h6>
-                                            <div class="font-size-12 text-muted">
-                                            <h6 class="mb-1" key="t-your-order"><?php echo  $capitalizedFirstname ?></h6>
-
-                                            <?php
-                                            if($bstatus==0){
-                                                ?>
-                                                 <h6 class="mb-1" key="t-your-order">This booking is pending</h6>
-                                                 <?php
-                                            }
-                                            ?>
-                                           
-                                               
-                                                <p class="mb-0"><i class="mdi mdi-clock-outline"></i> <span
-                                                        key="t-min-ago"><?php echo $time ?></span></p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </a>
-                            
-                               
-                                
-                            </div>
-                            <?php
-                            }  }
-                                ?>
                             <div class="p-2 border-top d-grid">
                                 <a href='adminnotification.php' class="btn btn-sm btn-link font-size-14 text-center" href="javascript:void(0)">
                                     <i class="mdi mdi-arrow-right-circle me-1"></i> <span key="t-view-more">View
@@ -234,6 +188,48 @@ function updateViewStatus() {
         notificationCountElement.text("0");
     }
 }
+
+    function fetchNotifications() {
+        $.ajax({
+            url: 'fetch_notifications.php', // Replace with the path to your PHP script
+            method: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                var notificationsContainer = $('#notificationsContainer');
+                notificationsContainer.empty();
+
+                $.each(data, function (index, notification) {
+                    var notificationHtml = `
+                        <a href="javascript:void(0);" class="text-reset notification-item">
+                            <div class="d-flex">
+                                <div class="avatar-xs me-3">
+                                    <span class="avatar-title bg-primary rounded-circle font-size-16">
+                                        <i class="bx bx-cart"></i>
+                                    </span>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-1">${notification.firstname}</h6>
+                                    <div class="font-size-12 text-muted">
+                                        <h6 class="mb-1">This booking is pending</h6>
+                                        <p class="mb-0"><i class="mdi mdi-clock-outline"></i> <span>${notification.time}</span></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    `;
+                    notificationsContainer.append(notificationHtml);
+                });
+            },
+            error: function (xhr, status, error) {
+                console.error(error);
+            }
+        });
+    }
+
+    // Fetch notifications initially and then fetch every 30 seconds
+    fetchNotifications();
+    setInterval(fetchNotifications, 30000);
 </script>
+
 
 </script>
