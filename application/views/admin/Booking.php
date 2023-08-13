@@ -201,7 +201,7 @@ include '../../../conn.php'; ?>
                             <a class='dropdown-item text-secondary p-2 delete-btn' data-bs-toggle='modal' data-item-id='<?php echo $id; ?>' href='#'><i class='bx bxs-trash'></i>Delete</a>
                             <a class='dropdown-item text-dark p-2 refund-btn' data-bs-toggle='modal' data-bs-target='.refundModal' data-item-id='<?php echo $id; ?>' href='#'><i class='bx bxs-edit-alt'></i>Refund</a>
                             <a class='dropdown-item text-warning p-2 discount-btn' data-bs-toggle='modal' data-bs-target='.discountModal' data-item-id='<?php echo $id; ?>' href='#'><i class='bx bxs-edit-alt'></i>Discount</a>
-                            <a class='dropdown-item text-secondary p-2 cancel-btn-btn' data-bs-toggle='modal' data-item-id='<?php echo $id; ?>' href='#'><i class='bx bxs-cancel'></i><i class='bx bxs-edit-alt'></i>Cancel</a>
+                            <a class='dropdown-item text-secondary p-2 cancel-btn' data-bs-toggle='modal' data-item-id='<?php echo $id; ?>' href='#'><i class='bx bxs-cancel'></i><i class='bx bxs-edit-alt'></i>Cancel</a>
                         </div>
                     </td>
                     <?php
@@ -942,9 +942,18 @@ function cancel(itemId) {
         method: 'POST',
         data: { itemId: itemId },
         success: function(response) {
-            window.location.href = 'booking.php';
-            console.log(response);
-            // Reload the page or update the UI as needed
+            alert(resp)
+                 var res = jQuery.parseJSON(resp);
+                 if (res.status == 200) {
+
+                   $("#success").css("display", "block");
+                    $("#success").text(res.message);
+                    window.location.href = 'Booking.php';
+              }     else if (res.status == 404) {
+                //   $("#success").css("display", "none");
+                //    $("#error").css("display", "block");
+                //    $("#error").text(res.message);
+              }
         },
         error: function(xhr, status, error) {
             // Handle errors

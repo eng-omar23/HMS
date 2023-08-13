@@ -211,11 +211,11 @@ else{
 <td>
 <button class='btn btn-info btn-sm dropdown-toggle' type='button' data-bs-toggle='dropdown' aria-haspopup='true' aria-expanded='false' data-item-id='<?php echo $id; ?>'>Action</button>
 <div class='dropdown-menu dropdown-menu-end' >
-    <a class='dropdown-item text-success p-2 edit-btn' data-bs-toggle='modal' data-bs-target='.orderdetailsModal' data-item-id='<?php echo $id; ?>' href='#'><i class='bx bxs-edit-alt'></i>Adjustment</a>
-    <a class='dropdown-item text-danger p-2 receipt-btn' data-bs-toggle='modal' data-bs-target='.receiptModal' data-item-id='<?php echo $id; ?>' href='#'><i class='bx bxs-edit-alt'></i>cancell</a>
+<a class='dropdown-item text-warning p-2 discount-btn' data-bs-toggle='modal' data-bs-target='.discountModal' data-item-id='<?php echo $id; ?>' href='#'><i class='bx bxs-edit-alt'></i>Ajust</a>
+    <a class='dropdown-item text-secondary p-2 cancel-btn' data-bs-toggle='modal' data-item-id='<?php echo $id; ?>' href='#'><i class='bx bxs-cancel'></i><i class='bx bxs-edit-alt'></i>Cancel</a>
     <!-- <a class='dropdown-item text-secondary p-2 delete-btn' data-bs-toggle='modal' data-item-id='<?php echo $id; ?>' href='#'><i class='bx bxs-trash'></i>Delete</a>
     <a class='dropdown-item text-dark p-2 refund-btn' data-bs-toggle='modal' data-bs-target='.refundModal' data-item-id='<?php echo $id; ?>' href='#'><i class='bx bxs-edit-alt'></i>Refund</a>
-    <a class='dropdown-item text-warning p-2 discount-btn' data-bs-toggle='modal' data-bs-target='.discountModal' data-item-id='<?php echo $id; ?>' href='#'><i class='bx bxs-edit-alt'></i>Discount</a>
+    
     <a class='dropdown-item text-secondary p-2 cancel-btn-btn' data-bs-toggle='modal' data-item-id='<?php echo $id; ?>' href='#'><i class='bx bxs-cancel'></i><i class='bx bxs-edit-alt'></i>Cancel</a> -->
 </div>
 </td>
@@ -253,22 +253,30 @@ else{
 
                 <!-- Add this at the end of the <body> section of your HTML, just before </body> -->
 <!-- Add this at the end of the <body> section of your HTML, just before </body> -->
+<
 <script>
-    const dropdownButtons = document.querySelectorAll('.dropdown-toggle');
-    dropdownButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            const parent = button.closest('.dropdown');
-            parent.classList.toggle('show');
-        });
-    });
-
-    // Close dropdowns when clicking outside
-    window.addEventListener('click', (event) => {
-        dropdownButtons.forEach(button => {
-            const parent = button.closest('.dropdown');
-            if (!parent.contains(event.target)) {
-                parent.classList.remove('show');
+$(document).ready(function() {
+    function cancel(itemId) {
+        $.ajax({
+            url: "../../../apis/booking/cancel.php",
+            method: 'POST',
+            data: { itemId: itemId },
+            success: function(response) {
+                window.location.href = 'bookingsHistory.php';
+                console.log(response);
+                // Reload the page or update the UI as needed
+            },
+            error: function(xhr, status, error) {
+                // Handle errors
+                console.error(error);
             }
         });
+    }
+
+    $('.cancel-btn').click(function(e) {
+        e.preventDefault();
+        var itemId = $(this).data('item-id');
+        cancel(itemId);
     });
+});
 </script>
