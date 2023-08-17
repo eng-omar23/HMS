@@ -945,7 +945,7 @@ function cancel(itemId) {
             alert(resp)
                  var res = jQuery.parseJSON(resp);
                  if (res.status == 200) {
-
+                    
                    $("#success").css("display", "block");
                     $("#success").text(res.message);
                     window.location.href = 'Booking.php';

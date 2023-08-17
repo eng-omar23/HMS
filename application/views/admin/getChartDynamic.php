@@ -55,7 +55,6 @@ $data = array(
     ],
     'labels' => ['Pending Halls', 'Approved Halls', 'Cancelled Halls', 'Total Halls'],
 );
-
 // Convert the data to JSON format and send the response
 header('Content-Type: application/json');
 echo json_encode($data);

@@ -137,7 +137,7 @@ function getCustomerIdbasedonEmail($conn, $email)
         $cid = $data['custid'];
         return $cid;
     } else {
-        return 3;
+        return 0;
     }
 }
 

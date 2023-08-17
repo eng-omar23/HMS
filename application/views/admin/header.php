@@ -108,7 +108,7 @@ session_start();
         <script>
   // Function to update the notification count using AJAX
   function playNotificationSound() {
-    var sound = document.getElementById("notificationSound");
+    var sound = document.getElementById("#notificationSound");
     sound.play();
   }
 
@@ -158,32 +158,24 @@ $(document).ready(function() {
 function updateViewStatus() {
     // Get the notificationCount element
     var notificationCountElement = $("#notificationCount");
-   
     // Get the current value of notificationCount (number of notifications)
     var notificationCount = parseInt(notificationCountElement.text());
-
     // If there are notifications (count > 0), update the view_status via AJAX
     if (notificationCount > 0) {
         // Prepare the data to send in the request
         var data = { view_status: 1 }; // You can include additional data if needed
-
-
         // Send the AJAX request with jQuery
         $.ajax({
             type: "POST",
             url: "update_view_status.php", // Replace "update_view_status.php" with your server-side script URL
             data: data,
             success: function (response) {
-                // Request was successful, handle any response if necessary
-                // For example, you could update the UI to show that the view_status was updated.
-                // The response variable contains the response from the server, if any.
             },
             error: function (xhr, status, error) {
                 // Request failed, handle the error if necessary
                 console.error(error);
             }
         });
-
         // Update the notificationCount display (optional, you can remove this if you don't want to change the display immediately)
         notificationCountElement.text("0");
     }

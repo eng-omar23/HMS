@@ -1,6 +1,9 @@
 <?php session_start(); include 'header.php'; ?>
 <?php include 'nav.php'; ?>
-<?php include '../../../conn.php'; ?>
+<?php include '../../../conn.php'; 
+
+$email=$_SESSION['email'];
+?>
 
 
 <?php 
@@ -20,13 +23,15 @@
 <?php 
             include '../../../conn.php';
             // Query to retrieve the data from the database
-            $sql = "SELECT count(*) as total FROM halls";
+            $sql = "SELECT COUNT(*) AS num_bookings
+            FROM bookings b LEFT join customers c on b.customer_id=c.custid 
+            WHERE email = '$email'";
             $result = $conn->query($sql);
             if ($result->num_rows > 0) {
                 $row = $result->fetch_assoc();
-                $halls = $row['total'];
+                $num_bookings = $row['num_bookings'];
             } else {
-                $halls = 0;
+                $num_bookings = 0;
             }
             $conn->close();
         ?>
@@ -34,13 +39,19 @@
 <?php 
             include '../../../conn.php';
             // Query to retrieve the data from the database
-            $sql = "SELECT count(*) as total FROM food";
+            $sql = "SELECT custid, 
+            (SELECT SUM(credit) 
+             FROM transactions 
+             WHERE custid = c.custid) AS total_amount_paid
+     FROM customers c
+     WHERE email = '$email'
+     ";
             $result = $conn->query($sql);
             if ($result->num_rows > 0) {
                 $row = $result->fetch_assoc();
-                $food = $row['total'];
+                $total_amount_paid = $row['total_amount_paid'];
             } else {
-                $food = 0;
+                $total_amount_paid = 0;
             }
             $conn->close();
         ?>
@@ -48,13 +59,18 @@
 <?php
             include '../../../conn.php';
             // Query to retrieve the data from the database
-            $sql = "SELECT count(*) as total FROM users";
+            $sql = "SELECT custid, 
+            (SELECT SUM(credit-debit) 
+             FROM transactions 
+             WHERE custid = c.custid) AS balance
+     FROM customers c
+     WHERE email = '$email'";
             $result = $conn->query($sql);
             if ($result->num_rows > 0) {
                 $row = $result->fetch_assoc();
-                $users = $row['total'];
+                $balance = $row['balance'];
             } else {
-                $users = 0;
+                $balance = 0;
             }
             $conn->close();
         ?>
@@ -165,24 +181,24 @@
                 <div class="col-xl-12">
                     <div class="row">
                         <div class="col-sm-3">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="d-flex align-items-center mb-3">
-                                        <div class="avatar-xs me-3">
-                                            <span
-                                                class="avatar-title rounded-circle bg-primary bg-soft text-primary font-size-18">
-                                                <i class="bx bx-group"></i>
-                                            </span>
-                                        </div>
-                                        <h5 class="font-size-14 mb-0">Customers</h5>
-                                    </div>
-                                    <div class="text-muted mt-4">
-                                        <h4><?php echo $customers; ?></h4>
-                                        <div class="d-flex">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="card" id="editProfileCard">
+    <div class="card-body">
+        <div class="d-flex align-items-center mb-3">
+            <div class="avatar-xs me-3">
+                <span class="avatar-title rounded-circle bg-primary bg-soft text-primary font-size-18">
+                    <i class="bx bx-group"></i>
+                </span>
+            </div>
+            <h5 class="font-size-14 mb-0">Your Profile</h5>
+        </div>
+        <div class="text-muted mt-4">
+            <h6>Change Personal Info</h6>
+            <div class="d-flex">
+            </div>
+        </div>
+    </div>
+</div>
+
                         </div>
 
                         <div class="col-sm-3">
@@ -195,10 +211,10 @@
                                                 <i class="bx bx-hotel"></i>
                                             </span>
                                         </div>
-                                        <h5 class="font-size-14 mb-0">Halls</h5>
+                                        <h5 class="font-size-14 mb-0">Number of Bookings</h5>
                                     </div>
                                     <div class="text-muted mt-4">
-                                        <h4><?php echo $halls; ?></h4>
+                                        <h4><?php echo $num_bookings; ?></h4>
                                         <div class="d-flex">
                                         </div>
                                     </div>
@@ -216,10 +232,10 @@
                                                 <i class="bx bxs-food-menu"></i>
                                             </span>
                                         </div>
-                                        <h5 class="font-size-14 mb-0">Food</h5>
+                                        <h5 class="font-size-14 mb-0">Amount Paid</h5>
                                     </div>
                                     <div class="text-muted mt-4">
-                                        <h4><?php echo $food; ?></h4>
+                                        <h4><?php echo $total_amount_paid."$"; ?></h4>
 
                                         <div class="d-flex">
                                         </div>
@@ -238,10 +254,10 @@
                                                 <i class="bx bx-user"></i>
                                             </span>
                                         </div>
-                                        <h5 class="font-size-14 mb-0">Users</h5>
+                                        <h5 class="font-size-14 mb-0">Balance</h5>
                                     </div>
                                     <div class="text-muted mt-4">
-                                        <h4><?php echo $users; ?></h4>
+                                        <h4><?php echo $balance; ?></h4>
 
                                         <div class="d-flex">
                                         </div>
@@ -253,7 +269,7 @@
                     <!-- end row -->
                 </div>
             </div>
-            <div class="row">
+            <!-- <div class="row">
                 <div class="col-xl-6">
                     <div class="card">
                         <div class="card-body">
@@ -359,11 +375,56 @@
             </div>
             <!-- end row -->
         </div> <!-- container-fluid -->
+    </div> -->
+
+    <div class="modal fade" id="profileModal" tabindex="-1" role="dialog" aria-labelledby="profileModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="profileModalLabel">Edit Profile Information</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="EditProfile" method="Post" action="ProfileUpdate.php">
+                    <div class="mb-3">
+                        <label for="fullName" class="form-label">Full Name</label>
+                        <input type="text" class="form-control" id="fullName" name="fullName" placeholder="Enter your full name">
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email">
+                    </div>
+                    <div class="mb-3">
+                        <label for="phone" class="form-label">Phone Number</label>
+                        <input type="tel" class="form-control" id="phone" name="phone" placeholder="Enter your phone number">
+                    </div>
+                    <div class="mb-3">
+                        <label for="phone" class="form-label">Password </label>
+                        <input type="tel" class="form-control" id="pass" name="pass" placeholder="Enter your phone number">
+                    </div>
+                    <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Save changes</button>
+              
+            </div>
+                </form>
+            </div>
+            
+        </div>
     </div>
+</div>
+
+
     <!-- End Page-content -->
 </div>
 <?php include 'footer.php'; ?>
 <!-- Include jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.4/js/dataTables.bootstrap4.min.js"></script>
+    <!-- Add this to your HTML file -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.all.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <!-- Add the id attribute to the h4 element -->
 <!-- Add the id attribute to the h4 element -->
@@ -409,4 +470,79 @@ function fetchMonthValueFromDatabase(tableName, columnName) {
             return data.total || 0;
         });
 }
+
+
+
+$(document).ready(function() {
+    // When the "Edit Profile" card is clicked
+    $('#editProfileCard').click(function() {
+        // Fetch customer information using AJAX
+        $.ajax({
+            url: 'fetch_customer_info.php', // Replace with your backend endpoint
+            method: 'GET',
+            dataType: 'json',
+            success: function(response) {
+                // Update the form fields with fetched data
+                $('#fullName').val(response.customer.fullName);
+                $('#email').val(response.customer.email);
+                $('#phone').val(response.customer.phone);
+                $('#pass').val(response.user.password);
+
+                // Show the modal
+                $('#profileModal').modal('show');
+            },
+        
+            error: function(xhr, status, error) {
+                console.error(error);
+                //showAlert('danger', 'An error occurred while fetching data.'.status);
+            },
+            complete: function() {
+                // This block will be executed regardless of success or error
+            }
+        });
+    });
+
+    
+
+
+$("#EditProfile").submit(function(e){   
+            e.preventDefault();
+            $.ajax({
+                url:"ProfileUpdate.php",
+                    data: new FormData($(this)[0]),
+                cache: false,
+                contentType: false,
+                processData: false,
+                    method: 'POST',
+                type: 'POST',
+                success: function(resp) {
+                    var res = jQuery.parseJSON(resp);
+                    
+                    if (res.status == 200) {
+                        Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: res.message,
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = 'profile.php';
+                            }
+                        });
+                    } else if (res.status == 404) {
+                        // Use SweetAlert for error message
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: res.message,
+                        });
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error fetching data:', error);
+                }
+            });
+        });
+ });
+
+
 </script>
