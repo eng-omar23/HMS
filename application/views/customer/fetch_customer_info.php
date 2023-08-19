@@ -24,11 +24,22 @@ if(!empty($email)){
         'message' => ' customer ID not found'
     ];
   }
+  $sql="select * from users where email='$email'";
+  $query=mysqli_query($conn,$sql);
+  if($query){
+      $row=mysqli_fetch_assoc($query);
+      $user_id=$row['user_id'];
+  }
+  else{
+    $response = [
+        'status' => 404, // or 500
+        'message' => ' customer ID not found'
+    ];
+  }
 
-
-    $sqlUser = "SELECT * FROM users WHERE email = ?";
+    $sqlUser = "SELECT * FROM users WHERE user_id = ?";
     $stmtUser = $conn->prepare($sqlUser);
-    $stmtUser->bind_param("i", $email);
+    $stmtUser->bind_param("i", $user_id);
     $stmtUser->execute();
     $resultUser = $stmtUser->get_result();
     

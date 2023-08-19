@@ -1,5 +1,7 @@
 <?php require_once 'header.php'; ?>
-<?php include 'nav.php';?>
+<?php include 'nav.php';  
+// ... rest of your code ...
+?>
 <!-- ============================================================== -->
 <!-- Start right Content here -->
 <!-- ============================================================== -->

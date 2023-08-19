@@ -10,6 +10,13 @@
                             <span key="t-ui-elements">Profile</span>
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link dropdown-toggle arrow-none" href="dashboard.php" id="topnav-uielement"
+                            role="button">
+                            <i class="bx bx-tone me-2"></i>
+                            <span key="t-ui-elements">Home</span>
+                        </a>
+                    </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle arrow-none" href="#" id="topnav-uielement" role="button">
                             <i class="bx bx-tone me-2"></i>

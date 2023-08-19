@@ -30,10 +30,18 @@
                                         <label for="statusFilter">Booking Status</label>
                                         <select class="form-control" id="statusFilter">
                                             <option value="">All</option>
-                                            <option value="approved">Approved</option>
-                                            <option value="pending">Pending</option>
+                                            <?php
+                                            $sql = "SELECT * FROM customers";
+                                            $result = mysqli_query($conn, $sql);
+
+                                            while ($row = mysqli_fetch_assoc($result)) {
+                                                $customerId = $row['custid'];
+                                                $customerName = $row['firstname'];
+                                                echo "<option value='$customerId'>$customerName</option>";
+                                            }
+                                            ?>
                                         </select>
-                                    </div>
+                                                                            </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
@@ -57,8 +65,15 @@
                                 <table id="dtBasicExample" class="table table-bordered dt-responsive nowrap w-100">
                                     <thead>
                                         <tr>
-                                            <th>Credit</th>
-                                        </tr>
+                                        <th>Credit</th>
+                                        <th>Transaction Date</th>
+                                        <th>Debit</th>
+                                        <th>Transaction Type</th>
+                                        <th>Reference ID</th>
+                                        <th>Customer ID</th>
+                                        <!-- Add more <th> elements for any other transaction columns you have -->
+                                    </tr>
+
                                     </thead>
                                     <tbody>
                                     </tbody>
@@ -144,11 +159,21 @@
                 // Append the new data to the table
                 for (var i = 0; i < response.length; i++) {
                     if (statusFilter === '' || response[i].credit === statusFilter) {
-                        
                         var row = [
-                            response[i].credit
-                        ];
-                        dataTable.row.add(row).draw();
+    response[i].credit,
+    response[i].transaction_date,
+    response[i].debit,
+    response[i].transaction_type,
+    response[i].transaction_id,
+    response[i].custid,
+    response[i].customer_name,
+    response[i].customer_phone,
+    response[i].customer_address,
+    response[i].customer_email
+    // Add more columns here if needed
+];
+dataTable.row.add(row).draw();
+
                     }
                 }
             },

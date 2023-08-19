@@ -5,8 +5,10 @@
     }
 </style>
 <?php
-session_start(); ?>
-<?php 
+session_start(); 
+
+require_once 'auth.php';
+
  include_once '../../../conn.php'; 
  include_once 'nav.php'; 
 include_once 'header.php'; 
