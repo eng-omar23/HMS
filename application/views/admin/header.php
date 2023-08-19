@@ -1,8 +1,13 @@
 
 <?php
-session_start();
-require_once "auth.php";
+ session_start();
 ?>
+
+<?php
+ require_once "auth.php";
+
+?>
+
 <!doctype html>
 <html lang="en">
 <meta http-equiv="content-type" content="text/html;charset=UTF-8" />

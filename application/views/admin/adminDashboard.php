@@ -1,5 +1,7 @@
-<?php require_once 'header.php'; ?>
-<?php include 'nav.php';  
+<?php
+require_once 'header.php'; ?>
+<?php include 'nav.php'; 
+
 // ... rest of your code ...
 ?>
 <!-- ============================================================== -->

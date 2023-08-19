@@ -9,10 +9,10 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 // Check user type
-$userType = $_SESSION['customer'];
+$userType = $_SESSION['type'];
 
 // If user type is not 'admin', redirect to unauthorized page
-if ($userType !== 'admin') {
+if ($userType !== 'customer') {
     header('Location: unauthorized.php');
     exit();
 }

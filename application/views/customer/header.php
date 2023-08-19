@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="en">
 <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
@@ -26,7 +25,12 @@
 
         <header id="page-topbar">
             <div class="navbar-header">
+<?php
 
+session_start();
+
+ require_once "auth.php";
+?>
                 <div class="d-flex">
                 </div>
 

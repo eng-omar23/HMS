@@ -1,33 +1,72 @@
 <?php
 session_start();
-require_once "../../conn.php";
-require_once "../functions.php";
+require_once "../../../conn.php";
+require_once "../../../apis/functions.php";
+
+// Get data from POST
+$hallId = trim($_POST['hid']);
+$bookId = trim($_POST['bid']);
+$startDate = trim($_POST['startDate']);
+$endDate = trim($_POST['endDate']);
+$starttime = trim($_POST['starttime']);
+$endtime = trim($_POST['endtime']);
+$attendee = trim($_POST['attend']);
+$selectedFacilities = isset($_POST['facility_id']) ? $_POST['facility_id'] : [];
+$food = $_POST['food'];
 
 // Check if the customer ID is set in the session
-if (empty($_SESSION['email'])) {
+if (!isset($_SESSION['email'])) {
     $result = [
-        'message' => 'Email ID Not Found.',
+        'message' => 'Email Not Found.',
         'status' => 404
     ];
     echo json_encode($result);
     exit;
 }
 
-$hallId = trim($_POST['hid']);
-$bookId = trim($_POST['bid']);
-$customerId = 3;
-$startDate = trim($_POST['startDate']);
-$endDate = trim($_POST['endDate']);
-$starttime = trim($_POST['starttime']);
-$endtime = trim($_POST['endtime']);
-$bookStatus = 0;
-$attendee = trim($_POST['attend']);
-$rate = 0;
-$date = date('Y-m-d');
-$credit = 0;
-$bookingType = 0;
-$selectedFacilities = isset($_POST['facility_id']) ? $_POST['facility_id'] : [];
-$food = $_POST['food'];
+$email = $_SESSION['email'];
+$CustomerEmailQuery = "SELECT * FROM customers WHERE email='$email'";
+$getCustomer = mysqli_query($conn, $CustomerEmailQuery);
+
+if (!$getCustomer || mysqli_num_rows($getCustomer) === 0) {
+    $result = [
+        'message' => 'Customer ID Not Found.',
+        'status' => 404
+    ];
+    echo json_encode($result);
+    exit;
+}
+
+$data = mysqli_fetch_assoc($getCustomer);
+$customerId = $data['custid'];
+
+// Now check if a record exists based on datetime and customerId
+$checkOverlapQuery = "SELECT * FROM bookings 
+WHERE hall_id = '$hallId' 
+AND start_date = '$startDate' 
+AND end_date = '$endDate' 
+AND starttime = '$starttime' 
+AND endtime = '$endtime'";
+$checkRecord = mysqli_query($conn, $checkOverlapQuery);
+
+if (!$checkRecord) {
+    $result = [
+        'message' => 'Database error: ' . mysqli_error($conn),
+        'status' => 404
+    ];
+    echo json_encode($result);
+    exit;
+}
+
+else if (mysqli_num_rows($checkRecord) > 0) {
+    $result = [
+        'message' => 'Overlapping booking found.',
+        'status' => 404
+    ];
+    echo json_encode($result);
+    exit;
+}
+
 
 // Function to handle facilities checkboxes
 function handleFacilities(&$selectedFacilities) {
@@ -192,4 +231,6 @@ try {
     ];
     echo json_encode($result);
 }
+
+
 ?>

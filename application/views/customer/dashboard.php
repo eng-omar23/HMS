@@ -1,4 +1,4 @@
-<?php   session_start(); ?>
+
 <?php include_once 'header.php'; ?>
 <?php include_once 'nav.php'; ?>
 <?php include_once '../../../conn.php'; ?>
@@ -204,7 +204,7 @@ $fullname=$record['firstname'];
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="BookingForm" method="post" action="../../../apis/booking/custBooking.php">
+                <form id="BookingForm" method="post" action="custBooking.php">
                     <!-- Hidden inputs for booking and hotel IDs -->
                     <input type="hidden" class="form-control" id="bid" name="bid">
                     <input type="hidden" class="form-control" id="hid" name="hid">
@@ -359,7 +359,7 @@ $(".btn-book").click(function() {
 $("#BookingForm").submit(function(e){   
             e.preventDefault();
             $.ajax({
-                url:"../../../apis/booking/custBooking.php",
+                url:"custBooking.php",
                     data: new FormData($(this)[0]),
                 cache: false,
                 contentType: false,

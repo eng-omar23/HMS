@@ -50,8 +50,8 @@
                                 <div class="col-lg-4">
                                     <div>
 
-                                        <a href="cusTrans.php" class="dropdown-item" key="t-buttons">Transacions</a>
-                                        <a href="ReceiptReport.php" class="dropdown-item" key="t-buttons">Receipts</a>
+                                        <a href="transactionReport.php" class="dropdown-item" key="t-buttons">Transacions</a>
+                                     
 
                                     </div>
                                 </div>
