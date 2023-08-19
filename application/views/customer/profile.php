@@ -1,7 +1,10 @@
 <?php session_start(); include 'header.php'; ?>
 <?php include 'nav.php'; ?>
 <?php include '../../../conn.php'; 
+// if (!isset($_SESSION['email'])){
+//     header("location : login.php")
 
+// }
 $email=$_SESSION['email'];
 ?>
 

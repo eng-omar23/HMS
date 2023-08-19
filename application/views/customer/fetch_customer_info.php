@@ -12,15 +12,29 @@ $email=$_SESSION['email'] ;
 
 if(!empty($email)){
 
+  $sql="select * from customers where email='$email'";
+  $query=mysqli_query($conn,$sql);
+  if($query){
+      $row=mysqli_fetch_assoc($query);
+      $custid=$row['custid'];
+  }
+  else{
+    $response = [
+        'status' => 404, // or 500
+        'message' => ' customer ID not found'
+    ];
+  }
+
+
     $sqlUser = "SELECT * FROM users WHERE email = ?";
     $stmtUser = $conn->prepare($sqlUser);
     $stmtUser->bind_param("i", $email);
     $stmtUser->execute();
     $resultUser = $stmtUser->get_result();
     
-    $sqlCustomer = "SELECT * FROM customers WHERE email = ?";
+    $sqlCustomer = "SELECT * FROM customers WHERE custid = ?";
     $stmtCustomer = $conn->prepare($sqlCustomer);
-    $stmtCustomer->bind_param("i", $email);
+    $stmtCustomer->bind_param("i", $custid);
     $stmtCustomer->execute();
     $resultCustomer = $stmtCustomer->get_result();
 

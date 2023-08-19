@@ -5,16 +5,19 @@ session_start();
 require_once '../../../conn.php';
 
 
+
 // Check if the user is logged in and has necessary IDs in session
 if (isset($_SESSION['email'])) {
-    $email = $_SESSION['email'];
-
+    $email=$_SESSION['email'];
     $CusQuery="select * from customers where email='$email'";
     $exCustomer=mysqli_query($conn,$CusQuery);
     $UserQuery="select * from users where email='$email'";
     $exUser=mysqli_query($conn,$UserQuery);
     if($exCustomer && $exUser && mysqli_num_rows($exCustomer) > 0 && mysqli_num_rows($exUser) > 0){
+        $result=mysqli_fetch_array($exCustomer);
+        $cid=$result['custid'];
 
+        
     // Gather updated information from POST data
     $updatedFullName = $_POST['fullName'];
     $updatedEmail = $_POST['email'];
@@ -29,9 +32,9 @@ if (isset($_SESSION['email'])) {
     
     
     // Update customer information
-    $sqlUpdateCustomer = "UPDATE customers SET firstname = ?, email = ?, phone = ? WHERE email = ?";
+    $sqlUpdateCustomer = "UPDATE customers SET firstname = ?, email = ?, phone = ? WHERE custid = ?";
     $stmtUpdateCustomer = $conn->prepare($sqlUpdateCustomer);
-    $stmtUpdateCustomer->bind_param("sssi", $updatedFullName, $updatedEmail, $updatedPhone, $email);
+    $stmtUpdateCustomer->bind_param("sssi", $updatedFullName, $updatedEmail, $updatedPhone, $cid);
     $updateCustomerResult = $stmtUpdateCustomer->execute();
 
     // Check if updates were successful
